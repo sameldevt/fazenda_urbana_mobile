@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:verdeviva/screens/config/my_account_screen.dart';
+import 'package:verdeviva/screens/access/change_password_screen.dart';
+import 'package:verdeviva/screens/account/my_account_screen.dart';
+import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/my_cart_screen.dart';
 import 'package:verdeviva/screens/market/my_orders_screen.dart';
 import 'package:verdeviva/screens/market/product_detail_screen.dart';
@@ -12,16 +14,20 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
-    _MainPageScreen(),
+    const _MainPageScreen(),
     MyCartScreen(),
-    MyOrdersScreen(),
-    MyAccountScreen()
+    const MyOrdersScreen(),
+    MyAccountScreen(),
+    const ChangePasswordScreen(),
+    const PersonalDataScreen(),
   ];
 
   int _currentPageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    print('Current Page Index: ${_screens.length}');
+    print('Current Page Index: $_currentPageIndex');
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -45,40 +51,34 @@ class _HomeScreenState extends State<HomeScreen> {
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
-        title: const Text(
-          'Fazenda VerdeViva',
-        ),
+        title: const Text('Fazenda VerdeViva'),
       ),
       drawer: Drawer(
         backgroundColor: Colors.white,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
-              topRight: Radius.circular(0), bottomRight: Radius.circular(0)),
+            topRight: Radius.circular(0),
+            bottomRight: Radius.circular(0),
+          ),
         ),
         child: ListView(
           children: [
-            Container(
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 24, 0, 24),
-                child: Text(
-                  textAlign: TextAlign.start,
-                  'Fazenda VerdeViva',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(24.0, 24, 0, 24),
+              child: Text(
+                'Fazenda VerdeViva',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            Container(
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 16, 0, 0),
-                child: Text(
-                  textAlign: TextAlign.start,
-                  'Atalhos',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(24.0, 16, 0, 0),
+              child: Text(
+                'Atalhos',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.home_outlined,
                 size: 32,
               ),
@@ -87,12 +87,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 0;
+                });
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.shopping_cart_outlined,
                 size: 32,
               ),
@@ -101,12 +103,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 1;
+                });
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.content_paste_search,
                 size: 32,
               ),
@@ -115,22 +119,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 2;
+                });
               },
             ),
-            Container(
-              child: const Padding(
-                padding: EdgeInsets.fromLTRB(24.0, 32, 0, 0),
-                child: Text(
-                  textAlign: TextAlign.start,
-                  'Configurações',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(24.0, 32, 0, 0),
+              child: Text(
+                'Configurações',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.edit_outlined,
                 size: 32,
               ),
@@ -139,13 +142,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 4;
+                });
               },
             ),
             ListTile(
-              leading: Icon(
-                Icons.person_2_outlined,
+              leading: const Icon(
+                Icons.account_circle_sharp,
                 size: 32,
               ),
               title: const Text(
@@ -153,8 +158,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               onTap: () {
-                // Update the state of the app.
-                // ...
+                Navigator.pop(context);
+                setState(() {
+                  _currentPageIndex = 5;
+                });
               },
             ),
             Padding(
@@ -169,8 +176,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onTap: () {
-                  // Update the state of the app.
-                  // ...
                   Navigator.pushReplacementNamed(context, 'login');
                 },
               ),
@@ -184,13 +189,12 @@ class _HomeScreenState extends State<HomeScreen> {
         showUnselectedLabels: true,
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.black,
-        currentIndex: _currentPageIndex,
         onTap: (index) {
-          setState(
-            () {
+          setState(() {
+            if (index >= 0 && index < _screens.length) {
               _currentPageIndex = index;
-            },
-          );
+            }
+          });
         },
         items: const [
           BottomNavigationBarItem(
@@ -220,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             backgroundColor: Colors.white,
             icon: Icon(
-              Icons.person_2_outlined,
+              Icons.account_circle_sharp,
               color: Colors.black,
             ),
             label: 'Minha conta',

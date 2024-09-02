@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/screens/access/change_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
-import 'package:verdeviva/screens/config/my_account_screen.dart';
+import 'package:verdeviva/screens/account/address_screen.dart';
+import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/screens/market/my_cart_screen.dart';
+import 'package:verdeviva/screens/market/my_orders_screen.dart';
 
 void main() {
   runApp(const App(isLogged: false,));
@@ -36,8 +38,11 @@ class App extends StatelessWidget {
         "login": (context) => LoginScreen(),
         "home": (context) => HomeScreen(),
         "register": (context) => const RegisterScreen(),
-        "change-pass": (context) => ChangePasswordScreen(),
+        "change-pass": (context) => const ChangePasswordScreen(),
         "cart": (context) => MyCartScreen(),
+        "personal-data": (context) => const PersonalDataScreen(),
+        "address": (context) => const AddressScreen(),
+        "orders": (context) => const MyOrdersScreen(),
       },
     );
   }

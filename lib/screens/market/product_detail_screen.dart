@@ -31,59 +31,61 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
         title: Text('Detalhes'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ProductInfoSection(
-              productCard: widget.productCard,
-            ),
-            _TotalPriceSection(
-              itemPrice: double.parse(widget.productCard.price),
-            ),
-            SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _ProductInfoSection(
+                productCard: widget.productCard,
+              ),
+              _TotalPriceSection(
+                itemPrice: double.parse(widget.productCard.price),
+              ),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'home');
+                  },
+                  child: const Text(
+                    'Comprar',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, 'home');
-                },
-                child: const Text(
-                  'Comprar',
-                  style: TextStyle(fontSize: 16, color: Colors.white),
-                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey[300],
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey[300],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+        
+                  },
+                  child: const Text(
+                    'Adicionar ao carrinho',
+                    style: TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ),
-                onPressed: () {
-
-                },
-                child: const Text(
-                  'Adicionar ao carrinho',
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                ),
               ),
-            ),
-            _SeeTooSection(),
-          ],
+              _SeeTooSection(),
+            ],
+          ),
         ),
       ),
     );
@@ -365,7 +367,7 @@ class _SeeTooSectionState extends State<_SeeTooSection> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -378,7 +380,7 @@ class _SeeTooSectionState extends State<_SeeTooSection> {
           ),
           CarouselSlider(
             options: CarouselOptions(
-              height: 200,
+              height: 240,
               viewportFraction: 0.6,
               enlargeCenterPage: true,
               enableInfiniteScroll: true,
