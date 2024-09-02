@@ -4,9 +4,14 @@ import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
 import 'package:verdeviva/screens/account/address_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
+import 'package:verdeviva/screens/market/card_payment_screen.dart';
+import 'package:verdeviva/screens/market/confirm_order_screen.dart';
 import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/screens/market/my_cart_screen.dart';
 import 'package:verdeviva/screens/market/my_orders_screen.dart';
+import 'package:verdeviva/screens/market/payment_method.dart';
+import 'package:verdeviva/screens/market/pix_payment_screen.dart';
+import 'package:verdeviva/screens/market/shipping_screen.dart';
 
 void main() {
   runApp(const App(isLogged: false,));
@@ -43,6 +48,11 @@ class App extends StatelessWidget {
         "personal-data": (context) => const PersonalDataScreen(),
         "address": (context) => const AddressScreen(),
         "orders": (context) => const MyOrdersScreen(),
+        "confirm-order": (context) => ConfirmOrderScreen(),
+        "shipping": (context) => ShippingScreen(),
+        "payment-method": (context) => PaymentMethodScreen(),
+        "pix-payment": (context) => PixPaymentScreen(),
+        "card-payment": (context) => CardPaymentScreen(),
       },
     );
   }
