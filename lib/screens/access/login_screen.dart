@@ -12,13 +12,15 @@ class LoginScreen extends StatelessWidget {
         child: Center(
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ScreenHeader(
-                    headerTitle: 'Fazenda VerdeViva',
-                    sectionTitle: 'Fazer login'),
-                _LoginForm(),
-                _CreateAccountSection(),
-                _LoginScreenFooter(),
+                  headerTitle: 'Fazenda VerdeViva',
+                  sectionTitle: 'Fazer login',
+                ),
+                const _LoginForm(),
+                const _CreateAccountSection(),
+                const _LoginScreenFooter(),
               ],
             ),
           ),
@@ -246,7 +248,6 @@ class _LoginScreenFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        SizedBox(height: 140),
         Text(
           '© 2024 Fazenda VerdeViva, Inc.',
           textAlign: TextAlign.center,

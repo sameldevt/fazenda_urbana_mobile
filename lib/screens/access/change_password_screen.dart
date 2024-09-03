@@ -7,12 +7,12 @@ class ChangePasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(32.0),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ScreenHeader(headerTitle: 'Fazenda VerdeViva', sectionTitle: 'Alterar senha'),
                 _ChangePasswordForm(),
@@ -210,7 +210,6 @@ class _ChangePasswordScreenFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        SizedBox(height: 100),
         Text(
           '© 2024 Fazenda VerdeViva, Inc.',
           textAlign: TextAlign.center,

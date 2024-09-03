@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/cards.dart';
+import 'package:verdeviva/common/custom_widgets.dart';
 import 'package:verdeviva/screens/access/change_password_screen.dart';
 import 'package:verdeviva/screens/account/my_account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
@@ -24,213 +26,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   int _currentPageIndex = 0;
 
+  void _onItemSelected(int index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
+  }
+
+  void _onNavBarItemTapped(int index) {
+    setState(() {
+      _currentPageIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    print('Current Page Index: ${_screens.length}');
-    print('Current Page Index: $_currentPageIndex');
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(
-                Icons.menu,
-                size: 30,
-              ),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
-        centerTitle: true,
-        titleTextStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-        title: const Text('Fazenda VerdeViva'),
-      ),
-      drawer: Drawer(
-        backgroundColor: Colors.white,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(0),
-            bottomRight: Radius.circular(0),
-          ),
-        ),
-        child: ListView(
-          children: [
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24.0, 24, 0, 24),
-              child: Text(
-                'Fazenda VerdeViva',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24.0, 16, 0, 0),
-              child: Text(
-                'Atalhos',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.home_outlined,
-                size: 32,
-              ),
-              title: const Text(
-                'Página Inicial',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _currentPageIndex = 0;
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.shopping_cart_outlined,
-                size: 32,
-              ),
-              title: const Text(
-                'Meu carrinho',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _currentPageIndex = 1;
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.content_paste_search,
-                size: 32,
-              ),
-              title: const Text(
-                'Meus pedidos',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _currentPageIndex = 2;
-                });
-              },
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(24.0, 32, 0, 0),
-              child: Text(
-                'Configurações',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.edit_outlined,
-                size: 32,
-              ),
-              title: const Text(
-                'Alterar senha',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _currentPageIndex = 4;
-                });
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.account_circle_sharp,
-                size: 32,
-              ),
-              title: const Text(
-                'Minha conta',
-                style: TextStyle(fontSize: 20),
-              ),
-              onTap: () {
-                Navigator.pop(context);
-                setState(() {
-                  _currentPageIndex = 5;
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 250),
-              child: ListTile(
-                leading: const Icon(
-                  Icons.exit_to_app,
-                  size: 32,
-                ),
-                title: const Text(
-                  'Sair',
-                  style: TextStyle(fontSize: 20),
-                ),
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, 'login');
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.white,
-        enableFeedback: false,
-        showUnselectedLabels: true,
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.black,
-        onTap: (index) {
-          setState(() {
-            if (index >= 0 && index < _screens.length) {
-              _currentPageIndex = index;
-            }
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            icon: Icon(
-              Icons.home,
-              color: Colors.black,
-            ),
-            label: 'Início',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            icon: Icon(
-              Icons.shopping_cart_outlined,
-              color: Colors.black,
-            ),
-            label: 'Meu carrinho',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            icon: Icon(
-              Icons.list_alt,
-              color: Colors.black,
-            ),
-            label: 'Meus pedidos',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.white,
-            icon: Icon(
-              Icons.account_circle_sharp,
-              color: Colors.black,
-            ),
-            label: 'Minha conta',
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(),
+      drawer: CustomDrawer(onItemSelected: _onItemSelected),
+      bottomNavigationBar: CustomBottomNavBar(currentIndex: _currentPageIndex, onTap: _onNavBarItemTapped,),
       body: _screens[_currentPageIndex],
     );
   }
@@ -246,28 +59,27 @@ class _MainPageScreen extends StatefulWidget {
 class _MainPageScreenState extends State<_MainPageScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SearchSection(),
-          _ItemsSection(),
-        ],
-      ),
+    return const Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.all(16.0),
+          child: _FilterSection(),
+        ),
+        _ItemsSection(),
+      ],
     );
   }
 }
 
 
-class _SearchSection extends StatefulWidget {
-  const _SearchSection({super.key});
+class _FilterSection extends StatefulWidget {
+  const _FilterSection({super.key});
 
   @override
-  State<_SearchSection> createState() => _SearchSectionState();
+  State<_FilterSection> createState() => _FilterSectionState();
 }
 
-class _SearchSectionState extends State<_SearchSection> {
+class _FilterSectionState extends State<_FilterSection> {
   String? selectedValue;
 
   final List<String> filterOptions = [
@@ -282,72 +94,54 @@ class _SearchSectionState extends State<_SearchSection> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Pesquisar produto',
-              prefixIcon: const Icon(
-                Icons.search,
-                size: 30,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Todos os itens',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Container(
+              height: 30,
+              width: 180,
+              padding: EdgeInsets.symmetric(horizontal: 4.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(20),
               ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+              child: DropdownButton<String>(
+                dropdownColor: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                value: selectedValue,
+                alignment: AlignmentDirectional.center,
+                hint: const Text(
+                  "Filtrar itens",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                icon: const Icon(
+                  Icons.filter_list,
+                  color: Colors.grey,
+                  size: 20,
+                ),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedValue = newValue!;
+                  });
+                },
+                items: filterOptions.map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    );
+                  },
+                ).toList(),
               ),
             ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Todos os itens',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Container(
-                height: 30,
-                width: 180,
-                padding: EdgeInsets.symmetric(horizontal: 4.0),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: DropdownButton<String>(
-                  dropdownColor: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  value: selectedValue,
-                  alignment: AlignmentDirectional.center,
-                  hint: const Text(
-                    "Filtrar itens",
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                  icon: const Icon(
-                    Icons.filter_list,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedValue = newValue!;
-                    });
-                  },
-                  items: filterOptions.map<DropdownMenuItem<String>>(
-                    (String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    },
-                  ).toList(),
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
       ],
     );
@@ -468,7 +262,7 @@ class _ItemsSectionState extends State<_ItemsSection> {
         itemCount: products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return ProductCard(
+          return ShopCard(
             name: product['name']!,
             description: product['description']!,
             price: product['price']!,
