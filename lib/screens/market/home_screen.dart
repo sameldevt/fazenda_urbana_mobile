@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/custom_widgets.dart';
+import 'package:verdeviva/common/sections.dart';
 import 'package:verdeviva/screens/access/change_password_screen.dart';
 import 'package:verdeviva/screens/account/my_account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
@@ -40,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final background = theme.colorScheme.surfaceBright;
+    final barItemsColor = theme.colorScheme.onPrimary;
+
     return Scaffold(
+      backgroundColor: background,
       appBar: CustomAppBar(),
       drawer: CustomDrawer(onItemSelected: _onItemSelected),
       bottomNavigationBar: CustomBottomNavBar(currentIndex: _currentPageIndex, onTap: _onNavBarItemTapped,),
@@ -57,15 +63,155 @@ class _MainPageScreen extends StatefulWidget {
 }
 
 class _MainPageScreenState extends State<_MainPageScreen> {
+  final List<Map<String, String>> frutas = [
+    {
+      "name": "Banana",
+      "price": "7.99",
+      "image": "https://rb.gy/2xfabn",
+      "description": "Banana madura e doce, ideal para lanches e smoothies."
+    },
+    {
+      "name": "Maçã",
+      "price": "6.49",
+      "image": "https://rb.gy/8ly4oc",
+      "description": "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
+    },
+    {
+      "name": "Manga",
+      "price": "6.99",
+      "image": "https://t.ly/WGNKn",
+      "description": "Manga suculenta e doce, perfeita para sobremesas e sucos."
+    },
+    {
+      "name": "Pêra",
+      "price": "7.49",
+      "image": "https://t.ly/QM99N",
+      "description": "Pêra doce e suculenta, ótima para lanches e sobremesas."
+    },
+    {
+      "name": "Tomate",
+      "price": "7.49",
+      "image": "https://encurtador.com.br/kAgBR",
+      "description": "Tomate maduro e suculento, excelente para saladas e molhos."
+    },
+  ];
+  final List<Map<String, String>> legumes = [
+    {
+      "name": "Couve",
+      "price": "5.99",
+      "image": "https://rb.gy/s2fpd2",
+      "description": "Couve fresca, rica em nutrientes e ideal para sucos verdes."
+    },
+    {
+      "name": "Cenoura",
+      "price": "4.99",
+      "image": "https://rb.gy/0fiy0z",
+      "description": "Cenoura crocante e adocicada, ótima para saladas e petiscos."
+    },
+    {
+      "name": "Batata",
+      "price": "3.99",
+      "image": "https://rb.gy/2ot2ch",
+      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
+    },
+    {
+      "name": "Batata doce",
+      "price": "4.49",
+      "image": "https://t.ly/obCYL",
+      "description": "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
+    },
+    {
+      "name": "Beterraba",
+      "price": "5.49",
+      "image": "https://t.ly/-YCSe",
+      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
+    },
+    {
+      "name": "Alface",
+      "price": "4.49",
+      "image": "https://t.ly/kGI0v",
+      "description": "Alface fresca e crocante, ideal para saladas."
+    },
+    {
+      "name": "Tomate",
+      "price": "7.49",
+      "image": "https://encurtador.com.br/kAgBR",
+      "description": "Tomate maduro e suculento, excelente para saladas e molhos."
+    },
+    {
+      "name": "Salsa",
+      "price": "3.99",
+      "image": "https://encurtador.com.br/LbyRY",
+      "description": "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
+    }
+  ];
+  final List<Map<String, String>> outros = [
+    {
+      "name": "Couve",
+      "price": "5.99",
+      "image": "https://rb.gy/s2fpd2",
+      "description": "Couve fresca, rica em nutrientes e ideal para sucos verdes."
+    },
+    {
+      "name": "Cenoura",
+      "price": "4.99",
+      "image": "https://rb.gy/0fiy0z",
+      "description": "Cenoura crocante e adocicada, ótima para saladas e petiscos."
+    },
+    {
+      "name": "Batata",
+      "price": "3.99",
+      "image": "https://rb.gy/2ot2ch",
+      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
+    },
+    {
+      "name": "Batata doce",
+      "price": "4.49",
+      "image": "https://t.ly/obCYL",
+      "description": "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
+    },
+    {
+      "name": "Beterraba",
+      "price": "5.49",
+      "image": "https://t.ly/-YCSe",
+      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
+    },
+    {
+      "name": "Alface",
+      "price": "4.49",
+      "image": "https://t.ly/kGI0v",
+      "description": "Alface fresca e crocante, ideal para saladas."
+    },
+    {
+      "name": "Tomate",
+      "price": "7.49",
+      "image": "https://encurtador.com.br/kAgBR",
+      "description": "Tomate maduro e suculento, excelente para saladas e molhos."
+    },
+    {
+      "name": "Salsa",
+      "price": "3.99",
+      "image": "https://encurtador.com.br/LbyRY",
+      "description": "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
+    }
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: _FilterSection(),
+        const _FilterSection(),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ProductSection(items: frutas, productCategory: "Frutas"),
+                ProductSection(items: legumes, productCategory: "Legumes"),
+                ProductSection(items: outros, productCategory: "Outros"),
+              ],
+            ),
+          ),
         ),
-        _ItemsSection(),
       ],
     );
   }
@@ -92,9 +238,11 @@ class _FilterSectionState extends State<_FilterSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const Text(
@@ -143,7 +291,7 @@ class _FilterSectionState extends State<_FilterSection> {
             ),
           ],
         ),
-      ],
+      ),
     );
   }
 }
@@ -251,24 +399,27 @@ class _ItemsSectionState extends State<_ItemsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 3 / 4,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Expanded(
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            mainAxisSpacing: 10.0,
+            childAspectRatio: 3 / 4,
+          ),
+          itemCount: products.length,
+          itemBuilder: (context, index) {
+            final product = products[index];
+            return ShopCard(
+              name: product['name']!,
+              description: product['description']!,
+              price: product['price']!,
+              image: product['image']!,
+            );
+          },
         ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return ShopCard(
-            name: product['name']!,
-            description: product['description']!,
-            price: product['price']!,
-            image: product['image']!,
-          );
-        },
       ),
     );
   }

@@ -34,7 +34,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto mobile VerdeViva',
-      initialRoute: 'landing-screen',
+      initialRoute: 'home',
       //initialRoute: (isLogged) ? "home" : "login",
       theme: ThemeData(
         colorScheme: ColorScheme(
@@ -45,6 +45,7 @@ class App extends StatelessWidget {
           onSecondary: Colors.black,
           tertiary: Colors.lightGreen.shade100,
           onTertiary: Colors.black,
+          surfaceBright: Colors.lightGreen.shade50,
           error: Colors.red,
           onError: Colors.white,
           background: Colors.grey[200]!,

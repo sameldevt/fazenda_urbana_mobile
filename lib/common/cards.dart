@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 
 final double _cardWidth = 170.0;
-final double _cardHeight = 120.0;
-final RoundedRectangleBorder _cardBorder = RoundedRectangleBorder(
-  borderRadius: BorderRadius.circular(40.0),
-);
-final double _cardElevation = 10.0;
+final double _cardHeight = 150.0;
+const double _cardElevation = 10.0;
 
 class ShopCard extends StatelessWidget {
   final String name;
@@ -24,17 +21,13 @@ class ShopCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final cardInfoColor = theme.colorScheme.primary;
-    final cardInfoTextColor = theme.colorScheme.onPrimary;
+    final divisorColor = theme.colorScheme.surfaceBright;
 
     return SizedBox(
       width: _cardWidth,
       height: _cardHeight,
       child: ClipRRect(
-        borderRadius: _cardBorder.borderRadius,
         child: Card(
-          shape: _cardBorder,
-          elevation: _cardElevation,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -42,32 +35,34 @@ class ShopCard extends StatelessWidget {
                 image,
                 fit: BoxFit.cover,
                 width: double.infinity,
-                height: 170,
+                height: 150,
               ),
-              Expanded(
-                child: Container(
-                  color: cardInfoColor,
-                  padding: const EdgeInsets.fromLTRB(16, 4.0, 0, 4.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0,
-                            color: cardInfoTextColor),
+              Divider(
+                thickness: 1,
+                color: divisorColor,
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 0, 1.0, 4.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
+                          color: Colors.black),
+                    ),
+                    const SizedBox(height: 2.0),
+                    Text(
+                      'R\$ $price / kg',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        color: Colors.grey,
                       ),
-                      SizedBox(height: 4.0),
-                      Text(
-                        'R\$ $price / kg',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 12.0,
-                            color: cardInfoTextColor),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
