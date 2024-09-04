@@ -3,6 +3,7 @@ import 'package:verdeviva/common/custom_widgets.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/sections.dart';
+import 'package:verdeviva/screens/market/widgets/product_card.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
@@ -23,19 +24,22 @@ class _TestScreenState extends State<TestScreen> {
       "name": "Maçã",
       "price": "6.49",
       "image": "https://rb.gy/8ly4oc",
-      "description": "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
+      "description":
+          "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
     },
     {
       "name": "Couve",
       "price": "5.99",
       "image": "https://rb.gy/s2fpd2",
-      "description": "Couve fresca, rica em nutrientes e ideal para sucos verdes."
+      "description":
+          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
     },
     {
       "name": "Cenoura",
       "price": "4.99",
       "image": "https://rb.gy/0fiy0z",
-      "description": "Cenoura crocante e adocicada, ótima para saladas e petiscos."
+      "description":
+          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
     },
     {
       "name": "Batata",
@@ -47,7 +51,8 @@ class _TestScreenState extends State<TestScreen> {
       "name": "Batata doce",
       "price": "4.49",
       "image": "https://t.ly/obCYL",
-      "description": "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
+      "description":
+          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
     },
     {
       "name": "Beterraba",
@@ -77,46 +82,62 @@ class _TestScreenState extends State<TestScreen> {
       "name": "Laranja",
       "price": "5.99",
       "image": "https://l1nq.com/nmBNt",
-      "description": "Laranja refrescante e rica em vitamina C, perfeita para sucos."
+      "description":
+          "Laranja refrescante e rica em vitamina C, perfeita para sucos."
     },
     {
       "name": "Alho",
       "price": "1.99",
       "image": "https://l1nq.com/7cqrk",
-      "description": "Alho aromático e saboroso, essencial para temperar pratos."
+      "description":
+          "Alho aromático e saboroso, essencial para temperar pratos."
     },
     {
       "name": "Cebola",
       "price": "6,49",
       "image": "https://l1nq.com/f4Mkz",
-      "description": "Cebola versátil e essencial na cozinha, ideal para diversos pratos."
+      "description":
+          "Cebola versátil e essencial na cozinha, ideal para diversos pratos."
     },
     {
       "name": "Tomate",
       "price": "7.49",
       "image": "https://encurtador.com.br/kAgBR",
-      "description": "Tomate maduro e suculento, excelente para saladas e molhos."
+      "description":
+          "Tomate maduro e suculento, excelente para saladas e molhos."
     },
     {
       "name": "Salsa",
       "price": "3.99",
       "image": "https://encurtador.com.br/LbyRY",
-      "description": "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
+      "description":
+          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
     }
   ];
+
   int onSelected(int value) {
     return 1;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.grey,
+    return Scaffold(
+      backgroundColor: Colors.grey,
       drawer: CustomDrawer(onItemSelected: onSelected),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ProductSection(items: products, productCategory: "Frutas"),
+            CartItemsSection(),
+            // CartItemCard(
+            //   productCard: ProductCard(
+            //     name: products[0]['name']!,
+            //     description: products[0]['description']!,
+            //     price: products[0]['price']!,
+            //     image: products[0]['image']!,
+            //   ),
+            // ),
+            //ProductSection(items: products, productCategory: "Frutas"),
             // NavigationPrimaryButton(
             //   route: '',
             //   buttonText: 'Teste',

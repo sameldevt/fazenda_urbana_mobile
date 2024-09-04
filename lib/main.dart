@@ -56,7 +56,7 @@ class App extends StatelessWidget {
       ),
       routes: {
         "landing-screen": (context) => LandingScreen(),
-        "test-screen": (context) => TestScreen(),
+        "test": (context) => TestScreen(),
         "login": (context) => LoginScreen(),
         "home": (context) => HomeScreen(),
         "register": (context) => const RegisterScreen(),

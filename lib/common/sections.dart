@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/cards.dart';
+import 'package:verdeviva/screens/market/widgets/product_card.dart';
 
 class ProductSection extends StatelessWidget {
   final String productCategory;
@@ -163,56 +164,57 @@ class CartItemsSection extends StatelessWidget {
     }
   ];
 
-  const CartItemsSection({super.key});
+  CartItemsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 8.0, 0, 8.0),
-                child: Text(
-                  productCategory,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16.0, 8.0, 0, 8.0),
+              child: Text(
+                'Produtos',
+                //productCategory,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.5, // Defina uma altura fixa ou baseada no tamanho da tela
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 1.0,
-                    mainAxisSpacing: 1.0,
-                    childAspectRatio: 3 / 4,
-                  ),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    return ShopCard(
-                      name: item['name']!,
-                      description: item['description']!,
-                      price: item['price']!,
-                      image: item['image']!,
-                    );
-                  },
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.55, // Altura fixa ou baseada no tamanho da tela
+              child: ListView.separated(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  final product = items[index];
+                  return CartItemCard(
+                    productCard: ProductCard(
+                      name: product['name']!,
+                      description: product['description']!,
+                      price: product['price']!,
+                      image: product['image']!,
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => const Divider(
+                  color: Colors.grey, // Cor do divisor
+                  thickness: 0.5, // Espessura do divisor
+                  indent: 10.0, // Recuo no início do divisor
+                  endIndent: 10.0, // Recuo no final do divisor
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
