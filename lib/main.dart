@@ -9,16 +9,18 @@ import 'package:verdeviva/screens/access/register_screen.dart';
 import 'package:verdeviva/screens/account/address_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/landing/landing_screen.dart';
-import 'package:verdeviva/screens/market/card_payment_screen.dart';
+import 'package:verdeviva/screens/purchase/card_payment_screen.dart';
 import 'package:verdeviva/screens/market/confirm_order_screen.dart';
 import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/screens/market/my_cart_screen.dart';
 import 'package:verdeviva/screens/market/my_orders_screen.dart';
 import 'package:verdeviva/screens/market/order_details_screen.dart';
-import 'package:verdeviva/screens/market/payment_method.dart';
-import 'package:verdeviva/screens/market/payment_status_screen.dart';
-import 'package:verdeviva/screens/market/pix_payment_screen.dart';
-import 'package:verdeviva/screens/market/shipping_screen.dart';
+import 'package:verdeviva/screens/purchase/payment_method.dart';
+import 'package:verdeviva/screens/purchase/payment_screen.dart';
+import 'package:verdeviva/screens/purchase/payment_status_screen.dart';
+import 'package:verdeviva/screens/purchase/pix_payment_screen.dart';
+import 'package:verdeviva/screens/purchase/shipping_option.dart';
+import 'package:verdeviva/screens/purchase/shipping_screen.dart';
 import 'package:verdeviva/screens/test_screen.dart';
 
 void main() {
@@ -34,7 +36,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto mobile VerdeViva',
-      initialRoute: 'home',
+      initialRoute: 'test',
       //initialRoute: (isLogged) ? "home" : "login",
       theme: ThemeData(
         colorScheme: ColorScheme(
@@ -63,11 +65,11 @@ class App extends StatelessWidget {
         "change-pass": (context) => const ChangePasswordScreen(),
         "cart": (context) => MyCartScreen(),
         "personal-data": (context) => const PersonalDataScreen(),
-        "address": (context) => const AddressScreen(),
+        "address": (context) => const ShippingOptionScreen(),
         "orders": (context) => const MyOrdersScreen(),
         "confirm-order": (context) => ConfirmOrderScreen(),
         "shipping": (context) => ShippingScreen(),
-        "payment-method": (context) => PaymentMethodScreen(),
+        "payment": (context) => PaymentOptionScreen(),
         "pix-payment": (context) => PixPaymentScreen(),
         "card-payment": (context) => CardPaymentScreen(),
         "payment-status": (context) => PaymentStatusScreen(),

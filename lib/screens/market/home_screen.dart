@@ -7,8 +7,9 @@ import 'package:verdeviva/screens/account/my_account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/my_cart_screen.dart';
 import 'package:verdeviva/screens/market/my_orders_screen.dart';
-import 'package:verdeviva/screens/market/product_detail_screen.dart';
+import 'package:verdeviva/screens/market/product_info_screen.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
+import 'package:verdeviva/screens/test_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
+    //TestScreen(),
     const _MainPageScreen(),
     MyCartScreen(),
     const MyOrdersScreen(),
@@ -42,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final background = theme.colorScheme.surfaceBright;
+    final background = theme.colorScheme.surface;
     final barItemsColor = theme.colorScheme.onPrimary;
 
     return Scaffold(

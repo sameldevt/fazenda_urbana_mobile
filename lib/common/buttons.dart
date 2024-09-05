@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final double _width = 300;
+final double _width = 400;
 final double _height = 50;
 final double _borderWidth = 2.0;
 final BorderRadius _borderRadius = BorderRadius.circular(8);
@@ -46,9 +46,9 @@ class NavigationPrimaryButton extends StatelessWidget {
             child: Text(
               buttonText,
               style: TextStyle(
-                fontSize: buttonTextSize,
-                color: buttonTextColor,
-              ),
+                  fontSize: buttonTextSize,
+                  color: buttonTextColor,
+                  fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -95,9 +95,9 @@ class NavigationSecondaryButton extends StatelessWidget {
           child: Text(
             buttonText,
             style: TextStyle(
-              fontSize: buttonTextSize,
-              color: buttonTextColor,
-            ),
+                fontSize: buttonTextSize,
+                color: buttonTextColor,
+                fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -105,11 +105,52 @@ class NavigationSecondaryButton extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
+class ActionPrimaryButton extends StatelessWidget {
   final String buttonText;
   final double buttonTextSize;
 
-  const ActionButton({
+  const ActionPrimaryButton({
+    super.key,
+    required this.buttonText,
+    required this.buttonTextSize,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final buttonColor = theme.colorScheme.primary;
+    final buttonTextColor = theme.colorScheme.onPrimary;
+    final borderColor = theme.colorScheme.primary;
+
+    return Container(
+      width: _width,
+      height: _height,
+      decoration: BoxDecoration(
+        color: buttonColor,
+        borderRadius: _borderRadius,
+        border: Border.all(
+          color: borderColor,
+          width: _borderWidth,
+        ),
+      ),
+      child: Center(
+        child: Text(
+          buttonText,
+          style: TextStyle(
+              fontSize: buttonTextSize,
+              color: buttonTextColor,
+              fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
+
+class ActionSecondaryButton extends StatelessWidget {
+  final String buttonText;
+  final double buttonTextSize;
+
+  const ActionSecondaryButton({
     super.key,
     required this.buttonText,
     required this.buttonTextSize,
@@ -122,27 +163,24 @@ class ActionButton extends StatelessWidget {
     final buttonTextColor = theme.colorScheme.onTertiary;
     final borderColor = theme.colorScheme.tertiary;
 
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        width: _width,
-        height: _height,
-        decoration: BoxDecoration(
-          color: buttonColor,
-          borderRadius: _borderRadius,
-          border: Border.all(
-            color: borderColor,
-            width: _borderWidth,
-          ),
+    return Container(
+      width: _width,
+      height: _height,
+      decoration: BoxDecoration(
+        color: buttonColor,
+        borderRadius: _borderRadius,
+        border: Border.all(
+          color: borderColor,
+          width: _borderWidth,
         ),
-        child: Center(
-          child: Text(
-            buttonText,
-            style: TextStyle(
+      ),
+      child: Center(
+        child: Text(
+          buttonText,
+          style: TextStyle(
               fontSize: buttonTextSize,
               color: buttonTextColor,
-            ),
-          ),
+              fontWeight: FontWeight.bold),
         ),
       ),
     );

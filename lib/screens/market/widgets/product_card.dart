@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verdeviva/screens/market/product_detail_screen.dart';
+import 'package:verdeviva/screens/market/product_info_screen.dart';
 
 class ProductCard extends StatelessWidget {
   final String name;
@@ -26,7 +26,7 @@ class ProductCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ProductDetailScreen(productCard: this,)),
+            MaterialPageRoute(builder: (context) => ProductInfoScreen()),
           );
         },
         child: Column(
@@ -39,6 +39,14 @@ class ProductCard extends StatelessWidget {
                   image,
                   fit: BoxFit.scaleDown,
                   width: double.infinity,
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    return Container(
+                      width: 300,
+                      height: 300,
+                      color: Colors.transparent,
+                    );
+                  },
                 ),
               ),
             ),

@@ -7,9 +7,19 @@ class MyCartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final background = theme.colorScheme.surfaceBright;
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Carrinho',
+          style: TextStyle(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
+      ),
       backgroundColor: background,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -36,33 +46,50 @@ class _ContinuePurchaseSection extends StatefulWidget {
 class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
+    return Expanded(
       child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white, // Fundo branco
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5), // Sombra cinza com opacidade
-              spreadRadius: 2,
-              blurRadius: 5,
-              offset: const Offset(0, -3), // Sombra apenas na parte superior
-            ),
-          ],
-        ),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(0, 16, 16.0, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
+        color: Colors.white,
+        child: const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Produtos (2)',style: TextStyle(
+                    fontSize: 14,
+                  ),),
+                  Text(
+                    'R\$ 18,99',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Frete',style: TextStyle(
+                    fontSize: 14,
+                  ),),
+                  Text(
+                    'R\$ 2,99',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Valor total da compra',
+                    'Total',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Text(
@@ -74,17 +101,17 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
                   ),
                 ],
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Center(
-                child: NavigationPrimaryButton(
-                    route: 'cart',
-                    buttonText: 'Continuar a compra',
-                    buttonTextSize: 20),
+              Padding(
+                padding: EdgeInsets.only(top: 4.0),
+                child: Center(
+                  child: NavigationPrimaryButton(
+                      route: 'address',
+                      buttonText: 'Continuar a compra',
+                      buttonTextSize: 20),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

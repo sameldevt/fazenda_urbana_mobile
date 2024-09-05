@@ -4,6 +4,7 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/sections.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
+import 'package:verdeviva/screens/purchase/shipping_option.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
@@ -121,41 +122,13 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final background = theme.colorScheme.surface;
+    final appBarColor = theme.colorScheme.primary;
+
     return Scaffold(
-      backgroundColor: Colors.grey,
-      drawer: CustomDrawer(onItemSelected: onSelected),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CartItemsSection(),
-            // CartItemCard(
-            //   productCard: ProductCard(
-            //     name: products[0]['name']!,
-            //     description: products[0]['description']!,
-            //     price: products[0]['price']!,
-            //     image: products[0]['image']!,
-            //   ),
-            // ),
-            //ProductSection(items: products, productCategory: "Frutas"),
-            // NavigationPrimaryButton(
-            //   route: '',
-            //   buttonText: 'Teste',
-            //   buttonTextSize: 20,
-            // ),
-            // NavigationSecondaryButton(
-            //   route: '',
-            //   buttonText: 'Teste 2',
-            //   buttonTextSize: 20,
-            // ),
-            // ActionButton(
-            //   buttonText: 'Teste 3',
-            //   buttonTextSize: 20,
-            // ),
-            //ShopCard(name: 'teste', description: 'teste', price: '1', image: 'https://rb.gy/2xfabn'),
-          ],
-        ),
-      ),
+      backgroundColor: background,
+      body: ShippingOptionScreen(),
     );
   }
 }
