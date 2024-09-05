@@ -4,6 +4,9 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/sections.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
+import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
+import 'package:verdeviva/screens/purchase/payment/pix_screen.dart';
+import 'package:verdeviva/screens/purchase/payment_screen.dart';
 import 'package:verdeviva/screens/purchase/shipping_option.dart';
 
 class TestScreen extends StatefulWidget {
@@ -128,7 +131,7 @@ class _TestScreenState extends State<TestScreen> {
 
     return Scaffold(
       backgroundColor: background,
-      body: ShippingOptionScreen(),
+      body: PaymentOptionScreen(),
     );
   }
 }

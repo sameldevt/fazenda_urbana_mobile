@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/screens/purchase/payment/boleto_screen.dart';
+import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
+import 'package:verdeviva/screens/purchase/payment/pix_screen.dart';
 
 class PaymentOptionScreen extends StatefulWidget {
   const PaymentOptionScreen({super.key});
@@ -17,11 +20,16 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
     final appBarColor = theme.colorScheme.primary;
     final background = theme.colorScheme.surface;
 
+    List<Widget> paymentScreens = [
+      CardScreen(),
+      BoletoScreen(),
+      PixScreen(),
+    ];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appBarColor,
         title: const Text(
-          'Escolha uma opção de pagamento',
+          'Pagamento',
           style: TextStyle(
               fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
@@ -55,12 +63,11 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
                       )),
                 ),
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                  padding: EdgeInsets.fromLTRB(2.0, 0.0, 8.0, 8.0),
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          Icon(Icons.payment_outlined, color: Colors.grey),
                           SizedBox(width: 8),
                           Text(
                             'Escolha o método de pagamento',
@@ -78,12 +85,15 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
                       indent: 10.0, // Recuo no início do divisor
                       endIndent: 10.0, // Recuo no final do divisor
                     ),
-                    itemCount: 5,
+                    itemCount: 3,
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
                           setState(() {
-                            Navigator.pushReplacementNamed(context, 'home');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => paymentScreens[index]),
+                            );
                           });
                         },
                         child: _buildPaymentOption(
@@ -125,11 +135,7 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
                                     fontSize: 20, fontWeight: FontWeight.bold)),
                           ],
                         ),
-                        NavigationPrimaryButton(
-                            route: 'order-details',
-                            buttonText: 'Finalizar Compra',
-                            buttonTextSize: 20),
-                      ],
+                       ],
                     ),
                   ),
                 )
@@ -183,15 +189,11 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
   String _getPaymentLabel(int index) {
     switch (index) {
       case 0:
-        return 'Cartão de Crédito';
+        return 'Cartão';
       case 1:
-        return 'Cartão de Débito';
-      case 2:
-        return 'Vale Refeição';
-      case 3:
-        return 'Vale Alimentação';
-      case 4:
         return 'Boleto Bancário';
+      case 2:
+        return 'Pix';
       default:
         return '';
     }
@@ -202,13 +204,9 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
       case 0:
         return Icons.credit_card;
       case 1:
-        return Icons.credit_card; // Usando o mesmo ícone para cartão de crédito e débito
-      case 2:
-        return Icons.card_giftcard; // Exemplo de ícone para vale refeição
-      case 3:
-        return Icons.card_giftcard; // Usando o mesmo ícone para vale alimentação
-      case 4:
         return Icons.picture_as_pdf; // Ícone para boleto bancário
+      case 2:
+        return Icons.pix;
       default:
         return Icons.payment;
     }
@@ -217,15 +215,11 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
   String _getPaymentDetails(int index) {
     switch (index) {
       case 0:
-        return 'Pague com cartão de crédito.';
+        return 'Com desconto de 5%.';
       case 1:
-        return 'Pague com cartão de débito.';
-      case 2:
-        return 'Pague com vale refeição.';
-      case 3:
-        return 'Pague com vale alimentação.';
-      case 4:
         return 'Pague com boleto bancário.';
+      case 2:
+        return 'Com desconto de 8%.';
       default:
         return '';
     }

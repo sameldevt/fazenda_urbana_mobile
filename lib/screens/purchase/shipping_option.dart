@@ -45,7 +45,7 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
             child: Column(
               children: [
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+                  padding: EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 0.0),
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -55,17 +55,24 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                       )),
                 ),
                 const Padding(
-                  padding: EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 8.0),
+                  padding: EdgeInsets.fromLTRB(12.0, 6.0, 8.0, 12.0),
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          Icon(Icons.pin_drop_outlined, color: Colors.grey,),
-                          SizedBox(width: 8,),
+                          Icon(
+                            Icons.pin_drop_outlined,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ),
                           Text(
                             'Envio para rua São Paulo, 95',
                             style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold,color: Colors.grey),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
                           )
                         ],
                       )),
@@ -80,30 +87,36 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                     ),
                     itemCount: 3,
                     itemBuilder: (context, index) {
-                      return _buildShippingOption(
-                        value: index + 1,
-                        label: _getLabel(index),
-                        price: _getPrice(index),
-                        deliveryTime: _getDeliveryTime(index),
+                      return InkWell(
+                        onTap: () {
+                          setState(() {
+                            _selectedValue = index + 1;
+                          });
+                        },
+                        child: _buildShippingOption(
+                          value: index + 1,
+                          label: _getLabel(index),
+                          price: _getPrice(index),
+                          deliveryTime: _getDeliveryTime(index),
+                        ),
                       );
                     },
                   ),
                 ),
-                Divider(
+                const Divider(
                   color: Colors.grey,
                 ),
                 Container(
                   height: 150,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(
                       Radius.circular(10.0),
                     ),
-                    color: Colors
-                        .white, // Garanta que a cor de fundo do container esteja definida
+                    color: Colors.white, // Garanta que a cor de fundo do container esteja definida
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Column(
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Row(
@@ -161,13 +174,13 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                 children: [
                   Text(
                     label,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(right: 8.0),
                     child: Text(
                       price,
-                      style: TextStyle(fontSize: 20),
+                      style: const TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
@@ -176,7 +189,7 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                 padding: const EdgeInsets.only(top: 4.0),
                 child: Text(
                   deliveryTime,
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ),
             ],

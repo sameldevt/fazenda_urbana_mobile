@@ -1,29 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/screens/market/my_orders_screen.dart';
 
-class PixPaymentScreen extends StatefulWidget {
-  const PixPaymentScreen({super.key});
+class PixScreen extends StatefulWidget {
+  const PixScreen({super.key});
 
   @override
-  State<PixPaymentScreen> createState() => _PixPaymentScreenState();
+  State<PixScreen> createState() => _PixScreenState();
 }
 
-class _PixPaymentScreenState extends State<PixPaymentScreen> {
+class _PixScreenState extends State<PixScreen> {
   String pixCode = 'e7a1fbe0-9c5c-4427-b0d1-f2e02d3cb6ff';
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Pagamento',
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        title: Text('Pagamento'),
-        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -154,53 +161,19 @@ class _PixPaymentScreenState extends State<PixPaymentScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: pixCode));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Código Pix copiado para o clipboard!'),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    'Copiar código Pix',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: InkWell(
+                onTap: () {
+                  Clipboard.setData(ClipboardData(text: pixCode));
+                },
+                child: ActionPrimaryButton(
+                    buttonText: 'Copiar código Pix', buttonTextSize: 20),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.popAndPushNamed(context, 'orders');
-                  },
-                  child: const Text(
-                    'Ver pedidos',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                ),
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 4.0),
+              child: NavigationSecondaryButton(
+                  route: 'orders', buttonText: 'Ver pedidos', buttonTextSize: 16),
             ),
           ],
         ),

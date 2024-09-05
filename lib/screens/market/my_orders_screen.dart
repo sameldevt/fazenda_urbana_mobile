@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/custom_widgets.dart';
 
-class MyOrdersScreen extends StatelessWidget {
-  const MyOrdersScreen({super.key});
+class OrdersScreen extends StatelessWidget {
+  const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Meus pedidos',
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: Text(
-                'Meus pedidos',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            Text('Produtos',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
             Expanded(child: _OrderList()),
             Center(child: _DoubtCard())
           ],
@@ -176,7 +185,7 @@ class _OrderCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           Navigator.pushNamed(context, 'order-details');
         },
         child: Card(
@@ -284,7 +293,10 @@ class _DoubtCard extends StatelessWidget {
                 ),
                 child: Text(
                   'Mande uma mensagem!',
-                  style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold), // Cor do texto para contraste
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight:
+                          FontWeight.bold), // Cor do texto para contraste
                 ),
               ),
             ],

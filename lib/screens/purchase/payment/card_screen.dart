@@ -1,26 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/screens/market/my_orders_screen.dart';
 
-class CardPaymentScreen extends StatefulWidget {
-  const CardPaymentScreen({super.key});
+class CardScreen extends StatefulWidget {
+  const CardScreen({super.key});
 
   @override
-  State<CardPaymentScreen> createState() => _CardPaymentScreenState();
+  State<CardScreen> createState() => _CardScreenState();
 }
 
-class _CardPaymentScreenState extends State<CardPaymentScreen> {
+class _CardScreenState extends State<CardScreen> {
+  String pixCode = 'e7a1fbe0-9c5c-4427-b0d1-f2e02d3cb6ff';
+  List<String> cardOptions = [
+    'Crédito',
+    'Débito',
+    'Vale refeição',
+    'Vale alimentação',
+  ];
+
+  String _selectedCardOption = '';
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Pagamento',
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        title: Text('Pagamento'),
-        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
       ),
       backgroundColor: Colors.white,
       body: Padding(
@@ -33,7 +51,7 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
               alignment: Alignment.center,
               child: Text(
                 'Cartão',
-                style: TextStyle(fontSize: 56, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
               ),
             ),
             _CardDataForm(),
@@ -101,28 +119,98 @@ class _CardPaymentScreenState extends State<CardPaymentScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+            InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(10.0),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, 'payment-status');
+                  showDragHandle: true,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 300,
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Escolha uma opção',
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          Expanded(
+                            child: ListView.separated(
+                              itemCount: cardOptions.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String value = cardOptions[index];
+                                return ListTile(
+                                  title: Center(
+                                    child: Text(
+                                      value,
+                                      style: const TextStyle(fontSize: 16.0),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedCardOption = value;
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                );
+                              },
+                              separatorBuilder: (BuildContext context, int index) {
+                                return const Divider(
+                                  color: Colors.grey,
+                                  thickness: 0.5,
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
                   },
-                  child: const Text(
-                    'Confirmar pagamento',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                );
+              },
+              child: Container(
+                width: 400,
+                height: 50,
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 1.0,
                   ),
+                  borderRadius: BorderRadius.circular(8.0),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _selectedCardOption.isEmpty ? 'Selecione uma opção' : _selectedCardOption, // Exibe o valor selecionado ou uma mensagem padrão
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black, // Ajuste a cor conforme necessário
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.arrow_drop_down_sharp, size: 36,color: Colors.green.shade900,),
+                  ],
                 ),
               ),
             ),
+
+            NavigationPrimaryButton(route: 'payment-status', buttonText: 'Confirmar pagamento', buttonTextSize: 20),
+
           ],
         ),
       ),
@@ -375,7 +463,7 @@ class _CardDataFormState extends State<_CardDataForm> {
                         ),
                       ),
                       DropdownButtonFormField<String>(
-                          isExpanded: true,
+                        isExpanded: true,
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                           border: InputBorder.none, // Remove o underline

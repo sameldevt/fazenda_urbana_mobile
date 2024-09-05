@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //TestScreen(),
     const _MainPageScreen(),
     MyCartScreen(),
-    const MyOrdersScreen(),
+    const OrdersScreen(),
     MyAccountScreen(),
     const ChangePasswordScreen(),
     const PersonalDataScreen(),
