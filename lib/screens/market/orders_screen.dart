@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:verdeviva/common/custom_widgets.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -11,25 +10,21 @@ class OrdersScreen extends StatelessWidget {
     final background = theme.colorScheme.surface;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: background,
       appBar: AppBar(
         backgroundColor: appBarColor,
         title: const Text(
           'Meus pedidos',
           style: TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 30,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Produtos',style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),),
+            Align(alignment: Alignment.centerLeft, child: _Header()),
             Expanded(child: _OrderList()),
             Center(child: _DoubtCard())
           ],
@@ -39,8 +34,23 @@ class OrdersScreen extends StatelessWidget {
   }
 }
 
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'Produtos',
+      style: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
 class _OrderList extends StatefulWidget {
-  const _OrderList({super.key});
+  const _OrderList();
 
   @override
   State<_OrderList> createState() => _OrderListState();
@@ -145,8 +155,7 @@ class _OrderCard extends StatelessWidget {
   final String price;
 
   const _OrderCard(
-      {super.key,
-      required this.orderNumber,
+      {required this.orderNumber,
       required this.status,
       required this.date,
       required this.price});
@@ -194,7 +203,7 @@ class _OrderCard extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0),
           ),
-          child: Container(
+          child: SizedBox(
             height: 70,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -256,7 +265,7 @@ class _OrderCard extends StatelessWidget {
 }
 
 class _DoubtCard extends StatelessWidget {
-  const _DoubtCard({super.key});
+  const _DoubtCard();
 
   @override
   Widget build(BuildContext context) {
@@ -269,16 +278,16 @@ class _DoubtCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: SizedBox(
-          height: 150,
+          height: 120,
           width: 260,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
+              const Text(
                 'Dúvidas? WhatsApp:',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
-              Text(
+              const Text(
                 '+55 (11) 98888-7777',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
@@ -291,7 +300,7 @@ class _DoubtCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.0),
                   border: Border.all(color: Colors.black),
                 ),
-                child: Text(
+                child: const Text(
                   'Mande uma mensagem!',
                   style: TextStyle(
                       color: Colors.black,

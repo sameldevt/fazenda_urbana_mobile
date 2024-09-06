@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:verdeviva/common/custom_widgets.dart';
-import 'package:verdeviva/common/buttons.dart';
-import 'package:verdeviva/common/cards.dart';
-import 'package:verdeviva/common/sections.dart';
-import 'package:verdeviva/screens/market/widgets/product_card.dart';
-import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
-import 'package:verdeviva/screens/purchase/payment/pix_screen.dart';
-import 'package:verdeviva/screens/purchase/payment_screen.dart';
-import 'package:verdeviva/screens/purchase/shipping_option.dart';
+import 'package:verdeviva/screens/access/login_screen.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
@@ -131,7 +123,7 @@ class _TestScreenState extends State<TestScreen> {
 
     return Scaffold(
       backgroundColor: background,
-      body: PaymentOptionScreen(),
+      body: LoginScreen(),
     );
   }
 }

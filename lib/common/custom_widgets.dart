@@ -19,7 +19,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
 
     return AppBar(
       shadowColor: Colors.black,
-      automaticallyImplyLeading: false, // Adicione esta linha para remover o ícone do drawer
+      automaticallyImplyLeading: false,
       title: Row(
         children: [
           Padding(
@@ -37,7 +37,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
           ),
           Expanded(
             child: SizedBox(
-              height: kToolbarHeight - 16, // Ajuste a altura do TextField
+              height: kToolbarHeight - 16,
               child: TextFormField(
                 decoration: InputDecoration(
                   hintText: 'Pesquisar produto',
@@ -46,7 +46,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     size: 24,
                     color: Colors.black,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 0),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -73,7 +73,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 color: barItemsColor,
                 size: 30,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, 'cart');
+              },
             ),
           ),
         ],
@@ -156,7 +158,7 @@ class CustomDrawer extends StatelessWidget {
 
     return Drawer(
       elevation: 10.0,
-      backgroundColor: barColor,
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topRight: Radius.circular(0),
@@ -168,143 +170,119 @@ class CustomDrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: barColor),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.white,
-                  child: Icon(
-                    Icons.account_circle_outlined,
-                    size: 60,
-                    color: barItemsColor,
+            child: InkWell(
+              onTap: (){
+                Navigator.pushNamed(context, 'account');
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.insert_emoticon_outlined,
+                      size: 60,
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Nome do Usuário',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: barItemsColor,
-                    fontWeight: FontWeight.bold,
+                  const SizedBox(height: 10),
+                  Text(
+                    'Nome do Usuário',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: barItemsColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  'email@exemplo.com',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: barItemsColor,
+                  Text(
+                    'email@exemplo.com',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: barItemsColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.fromLTRB(24.0, 16, 0, 0),
             child: Text(
               'Atalhos',
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: barItemsColor),
+                  color: Colors.black),
             ),
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.home_outlined,
               size: 32,
-              color: barItemsColor,
+              color: Colors.black,
             ),
-            title: Text(
+            title: const Text(
               'Página Inicial',
-              style: TextStyle(fontSize: 20, color: barItemsColor),
+              style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             onTap: () {
-              Navigator.pop(context);
-              onItemSelected(0);
+              Navigator.pushNamed(context, 'home');
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.shopping_cart_outlined,
               size: 32,
-              color: barItemsColor,
+              color: Colors.black,
             ),
-            title: Text(
+            title: const Text(
               'Meu carrinho',
-              style: TextStyle(fontSize: 20, color: barItemsColor),
+              style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             onTap: () {
-              Navigator.pop(context);
-              onItemSelected(1);
+              Navigator.pushNamed(context, 'cart');
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
+              Icons.account_circle_outlined,
+              size: 32,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Minha conta',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'account');
+            },
+          ),
+          ListTile(
+            leading: const Icon(
               Icons.content_paste_search,
               size: 32,
-              color: barItemsColor,
+              color: Colors.black,
             ),
-            title: Text(
+            title: const Text(
               'Meus pedidos',
-              style: TextStyle(fontSize: 20, color: barItemsColor),
+              style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             onTap: () {
-              Navigator.pop(context);
-              onItemSelected(2);
+              Navigator.pushNamed(context, 'orders');
             },
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(24.0, 32, 0, 0),
-            child: Text(
-              'Configurações',
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: barItemsColor),
-            ),
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.edit_outlined,
-              size: 32,
-              color: barItemsColor,
-            ),
-            title: Text(
-              'Alterar senha',
-              style: TextStyle(fontSize: 20, color: barItemsColor),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              onItemSelected(4);
-            },
-          ),
-          ListTile(
-            leading: Icon(
-              Icons.account_circle_sharp,
-              size: 32,
-              color: barItemsColor,
-            ),
-            title: Text(
-              'Minha conta',
-              style: TextStyle(fontSize: 20, color: barItemsColor),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-              onItemSelected(5);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 150),
+            padding: const EdgeInsets.only(top: 280),
             child: ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.exit_to_app,
                 size: 32,
-                color: barItemsColor,
+                color: Colors.black,
               ),
-              title: Text(
+              title: const Text(
                 'Sair',
-                style: TextStyle(fontSize: 20, color: barItemsColor),
+                style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               onTap: () {
                 Navigator.pushReplacementNamed(context, 'login');

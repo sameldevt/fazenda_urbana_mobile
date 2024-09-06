@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verdeviva/common/buttons.dart';
-import 'package:verdeviva/screens/market/my_orders_screen.dart';
+import 'package:verdeviva/screens/market/orders_screen.dart';
 
 class BoletoScreen extends StatefulWidget {
   const BoletoScreen({super.key});
@@ -11,8 +11,6 @@ class BoletoScreen extends StatefulWidget {
 }
 
 class _BoletoScreenState extends State<BoletoScreen> {
-  String boletoCode = '82736491028374659120384756';
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -20,129 +18,224 @@ class _BoletoScreenState extends State<BoletoScreen> {
     final background = theme.colorScheme.surface;
 
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: appBarColor,
-          title: const Text(
-            'Pagamento',
-            style: TextStyle(
-                fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-            size: 30,
-          ),
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Pedido aguardando pagamento',
+          style: TextStyle(
+              fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 64.0, 16.0, 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Align(
-                alignment: Alignment.topCenter,
-                child: Text(
-                  'Boleto bancário',
-                  style: TextStyle(fontSize: 42, fontWeight: FontWeight.bold),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
+        centerTitle: true,
+      ),
+      backgroundColor: background,
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10.0),
                 ),
               ),
-              Column(
+              child: const Column(
                 children: [
-                  //Image.network('https://img.freepik.com/psd-gratuitas/ilustracao-de-codigo-de-barras-isolada_23-2150584086.jpg?w=1060&t=st=1725577597~exp=1725578197~hmac=24cd5957a59062c88ebaf060cbc5e731833f064d5f62f064f2871efa181ce4e8'),
-                  Image.asset('assets/codigo-barras.png'),
-                  // Espaço reduzido entre a imagem e o texto
-                  Text(
-                    boletoCode,
-                    style: TextStyle(fontSize: 18),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _Header(),
+                            _BarCodeSection(),
+                            SizedBox(
+                              height: 32,
+                            ),
+                            _OrderInfo(),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Frete',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'R\$ 5,00',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            'Valor total',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'R\$ 23,99',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Valor final (-5%)',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            'R\$ 22,79',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16.0),
-                  // Espaço entre os valores e os botões
-                  Column(
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Clipboard.setData(ClipboardData(text: boletoCode));
-                        },
-                        child: ActionPrimaryButton(
-                            buttonText: 'Copiar código de barras',
-                            buttonTextSize: 20),
-                      ),
-                      SizedBox(height: 10.0),
-                      NavigationSecondaryButton(
-                        route: 'orders',
-                        buttonText: 'Ver pedidos',
-                        buttonTextSize: 16,
-                      ),
-                    ],
-                  )
-                ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text(
+        textAlign: TextAlign.center,
+        'Pedido realizado com sucesso!',
+        style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class _BarCodeSection extends StatelessWidget {
+  final String boletoCode = '82736491028374659120384756';
+
+  const _BarCodeSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const Center(
+          child: Icon(
+            Icons.check,
+            color: Colors.green,
+            size: 200,
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Center(
+            child: Text(
+              textAlign: TextAlign.center,
+              'Escaneie ou copie o código de barras abaixo para finalizar seu pagamento',
+              style: TextStyle(color: Colors.black, fontSize: 14),
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Column(
+          children: [
+            Image.asset('assets/codigo-barras.png'),
+            Text(
+              boletoCode,
+              style: const TextStyle(fontSize: 18),
+            ),
+          ],
+        ),
+        const SizedBox(
+          height: 16.0,
+        ),
+        InkWell(
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: boletoCode));
+          },
+          child: const ActionPrimaryButton(
+              buttonText: 'Copiar código de barras', buttonTextSize: 20),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+      ],
+    );
+  }
+}
+
+class _OrderInfo extends StatelessWidget {
+  const _OrderInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 250,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Resumo do pedido',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Produtos (2)',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                'R\$ 18,99',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ],
           ),
-        ));
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Frete',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                'R\$ 2,99',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+            ],
+          ),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'R\$ 18,99',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrdersScreen(),
+                ),
+              );
+            },
+            child: const ActionPrimaryButton(
+              buttonText: 'Ver pedidos',
+              buttonTextSize: 20,
+            ),
+          ),
+          const NavigationSecondaryButton(
+              route: 'home',
+              buttonText: 'Voltar ao início',
+              buttonTextSize: 20),
+        ],
+      ),
+    );
   }
 }

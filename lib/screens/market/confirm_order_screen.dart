@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
 
 class ConfirmOrderScreen extends StatelessWidget {
+  const ConfirmOrderScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,7 +74,7 @@ class ConfirmOrderScreen extends StatelessWidget {
 }
 
 class _CartList extends StatefulWidget {
-  const _CartList({super.key});
+  const _CartList();
 
   @override
   State<_CartList> createState() => _CartListState();
@@ -203,7 +205,7 @@ class _CartListState extends State<_CartList> {
 class _CartItem extends StatefulWidget {
   final ProductCard productCard;
 
-  const _CartItem({super.key, required this.productCard});
+  const _CartItem({required this.productCard});
 
   @override
   State<_CartItem> createState() => _CartItemState();
@@ -326,7 +328,7 @@ class _CartItemState extends State<_CartItem> {
 }
 
 class _CalculateShipping extends StatefulWidget {
-  const _CalculateShipping({super.key});
+  const _CalculateShipping();
 
   @override
   State<_CalculateShipping> createState() => _CalculateShippingState();
@@ -357,7 +359,7 @@ class _CalculateShippingState extends State<_CalculateShipping> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(right: 8.0),
-                  child: Container(
+                  child: SizedBox(
                     height: 40,
                     width: 200,
                     child: TextField(
@@ -380,7 +382,7 @@ class _CalculateShippingState extends State<_CalculateShipping> {
                     child: Container(
                       width: 100,
                       alignment: Alignment.center,
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(10.0),

@@ -1,30 +1,25 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:verdeviva/configuration/theme.dart';
 import 'package:verdeviva/screens/access/change_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
-import 'package:verdeviva/screens/account/address_screen.dart';
+import 'package:verdeviva/screens/account/account_screen.dart';
+import 'package:verdeviva/screens/account/create_card_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
-import 'package:verdeviva/screens/landing/landing_screen.dart';
+import 'package:verdeviva/screens/market/cart_screen.dart';
 import 'package:verdeviva/screens/market/confirm_order_screen.dart';
 import 'package:verdeviva/screens/market/home_screen.dart';
-import 'package:verdeviva/screens/market/my_cart_screen.dart';
-import 'package:verdeviva/screens/market/my_orders_screen.dart';
 import 'package:verdeviva/screens/market/order_details_screen.dart';
-import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
-import 'package:verdeviva/screens/purchase/payment_method.dart';
-import 'package:verdeviva/screens/purchase/payment_screen.dart';
-import 'package:verdeviva/screens/purchase/payment_status_screen.dart';
+import 'package:verdeviva/screens/market/orders_screen.dart';
+import 'package:verdeviva/screens/purchase/card_option_screen.dart';
+import 'package:verdeviva/screens/purchase/payment/order_confirmation_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/pix_screen.dart';
-import 'package:verdeviva/screens/purchase/shipping_option.dart';
-import 'package:verdeviva/screens/purchase/shipping_screen.dart';
+import 'package:verdeviva/screens/purchase/payment_option_screen.dart';
+import 'package:verdeviva/screens/purchase/payment_status_screen.dart';
+import 'package:verdeviva/screens/purchase/shipping_option_screen.dart';
 import 'package:verdeviva/screens/test_screen.dart';
 
 void main() {
-  runApp(App(isLogged: false));
+  runApp(const App(isLogged: false));
 }
 
 class App extends StatelessWidget {
@@ -36,8 +31,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto mobile VerdeViva',
-      initialRoute: 'home',
-      //initialRoute: (isLogged) ? "home" : "login",
+      //initialRoute: 'test',
+      initialRoute: (isLogged) ? "home" : "login",
       theme: ThemeData(
         colorScheme: ColorScheme(
           brightness: Brightness.light,
@@ -47,103 +42,36 @@ class App extends StatelessWidget {
           onSecondary: Colors.black,
           tertiary: Colors.lightGreen.shade100,
           onTertiary: Colors.black,
-          surfaceBright: Colors.lightGreen.shade50,
+          surfaceBright: Colors.white,
           error: Colors.red,
           onError: Colors.white,
-          background: Colors.grey[200]!,
-          onBackground: Colors.black,
           surface: Colors.white,
           onSurface: Colors.black,
         ),
       ),
       routes: {
-        "landing-screen": (context) => LandingScreen(),
-        "test": (context) => TestScreen(),
-        "login": (context) => LoginScreen(),
-        "home": (context) => HomeScreen(),
+        "test": (context) => const TestScreen(),
+        "login": (context) => const LoginScreen(),
+        "home": (context) => const HomeScreen(),
+        "account": (context) => const AccountScreen(),
         "register": (context) => const RegisterScreen(),
         "change-pass": (context) => const ChangePasswordScreen(),
-        "cart": (context) => MyCartScreen(),
+        "cart": (context) => const CartScreen(),
         "personal-data": (context) => const PersonalDataScreen(),
         "address": (context) => const ShippingOptionScreen(),
         "orders": (context) => const OrdersScreen(),
-        "confirm-order": (context) => ConfirmOrderScreen(),
-        "shipping": (context) => ShippingScreen(),
-        "payment": (context) => PaymentOptionScreen(),
-        "pix-payment": (context) => PixScreen(),
-        "card-payment": (context) => CardScreen(),
-        "payment-status": (context) => PaymentStatusScreen(),
-        "order-details": (context) => OrderDetailsScreen(),
+        "confirm-order": (context) => const ConfirmOrderScreen(),
+        "shipping": (context) => const ShippingOptionScreen(),
+        "payment": (context) => const PaymentOptionScreen(),
+        "pix-payment": (context) => const PixScreen(),
+        "card-payment": (context) => const CardOptionScreen(),
+        "payment-status": (context) => const PaymentStatusScreen(),
+        "order-details": (context) => const OrderDetailsScreen(),
+        "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
+        "create-card": (context) => const CreateCardScreen(),
+        "card": (context) => const CardOptionScreen(),
+        //"purchase-sumary": (context) => PurchaseSumaryScreen(),
       },
-    );
-  }
-}
-
-class DadosPessoaisScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fazenda VerdeViva'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Dados pessoais',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            TextField(
-              decoration: InputDecoration(labelText: 'Nome Completo'),
-              // ...
-            ),
-            // Outros campos de texto...
-            ElevatedButton(
-                onPressed: () {
-                  // Salvar alterações
-                },
-                child: Text('Alterar')),
-            ElevatedButton(
-                onPressed: () {
-                  // Alterar senha
-                },
-                child: Text('Alterar senha')),
-          ],
-        ),
-      ),
-      // ... bottomNavigationBar
-    );
-  }
-}
-
-class EnderecoScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Fazenda VerdeViva'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Endereço padrão',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            TextField(
-              decoration: InputDecoration(labelText: 'Endereço'),
-              // ...
-            ),
-            // Outros campos de texto...
-            ElevatedButton(
-                onPressed: () {
-                  // Salvar alterações
-                },
-                child: Text('Alterar')),
-          ],
-        ),
-      ),
-      // ... bottomNavigationBar
     );
   }
 }

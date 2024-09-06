@@ -7,7 +7,7 @@ class ProductCard extends StatelessWidget {
   final String price;
   final String image;
 
-  ProductCard({
+  const ProductCard({super.key,
     required this.name,
     required this.description,
     required this.price,
@@ -34,7 +34,7 @@ class ProductCard extends StatelessWidget {
           children: [
             Expanded(
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10.0)),
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
                 child: Image.network(
                   image,
                   fit: BoxFit.scaleDown,
@@ -55,8 +55,8 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                  Text('R\$ $price kg', style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Text('R\$ $price kg', style: const TextStyle(fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

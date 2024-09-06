@@ -55,7 +55,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     return Text(
       textAlign: TextAlign.center,
       description,
-      style: TextStyle(fontSize: 16, color: Colors.grey),
+      style: const TextStyle(fontSize: 16, color: Colors.grey),
     );
   }
 
@@ -69,7 +69,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
-        title: Text('Informações do pedido'),
+        title: const Text('Informações do pedido'),
         centerTitle: true,
       ),
       backgroundColor: Colors.white,
@@ -83,7 +83,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 8),
                       child: _getIconForStatus('Em transito')),
                   const Text(
                     'Pedido 0104937',
@@ -98,8 +98,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
             Center(
               child: _getDescriptionForStatus('Em transito'),
             ),
-            Expanded(child: _CartList()),
-            Center(child: _DoubtCard())
+            const Expanded(child: _CartList()),
+            const Center(child: _DoubtCard())
           ],
         ),
       ),
@@ -107,67 +107,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 }
 
-class _MoreInfoDialog extends StatelessWidget {
-  const _MoreInfoDialog({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Overlay();
-  }
-}
-
-class _OrderDetailsSection extends StatelessWidget {
-  const _OrderDetailsSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 16.0, // Espaçamento horizontal entre os elementos
-      runSpacing: 8.0, // Espaçamento vertical entre as linhas
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // Alinha os textos à esquerda
-            children: [
-              Text('Data do pedido'),
-              Text('23/05/2024 18:37'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Forma de pagamento'),
-              Text('Crédito em 2x sem juros'),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Endereço de entrega'),
-              Text(
-                'Rua das Flores, 100, apto 31, CEP 01010-010 São Paulo, SP',
-                maxLines: 2, // Limita o número de linhas
-                overflow: TextOverflow
-                    .ellipsis, // Adiciona reticências se o texto ultrapassar o limite
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 class _DoubtCard extends StatelessWidget {
-  const _DoubtCard({super.key});
+  const _DoubtCard();
 
   @override
   Widget build(BuildContext context) {
@@ -185,11 +126,11 @@ class _DoubtCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(
+              const Text(
                 'Dúvidas? WhatsApp:',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
               ),
-              Text(
+              const Text(
                 '+55 (11) 98888-7777',
                 style: TextStyle(fontSize: 14, color: Colors.grey),
               ),
@@ -222,7 +163,7 @@ class _DoubtCard extends StatelessWidget {
 }
 
 class _CartList extends StatefulWidget {
-  const _CartList({super.key});
+  const _CartList();
 
   @override
   State<_CartList> createState() => _CartListState();
@@ -353,7 +294,7 @@ class _CartListState extends State<_CartList> {
 class _CartItem extends StatefulWidget {
   final ProductCard productCard;
 
-  const _CartItem({super.key, required this.productCard});
+  const _CartItem({required this.productCard});
 
   @override
   State<_CartItem> createState() => _CartItemState();
@@ -456,7 +397,7 @@ class _CartItemState extends State<_CartItem> {
 }
 
 class _SubTotalSection extends StatefulWidget {
-  const _SubTotalSection({super.key});
+  const _SubTotalSection();
 
   @override
   State<_SubTotalSection> createState() => _SubTotalSectionState();
