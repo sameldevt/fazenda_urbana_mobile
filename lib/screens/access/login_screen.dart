@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/model/dtos/login_dto.dart';
+import 'package:verdeviva/services/access_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -77,6 +79,7 @@ class _LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<_LoginForm> {
   final _formKey = GlobalKey<FormState>();
+  final _loginService = new AccessService();
 
   String? _email;
   String? _password;
@@ -155,11 +158,16 @@ class _LoginFormState extends State<_LoginForm> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, 'home');
-                // if (_formKey.currentState!.validate()) {
-                //   _formKey.currentState!.save();
-                //   // Processar dados aqui
-                // }
+                if (_formKey.currentState!.validate()) {
+                   _formKey.currentState!.save();
+                    var loginDto = new LoginDto(email: _email!, password: _password!);
+
+                   _loginService.login(loginDto).then((result) {
+                     Navigator.pushReplacementNamed(context, 'home');
+                   }).catchError((error) {
+                     print("Erro ao fazer login: $error");
+                   });
+                 }
               },
               child: const ActionPrimaryButton(
                   buttonText: 'Acessar conta', buttonTextSize: 20),
