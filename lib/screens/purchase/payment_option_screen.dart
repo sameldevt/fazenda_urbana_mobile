@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/screens/purchase/card_option_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
 import 'package:verdeviva/screens/purchase/purchase_sumary_screen.dart';
@@ -42,7 +43,7 @@ class _PaymentOptionScreenState extends State<PaymentOptionScreen> {
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(appPadding),
                 child: Column(
                   children: [
                     _Header(),

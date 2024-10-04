@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
 
 class ConfirmOrderScreen extends StatelessWidget {
@@ -35,7 +37,7 @@ class ConfirmOrderScreen extends StatelessWidget {
         title: const Text('Confirmar pedido'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(appPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -81,107 +83,7 @@ class _CartList extends StatefulWidget {
 }
 
 class _CartListState extends State<_CartList> {
-  final List<Map<String, String>> products = [
-    {
-      "name": "Banana",
-      "price": "7.99",
-      "image": "https://rb.gy/2xfabn",
-      "description": "Banana madura e doce, ideal para lanches e smoothies."
-    },
-    {
-      "name": "Maçã",
-      "price": "6.49",
-      "image": "https://rb.gy/8ly4oc",
-      "description":
-          "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
-    },
-    {
-      "name": "Couve",
-      "price": "5.99",
-      "image": "https://rb.gy/s2fpd2",
-      "description":
-          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
-    },
-    {
-      "name": "Cenoura",
-      "price": "4.99",
-      "image": "https://rb.gy/0fiy0z",
-      "description":
-          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
-    },
-    {
-      "name": "Batata",
-      "price": "3.99",
-      "image": "https://rb.gy/2ot2ch",
-      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
-    },
-    {
-      "name": "Batata doce",
-      "price": "4.49",
-      "image": "https://t.ly/obCYL",
-      "description":
-          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
-    },
-    {
-      "name": "Beterraba",
-      "price": "5.49",
-      "image": "https://t.ly/-YCSe",
-      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
-    },
-    {
-      "name": "Manga",
-      "price": "6.99",
-      "image": "https://t.ly/WGNKn",
-      "description": "Manga suculenta e doce, perfeita para sobremesas e sucos."
-    },
-    {
-      "name": "Alface",
-      "price": "4.49",
-      "image": "https://t.ly/kGI0v",
-      "description": "Alface fresca e crocante, ideal para saladas."
-    },
-    {
-      "name": "Pêra",
-      "price": "7.49",
-      "image": "https://t.ly/QM99N",
-      "description": "Pêra doce e suculenta, ótima para lanches e sobremesas."
-    },
-    {
-      "name": "Laranja",
-      "price": "5.99",
-      "image": "https://l1nq.com/nmBNt",
-      "description":
-          "Laranja refrescante e rica em vitamina C, perfeita para sucos."
-    },
-    {
-      "name": "Alho",
-      "price": "1.99",
-      "image": "https://l1nq.com/7cqrk",
-      "description":
-          "Alho aromático e saboroso, essencial para temperar pratos."
-    },
-    {
-      "name": "Cebola",
-      "price": "6,49",
-      "image": "https://l1nq.com/f4Mkz",
-      "description":
-          "Cebola versátil e essencial na cozinha, ideal para diversos pratos."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-    {
-      "name": "Salsa",
-      "price": "3.99",
-      "image": "https://encurtador.com.br/LbyRY",
-      "description":
-          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
-    }
-  ];
+  final List<Product> products = [];
 
   @override
   Widget build(BuildContext context) {
@@ -190,12 +92,7 @@ class _CartListState extends State<_CartList> {
       itemBuilder: (context, index) {
         final product = products[index];
         return _CartItem(
-          productCard: ProductCard(
-            name: product['name']!,
-            description: product['description']!,
-            price: product['price']!,
-            image: product['image']!,
-          ),
+            product: product,
         );
       },
     );
@@ -203,9 +100,9 @@ class _CartListState extends State<_CartList> {
 }
 
 class _CartItem extends StatefulWidget {
-  final ProductCard productCard;
+  final Product product;
 
-  const _CartItem({required this.productCard});
+  const _CartItem({required this.product});
 
   @override
   State<_CartItem> createState() => _CartItemState();
@@ -225,7 +122,7 @@ class _CartItemState extends State<_CartItem> {
             width: 100,
             height: 100,
             child: Image.network(
-              widget.productCard.image,
+              widget.product.imageUrl,
               fit: BoxFit.scaleDown,
             ),
           ),
@@ -236,14 +133,14 @@ class _CartItemState extends State<_CartItem> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  widget.productCard.name,
+                  widget.product.name,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  'R\$ ${widget.productCard.price} / kg',
+                  'R\$ ${widget.product.pricePerKilo} / kg',
                   style: const TextStyle(fontSize: 14, color: Colors.black),
                 ),
               ],
@@ -295,7 +192,7 @@ class _CartItemState extends State<_CartItem> {
                   ),
                 ),
                 Text(
-                  'R\$ ${(widget.productCard.price * 1)}',
+                  'R\$ ${(widget.product.pricePerKilo * 1)}',
                   style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],

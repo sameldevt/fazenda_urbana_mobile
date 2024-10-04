@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -24,7 +25,7 @@ class _AddressScreenState extends State<AddressScreen> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(appPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

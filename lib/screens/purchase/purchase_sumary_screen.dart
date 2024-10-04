@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
 import 'package:verdeviva/screens/purchase/payment/boleto_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
@@ -38,7 +40,7 @@ class PurchaseSummaryScreen extends StatelessWidget {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(appPadding),
                 child: Column(
                   children: [
                     const _Header(),
@@ -79,107 +81,7 @@ class _Header extends StatelessWidget {
 }
 
 class _SummaryItemsSection extends StatelessWidget {
-  final List<Map<String, String>> items = [
-    {
-      "name": "Banana",
-      "price": "7.99",
-      "image": "https://rb.gy/2xfabn",
-      "description": "Banana madura e doce, ideal para lanches e smoothies."
-    },
-    {
-      "name": "Maçã",
-      "price": "6.49",
-      "image": "https://rb.gy/8ly4oc",
-      "description":
-          "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
-    },
-    {
-      "name": "Couve",
-      "price": "5.99",
-      "image": "https://rb.gy/s2fpd2",
-      "description":
-          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
-    },
-    {
-      "name": "Cenoura",
-      "price": "4.99",
-      "image": "https://rb.gy/0fiy0z",
-      "description":
-          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
-    },
-    {
-      "name": "Batata",
-      "price": "3.99",
-      "image": "https://rb.gy/2ot2ch",
-      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
-    },
-    {
-      "name": "Batata doce",
-      "price": "4.49",
-      "image": "https://t.ly/obCYL",
-      "description":
-          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
-    },
-    {
-      "name": "Beterraba",
-      "price": "5.49",
-      "image": "https://t.ly/-YCSe",
-      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
-    },
-    {
-      "name": "Manga",
-      "price": "6.99",
-      "image": "https://t.ly/WGNKn",
-      "description": "Manga suculenta e doce, perfeita para sobremesas e sucos."
-    },
-    {
-      "name": "Alface",
-      "price": "4.49",
-      "image": "https://t.ly/kGI0v",
-      "description": "Alface fresca e crocante, ideal para saladas."
-    },
-    {
-      "name": "Pêra",
-      "price": "7.49",
-      "image": "https://t.ly/QM99N",
-      "description": "Pêra doce e suculenta, ótima para lanches e sobremesas."
-    },
-    {
-      "name": "Laranja",
-      "price": "5.99",
-      "image": "https://l1nq.com/nmBNt",
-      "description":
-          "Laranja refrescante e rica em vitamina C, perfeita para sucos."
-    },
-    {
-      "name": "Alho",
-      "price": "1.99",
-      "image": "https://l1nq.com/7cqrk",
-      "description":
-          "Alho aromático e saboroso, essencial para temperar pratos."
-    },
-    {
-      "name": "Cebola",
-      "price": "6,49",
-      "image": "https://l1nq.com/f4Mkz",
-      "description":
-          "Cebola versátil e essencial na cozinha, ideal para diversos pratos."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-    {
-      "name": "Salsa",
-      "price": "3.99",
-      "image": "https://encurtador.com.br/LbyRY",
-      "description":
-          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
-    }
-  ];
+  final List<Product> items = [];
 
   _SummaryItemsSection();
 
@@ -201,12 +103,7 @@ class _SummaryItemsSection extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final product = items[index];
                   return _SummaryItemCard(
-                    productCard: ProductCard(
-                      name: product['name']!,
-                      description: product['description']!,
-                      price: product['price']!,
-                      image: product['image']!,
-                    ),
+                    product: product
                   );
                 },
                 separatorBuilder: (context, index) => const Divider(
@@ -225,9 +122,9 @@ class _SummaryItemsSection extends StatelessWidget {
 }
 
 class _SummaryItemCard extends StatefulWidget {
-  final ProductCard productCard;
+  final Product product;
 
-  const _SummaryItemCard({required this.productCard});
+  const _SummaryItemCard({required this.product});
 
   @override
   State<_SummaryItemCard> createState() => _SummaryItemCardState();
@@ -242,7 +139,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.network(
-            widget.productCard.image,
+            widget.product.imageUrl,
             width: 100,
             height: 100,
             fit: BoxFit.scaleDown,
@@ -263,7 +160,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.productCard.name,
+                    widget.product.name,
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -302,7 +199,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'R\$ ${widget.productCard.price} / kg',
+                  'R\$ ${widget.product.pricePerKilo} / kg',
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                   overflow: TextOverflow.ellipsis, // Evita overflow de texto
                 ),

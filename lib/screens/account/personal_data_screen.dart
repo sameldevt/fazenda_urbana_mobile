@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class PersonalDataScreen extends StatefulWidget {
   const PersonalDataScreen({super.key});
@@ -40,7 +41,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(appPadding),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

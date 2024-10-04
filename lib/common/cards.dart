@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/market/product_info_screen.dart';
 
 const double _cardWidth = 170.0;
-const double _cardHeight = 150.0;
+const double _cardHeight = 140.0;
 const double _cardElevation = 10.0;
 
 class ShopCard extends StatelessWidget {
-  final String name;
-  final String description;
-  final String price;
-  final String image;
+  final Product product;
 
   const ShopCard({
     super.key,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.image,
+    required this.product
   });
 
   @override
@@ -28,7 +23,7 @@ class ShopCard extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProductInfoScreen()),
+          MaterialPageRoute(builder: (context) => ProductInfoScreen(product: product)),
         );
       },
       child: SizedBox(
@@ -40,7 +35,7 @@ class ShopCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Image.network(
-                  image,
+                  product.imageUrl,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 150,
@@ -63,7 +58,7 @@ class ShopCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        product.name,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,
@@ -71,7 +66,7 @@ class ShopCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 2.0),
                       Text(
-                        'R\$ $price / kg',
+                        'R\$ ${product.pricePerKilo.toString()} / kg',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12.0,

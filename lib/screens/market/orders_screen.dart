@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -21,7 +22,7 @@ class OrdersScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
       body: const Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(appPadding),
         child: Column(
           children: [
             Align(alignment: Alignment.centerLeft, child: _Header()),

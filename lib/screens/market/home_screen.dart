@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/custom_widgets.dart';
 import 'package:verdeviva/common/sections.dart';
+import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/access/change_password_screen.dart';
 import 'package:verdeviva/screens/account/account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/cart_screen.dart';
 import 'package:verdeviva/screens/market/orders_screen.dart';
+import 'package:verdeviva/service/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,150 +60,19 @@ class _MainPageScreen extends StatefulWidget {
 }
 
 class _MainPageScreenState extends State<_MainPageScreen> {
-  final List<Map<String, String>> frutas = [
-    {
-      "name": "Banana",
-      "price": "7.99",
-      "image": "https://rb.gy/2xfabn",
-      "description": "Banana madura e doce, ideal para lanches e smoothies."
-    },
-    {
-      "name": "Maçã",
-      "price": "6.49",
-      "image": "https://rb.gy/8ly4oc",
-      "description":
-          "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
-    },
-    {
-      "name": "Manga",
-      "price": "6.99",
-      "image": "https://t.ly/WGNKn",
-      "description": "Manga suculenta e doce, perfeita para sobremesas e sucos."
-    },
-    {
-      "name": "Pêra",
-      "price": "7.49",
-      "image": "https://t.ly/QM99N",
-      "description": "Pêra doce e suculenta, ótima para lanches e sobremesas."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-  ];
-  final List<Map<String, String>> legumes = [
-    {
-      "name": "Couve",
-      "price": "5.99",
-      "image": "https://rb.gy/s2fpd2",
-      "description":
-          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
-    },
-    {
-      "name": "Cenoura",
-      "price": "4.99",
-      "image": "https://rb.gy/0fiy0z",
-      "description":
-          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
-    },
-    {
-      "name": "Batata",
-      "price": "3.99",
-      "image": "https://rb.gy/2ot2ch",
-      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
-    },
-    {
-      "name": "Batata doce",
-      "price": "4.49",
-      "image": "https://t.ly/obCYL",
-      "description":
-          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
-    },
-    {
-      "name": "Beterraba",
-      "price": "5.49",
-      "image": "https://t.ly/-YCSe",
-      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
-    },
-    {
-      "name": "Alface",
-      "price": "4.49",
-      "image": "https://t.ly/kGI0v",
-      "description": "Alface fresca e crocante, ideal para saladas."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-    {
-      "name": "Salsa",
-      "price": "3.99",
-      "image": "https://encurtador.com.br/LbyRY",
-      "description":
-          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
-    }
-  ];
-  final List<Map<String, String>> outros = [
-    {
-      "name": "Couve",
-      "price": "5.99",
-      "image": "https://rb.gy/s2fpd2",
-      "description":
-          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
-    },
-    {
-      "name": "Cenoura",
-      "price": "4.99",
-      "image": "https://rb.gy/0fiy0z",
-      "description":
-          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
-    },
-    {
-      "name": "Batata",
-      "price": "3.99",
-      "image": "https://rb.gy/2ot2ch",
-      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
-    },
-    {
-      "name": "Batata doce",
-      "price": "4.49",
-      "image": "https://t.ly/obCYL",
-      "description":
-          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
-    },
-    {
-      "name": "Beterraba",
-      "price": "5.49",
-      "image": "https://t.ly/-YCSe",
-      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
-    },
-    {
-      "name": "Alface",
-      "price": "4.49",
-      "image": "https://t.ly/kGI0v",
-      "description": "Alface fresca e crocante, ideal para saladas."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-    {
-      "name": "Salsa",
-      "price": "3.99",
-      "image": "https://encurtador.com.br/LbyRY",
-      "description":
-          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
-    }
-  ];
+  final ProductService _productService = new ProductService();
+  final List<Product> _products = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _productService.getAll().then((result) {
+      setState(() {
+        _products.addAll(result);
+        print(_products.length);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,14 +80,26 @@ class _MainPageScreenState extends State<_MainPageScreen> {
       children: [
         const _FilterSection(),
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ProductSection(items: frutas, productCategory: "Frutas"),
-                ProductSection(items: legumes, productCategory: "Legumes"),
-                ProductSection(items: outros, productCategory: "Outros"),
-              ],
-            ),
+          child: Column(
+            children: [
+              Expanded(
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 1.0,
+                    mainAxisSpacing: 1.0,
+                    childAspectRatio: 3 / 4,
+                  ),
+                  itemCount: _products.length,
+                  itemBuilder: (context, index) {
+                    final item = _products[index];
+                     return ShopCard(
+                      product: item,
+                     );
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -299,137 +182,3 @@ class _FilterSectionState extends State<_FilterSection> {
   }
 }
 
-class _ItemsSection extends StatefulWidget {
-  const _ItemsSection();
-
-  @override
-  State<_ItemsSection> createState() => _ItemsSectionState();
-}
-
-class _ItemsSectionState extends State<_ItemsSection> {
-  final List<Map<String, String>> products = [
-    {
-      "name": "Banana",
-      "price": "7.99",
-      "image": "https://rb.gy/2xfabn",
-      "description": "Banana madura e doce, ideal para lanches e smoothies."
-    },
-    {
-      "name": "Maçã",
-      "price": "6.49",
-      "image": "https://rb.gy/8ly4oc",
-      "description":
-          "Maçã crocante e suculenta, perfeita para uma alimentação saudável."
-    },
-    {
-      "name": "Couve",
-      "price": "5.99",
-      "image": "https://rb.gy/s2fpd2",
-      "description":
-          "Couve fresca, rica em nutrientes e ideal para sucos verdes."
-    },
-    {
-      "name": "Cenoura",
-      "price": "4.99",
-      "image": "https://rb.gy/0fiy0z",
-      "description":
-          "Cenoura crocante e adocicada, ótima para saladas e petiscos."
-    },
-    {
-      "name": "Batata",
-      "price": "3.99",
-      "image": "https://rb.gy/2ot2ch",
-      "description": "Batata versátil, ideal para fritar, assar ou cozinhar."
-    },
-    {
-      "name": "Batata doce",
-      "price": "4.49",
-      "image": "https://t.ly/obCYL",
-      "description":
-          "Batata doce nutritiva e adocicada, excelente para receitas saudáveis."
-    },
-    {
-      "name": "Beterraba",
-      "price": "5.49",
-      "image": "https://t.ly/-YCSe",
-      "description": "Beterraba rica em ferro, ótima para saladas e sucos."
-    },
-    {
-      "name": "Manga",
-      "price": "6.99",
-      "image": "https://t.ly/WGNKn",
-      "description": "Manga suculenta e doce, perfeita para sobremesas e sucos."
-    },
-    {
-      "name": "Alface",
-      "price": "4.49",
-      "image": "https://t.ly/kGI0v",
-      "description": "Alface fresca e crocante, ideal para saladas."
-    },
-    {
-      "name": "Pêra",
-      "price": "7.49",
-      "image": "https://t.ly/QM99N",
-      "description": "Pêra doce e suculenta, ótima para lanches e sobremesas."
-    },
-    {
-      "name": "Laranja",
-      "price": "5.99",
-      "image": "https://l1nq.com/nmBNt",
-      "description":
-          "Laranja refrescante e rica em vitamina C, perfeita para sucos."
-    },
-    {
-      "name": "Alho",
-      "price": "1.99",
-      "image": "https://l1nq.com/7cqrk",
-      "description":
-          "Alho aromático e saboroso, essencial para temperar pratos."
-    },
-    {
-      "name": "Cebola",
-      "price": "6,49",
-      "image": "https://l1nq.com/f4Mkz",
-      "description":
-          "Cebola versátil e essencial na cozinha, ideal para diversos pratos."
-    },
-    {
-      "name": "Tomate",
-      "price": "7.49",
-      "image": "https://encurtador.com.br/kAgBR",
-      "description":
-          "Tomate maduro e suculento, excelente para saladas e molhos."
-    },
-    {
-      "name": "Salsa",
-      "price": "3.99",
-      "image": "https://encurtador.com.br/LbyRY",
-      "description":
-          "Salsa fresca e aromática, ideal para temperar e enfeitar pratos."
-    }
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10.0,
-          mainAxisSpacing: 10.0,
-          childAspectRatio: 3 / 4,
-        ),
-        itemCount: products.length,
-        itemBuilder: (context, index) {
-          final product = products[index];
-          return ShopCard(
-            name: product['name']!,
-            description: product['description']!,
-            price: product['price']!,
-            image: product['image']!,
-          );
-        },
-      ),
-    );
-  }
-}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class PaymentStatusScreen extends StatefulWidget {
   const PaymentStatusScreen({super.key});
@@ -23,7 +24,7 @@ class _PaymentStatusScreenState extends State<PaymentStatusScreen> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(appPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [

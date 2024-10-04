@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class ShippingOptionScreen extends StatefulWidget {
   const ShippingOptionScreen({super.key});
@@ -33,7 +34,7 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
         children: [
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(appPadding),
               child: Column(
                 children: [
                   _Header(),

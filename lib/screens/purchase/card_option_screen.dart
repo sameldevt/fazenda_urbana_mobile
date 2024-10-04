@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/screens/purchase/purchase_sumary_screen.dart';
 
 class CardOptionScreen extends StatefulWidget {
@@ -42,7 +43,7 @@ class _CardOptionScreenState extends State<CardOptionScreen> {
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(appPadding),
                 child: Column(
                   children: [
                     _Header(),

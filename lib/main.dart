@@ -32,7 +32,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Projeto mobile VerdeViva',
       //initialRoute: 'test',
-      initialRoute: (isLogged) ? "home" : "login",
+      //initialRoute: (isLogged) ? "test" : "test",
+      initialRoute: "home",
       theme: ThemeData(
         colorScheme: ColorScheme(
           brightness: Brightness.light,

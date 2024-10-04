@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   const ChangePasswordScreen({super.key});
@@ -21,7 +22,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(appPadding),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

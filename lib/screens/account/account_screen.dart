@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -32,7 +33,7 @@ class AccountScreen extends StatelessWidget {
                   ),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(appPadding),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

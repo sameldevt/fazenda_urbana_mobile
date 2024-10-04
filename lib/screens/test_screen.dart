@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:verdeviva/screens/access/login_screen.dart';
+import 'dart:convert'; // Importe o pacote para converter para JSON
+
 
 class TestScreen extends StatefulWidget {
   const TestScreen({super.key});
@@ -123,7 +126,134 @@ class _TestScreenState extends State<TestScreen> {
 
     return Scaffold(
       backgroundColor: background,
-      body: LoginScreen(),
+      body: ApiTestScreen(),
+    );
+  }
+}
+
+class ApiTestScreen extends StatefulWidget {
+  @override
+  _ApiTestScreenState createState() => _ApiTestScreenState();
+}
+
+class _ApiTestScreenState extends State<ApiTestScreen> {
+  String _response = '';
+
+  Future<void> _makeGetRequest() async {
+    final response = await http.get(Uri.parse('http://10.0.2.2:5085/verdeviva/clientes/produtos/listar-todos'));
+    setState(() {
+      _response = response.body;
+    });
+  }
+
+  Future<void> _makePostRequest() async {
+    print("request feito");
+    final response = await http.post(
+      Uri.parse('http://10.0.2.2:5085/verdeviva/produtos/adicionar-novo'),
+      headers: {
+        'Content-Type': 'application/json', // Especifique o tipo de conteúdo
+      },
+      body: json.encode({
+        "nome": "feito",
+        "descricao": "com",
+        "precoUnitario": 0,
+        "precoQuilo": 0,
+        "quantidadeEstoque": 0,
+        "categoria": "flutter",
+        "imagemUrl": "no android",
+        "informacoesNutricionais": {
+          "calorias": 0,
+          "proteinas": 0,
+          "carboidratos": 0,
+          "fibras": 0,
+          "gorduras": 0
+        }
+      }),
+    );
+    print("request terminado");
+    setState(() {
+      _response = response.body;
+    });
+  }
+
+  Future<void> _makePutRequest() async {
+    final response = await http.put(
+      Uri.parse('https://suaapi.com/put-endpoint'),
+      body: {'key': 'updatedValue'},
+    );
+    setState(() {
+      _response = response.body;
+    });
+  }
+
+  Future<void> _makeDeleteRequest() async {
+    final response = await http.delete(Uri.parse('https://suaapi.com/delete-endpoint'));
+    setState(() {
+      _response = response.body;
+    });
+  }
+
+  Future<void> _makePatchRequest() async {
+    final response = await http.patch(
+      Uri.parse('https://suaapi.com/patch-endpoint'),
+      body: {'key': 'patchedValue'},
+    );
+    setState(() {
+      _response = response.body;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text('API Tester'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(
+              onPressed: (){
+                try {
+                  _makeGetRequest();
+                }catch(e){
+                  print(e);
+                }
+            },
+              child: Text('GET Request'),
+            ),
+            ElevatedButton(
+              onPressed: _makePostRequest,
+              child: Text('POST Request'),
+            ),
+            ElevatedButton(
+              onPressed: _makePutRequest,
+              child: Text('PUT Request'),
+            ),
+            ElevatedButton(
+              onPressed: _makeDeleteRequest,
+              child: Text('DELETE Request'),
+            ),
+            ElevatedButton(
+              onPressed: _makePatchRequest,
+              child: Text('PATCH Request'),
+            ),
+            SizedBox(height: 20),
+            const Text(
+              'Response:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Text(_response),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

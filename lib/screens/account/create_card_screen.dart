@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 
 class CreateCardScreen extends StatefulWidget {
   const CreateCardScreen({super.key});
@@ -40,7 +41,7 @@ class _CreateCardScreenState extends State<CreateCardScreen> {
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(appPadding),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [

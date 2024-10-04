@@ -46,7 +46,6 @@ class ProductSection extends StatelessWidget {
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.5,
-                // Defina uma altura fixa ou baseada no tamanho da tela
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -57,12 +56,9 @@ class ProductSection extends StatelessWidget {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    return ShopCard(
-                      name: item['name']!,
-                      description: item['description']!,
-                      price: item['price']!,
-                      image: item['image']!,
-                    );
+                    // return ShopCard(
+                    //  product: item,
+                    // );
                   },
                 ),
               ),
