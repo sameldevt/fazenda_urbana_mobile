@@ -161,9 +161,9 @@ class _LoginFormState extends State<_LoginForm> {
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  var loginDto = new LoginDto(email: _email!, password: _password!);
+                  //var loginDto = new LoginDto(email: _email!, password: _password!);
 
-                  _loginService.login(loginDto).then((result) {
+                  _loginService.login(_email!, _password!).then((result) {
                     Navigator.pushReplacementNamed(context, 'home');
                   }).catchError((error) {
                     print("Erro ao fazer login: $error");
