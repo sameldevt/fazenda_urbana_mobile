@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/product.dart';
-import 'package:verdeviva/screens/market/product_info_screen.dart';
-import 'package:verdeviva/screens/market/widgets/product_card.dart';
 import 'package:verdeviva/service/cart_service.dart';
 
 class CartScreen extends StatefulWidget {
@@ -48,14 +46,18 @@ class _CartScreenState extends State<CartScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      body: Padding(
+      body: _products.isEmpty ? const _EmptyCartWidget() : Padding(
         padding: const EdgeInsets.all(appPadding),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             const _Header(),
-            _CartItemsSection(products: _products,),
-            _ContinuePurchaseSection(products: _products,),
+            _CartItemsSection(
+              products: _products,
+            ),
+            _ContinuePurchaseSection(
+              products: _products,
+            ),
           ],
         ),
       ),
@@ -113,8 +115,8 @@ class _CartItemsSectionState extends State<_CartItemsSection> {
               itemBuilder: (context, index) {
                 final product = widget.products[index];
                 return _CartItemCard(
-                    product: product,
-                    onDelete: _removeProduct,
+                  product: product,
+                  onDelete: _removeProduct,
                 );
               },
               separatorBuilder: (context, index) => const Divider(
@@ -160,7 +162,7 @@ class _CartItemCardState extends State<_CartItemCard> {
   ];
   int _selectedQuantity = 0;
 
-  void updateItemPrice(ProductToCart product, int selectedQuantity){
+  void updateItemPrice(ProductToCart product, int selectedQuantity) {
     product.totalPrice = selectedQuantity > 5
         ? product.basePrice * (selectedQuantity / 1000)
         : product.basePrice * selectedQuantity;
@@ -227,9 +229,9 @@ class _CartItemCardState extends State<_CartItemCard> {
                           _quantities.map<DropdownMenuItem<int>>((int value) {
                         return DropdownMenuItem<int>(
                           value: value,
-                          child: Text( '${value.toString()} ${value < 100
-                              ? 'kg'
-                              : 'g'}',),
+                          child: Text(
+                            '${value.toString()} ${value < 100 ? 'kg' : 'g'}',
+                          ),
                         );
                       }).toList(),
                       underline: Container(
@@ -273,6 +275,7 @@ class _CartItemCardState extends State<_CartItemCard> {
 
 class _ContinuePurchaseSection extends StatefulWidget {
   final List<ProductToCart> products;
+
   const _ContinuePurchaseSection({required this.products});
 
   @override
@@ -281,8 +284,9 @@ class _ContinuePurchaseSection extends StatefulWidget {
 }
 
 class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
-  String calculateTotalPrice(){
-    double total = widget.products.fold(0.0, (total, product) => total + product.totalPrice);
+  String calculateTotalPrice() {
+    double total = widget.products
+        .fold(0.0, (total, product) => total + product.totalPrice);
 
     return total.toStringAsFixed(2);
   }
@@ -300,13 +304,13 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
             children: [
               Text(
                 'Produtos (${widget.products.length})',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
               Text(
                 'R\$ ${calculateTotalPrice()}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                 ),
               ),
@@ -315,7 +319,7 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
+              const Text(
                 'Total',
                 style: TextStyle(
                   fontSize: 20,
@@ -324,14 +328,14 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
               ),
               Text(
                 'R\$ ${calculateTotalPrice()}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 4.0),
             child: Center(
               child: NavigationPrimaryButton(
@@ -342,6 +346,44 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _EmptyCartWidget extends StatelessWidget {
+  const _EmptyCartWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cartIconColor = theme.colorScheme.primary.withOpacity(0.5);
+
+    return Padding(
+      padding: const EdgeInsets.all(appPadding),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const SizedBox(height: 200,),
+            Container(
+              child: Column(
+                children: [
+                  Image.asset('assets/empty-cart.png', height: 200, width: 200,color: cartIconColor,),
+                  const SizedBox(height: 30,),
+                  const Text("Seu carrinho está vazío!", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10,),
+            InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, 'home');
+                },
+                child: const ActionPrimaryButton(buttonText: "Buscar produtos", buttonTextSize: 18)),
+            const SizedBox(height: 200,),
+          ],
+        ),
       ),
     );
   }

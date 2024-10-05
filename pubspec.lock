@@ -397,7 +397,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
 <<<<<<< HEAD
+<<<<<<< HEAD
     version: "14.2.1"
+=======
+    version: "14.2.5"
+>>>>>>> feat
   web:
     dependency: transitive
     description:
