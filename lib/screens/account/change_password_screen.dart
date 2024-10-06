@@ -2,30 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
-import 'package:verdeviva/service/user_service.dart';
+import 'package:verdeviva/service/access_service.dart';
 
-class PersonalDataScreen extends StatefulWidget {
-  const PersonalDataScreen({super.key});
+class ChangePasswordScreen extends StatefulWidget {
+  const ChangePasswordScreen({super.key});
 
   @override
-  State<PersonalDataScreen> createState() => _PersonalDataScreenState();
+  State<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
 }
 
-class _PersonalDataScreenState extends State<PersonalDataScreen> {
-  User? user;
-  void loadUser() async {
-    final userData = await User.fromSharedPreferences();
-    setState(() {
-      user = userData;
-    });
-  }
-
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
-
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -36,7 +22,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
       appBar: AppBar(
         backgroundColor: appBarColor,
         title: const Text(
-          'Minha conta',
+          'Minha senha',
           style: TextStyle(
             fontSize: 22,
             color: Colors.white,
@@ -62,10 +48,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                   child: Column(
                     children: [
                       const _Header(),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      _PersonalDataForm(user: user!,),
+                      _PersonalDataForm(),
                     ],
                   ),
                 ),
@@ -86,7 +69,7 @@ class _Header extends StatelessWidget {
     return const Align(
       alignment: Alignment.centerLeft,
       child: Text(
-        'Suas informações',
+        'Alterar senha',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 20,
@@ -97,8 +80,7 @@ class _Header extends StatelessWidget {
 }
 
 class _PersonalDataForm extends StatefulWidget {
-  User user;
-  _PersonalDataForm({required this.user});
+  _PersonalDataForm();
 
   @override
   State<_PersonalDataForm> createState() => _PersonalDataFormState();
@@ -106,8 +88,9 @@ class _PersonalDataForm extends StatefulWidget {
 
 class _PersonalDataFormState extends State<_PersonalDataForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userService = UserService();
-  bool isEditable = false;
+  final _accessService = AccessService();
+  String password = '';
+  String passwordAgain = '';
   User? user;
 
   void loadUser() async {
@@ -123,136 +106,156 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
     super.initState();
   }
 
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/fixing.png',
+                  height: 300,
+                  width: 300,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Sua senha foi alterada com sucesso!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final verticalPadding = MediaQuery.of(context).size.height * 0.29;
+    final verticalPadding = MediaQuery.of(context).size.height * 0.50;
 
     return Center(
       child: Form(
         key: _formKey,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
               child: Column(
                 children: [
                   const Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('Nome Completo',
+                    child: Text('Nova senha',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16)),
                   ),
                   TextFormField(
-                    enabled: isEditable,
                     //controller: controller,
-                    decoration: InputDecoration(
-                      hintText: widget.user.name,
-                      border: const OutlineInputBorder(),
+                    decoration: const InputDecoration(
+                      hintText: '********',
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor, insira seu nome!';
+                        return 'Por favor, insira uma senha!';
                       }
                       return null;
                     },
-                    onSaved: (value) {},
+                    onSaved: (value) {
+                      password = value!;
+                    },
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-              child: Column(
-                children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('E-mail',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16)),
-                  ),
-                  TextFormField(
-                    enabled: isEditable,
-                    //controller: controller,
-                    decoration: InputDecoration(
-                      hintText: widget.user.email,
-                      border: const OutlineInputBorder(),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Por favor, insira seu email';
-                      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                          .hasMatch(value)) {
-                        return 'Por favor, insira um email válido';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {},
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 16),
               child: Column(
                 children: [
                   const Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      'Telefone',
+                      'Confirmar nova senha',
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                   TextFormField(
-                    enabled: isEditable,
-                    //controller: controller,
-                    decoration: InputDecoration(
-                      hintText: widget.user.phone,
-                      border: const OutlineInputBorder(),
+                    decoration: const InputDecoration(
+                      hintText: '********',
+                      border: OutlineInputBorder(),
                     ),
-                    keyboardType: TextInputType.number,
+                    keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+                    obscureText: true,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Por favor, insira sua senha';
+                        return 'Por favor, insira uma senha!';
                       }
                       return null;
                     },
                     onSaved: (value) {
-
+                      passwordAgain = value!;
                     },
                   ),
                 ],
               ),
             ),
-            SizedBox(height: verticalPadding,),
-            InkWell(
-              onTap: () {
-                setState(() {
-                  isEditable = !isEditable;
-                });
-              },
-              child: ActionPrimaryButton(
-                  buttonText: isEditable ? 'Salvar alterações' : 'Editar',
-                  buttonTextSize: 20),
-            ),
-            const SizedBox(
-              height: 8,
+            SizedBox(
+              height: verticalPadding,
             ),
             InkWell(
               onTap: () {
-                setState(() {
-                  isEditable = false;
-                });
-                Navigator.pushNamed(context, 'change-pass');
+                setState(
+                  () {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      if (password == passwordAgain) {
+                        _accessService
+                            .recoverPassword(user!.email, password)
+                            .then((value) {
+                          _showDialog();
+                        });
+                      }
+                    }
+                    ;
+                  },
+                );
               },
-              child: const ActionSecondaryButton(
-                  buttonText: 'Alterar senha', buttonTextSize: 20),
+              child: const ActionPrimaryButton(
+                buttonText: 'Alterar senha',
+                buttonTextSize: 20,
+              ),
             ),
           ],
         ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/service/user_service.dart';
 
 class ShippingOptionScreen extends StatefulWidget {
   const ShippingOptionScreen({super.key});
@@ -10,6 +12,20 @@ class ShippingOptionScreen extends StatefulWidget {
 }
 
 class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
+  User? user;
+  void loadUser() async {
+    final userData = await User.fromSharedPreferences();
+    setState(() {
+      user = userData;
+    });
+  }
+
+  @override
+  void initState() {
+    loadUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -30,7 +46,7 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
         ),
       ),
       backgroundColor: background,
-      body: const Column(
+      body: user!.hasAddress() ? Column(
         children: [
           Expanded(
             child: Padding(
@@ -46,10 +62,66 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
             ),
           ),
         ],
+      ) : _HasNoAddressScreen(),
+    );
+  }
+}
+
+class _HasNoAddressScreen extends StatelessWidget {
+  const _HasNoAddressScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.05; // 5% do tamanho da altura
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(appPadding),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                height: verticalPadding,
+              ),
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'assets/something-wrong.png',
+                      height: 300,
+                      width: 300,
+                    ),
+                    const Text(
+                      textAlign: TextAlign.center,
+                      "Parece que você não tem nenhum endereço de entrega cadastrado!",
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 20,),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, 'create-address');
+                      },
+                      child: const ActionPrimaryButton(
+                          buttonText: "Cadastrar endereço", buttonTextSize: 18),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: verticalPadding,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
+
 
 class _Header extends StatelessWidget {
   const _Header();

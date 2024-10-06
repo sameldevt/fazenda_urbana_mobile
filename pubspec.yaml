@@ -71,6 +71,13 @@ flutter:
     - assets/codigo-barras.png
     - assets/logo-fazenda.png
     - assets/empty-cart.png
+    - assets/sad-face.png
+    - assets/sad-face-2.png
+    - assets/empty-box.png
+    - assets/missing-user.png
+    - assets/user-not-found.png
+    - assets/something-wrong.png
+    - assets/fixing.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

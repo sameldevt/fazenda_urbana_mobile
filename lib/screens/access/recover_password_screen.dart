@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 
-class ChangePasswordScreen extends StatelessWidget {
-  const ChangePasswordScreen({super.key});
+class RecoverPasswordScreen extends StatelessWidget {
+  const RecoverPasswordScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

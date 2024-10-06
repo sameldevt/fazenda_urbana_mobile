@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/product.dart';
+import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/service/cart_service.dart';
+import 'package:verdeviva/service/user_service.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -46,21 +48,23 @@ class _CartScreenState extends State<CartScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      body: _products.isEmpty ? const _EmptyCartWidget() : Padding(
-        padding: const EdgeInsets.all(appPadding),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const _Header(),
-            _CartItemsSection(
-              products: _products,
+      body: _products.isEmpty
+          ? const _EmptyCartWidget()
+          : Padding(
+              padding: const EdgeInsets.all(appPadding),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const _Header(),
+                  _CartItemsSection(
+                    products: _products,
+                  ),
+                  _ContinuePurchaseSection(
+                    products: _products,
+                  ),
+                ],
+              ),
             ),
-            _ContinuePurchaseSection(
-              products: _products,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -335,13 +339,22 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
               ),
             ],
           ),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 4.0),
             child: Center(
-              child: NavigationPrimaryButton(
-                route: 'address',
-                buttonText: 'Continuar a compra',
-                buttonTextSize: 20,
+              child: InkWell(
+                onTap: () {
+                  String route = '';
+                  User.fromSharedPreferences().then((value) {
+                    value == null
+                        ? Navigator.pushNamed(context, 'not-logged')
+                        : Navigator.pushNamed(context, 'address');
+                  });
+                },
+                child: const ActionPrimaryButton(
+                  buttonText: "Continuar a compra",
+                  buttonTextSize: 20,
+                ),
               ),
             ),
           ),
@@ -356,8 +369,10 @@ class _EmptyCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.05; // 5% do tamanho da altura
+
     final theme = Theme.of(context);
-    final cartIconColor = theme.colorScheme.primary.withOpacity(0.5);
 
     return Padding(
       padding: const EdgeInsets.all(appPadding),
@@ -365,23 +380,37 @@ class _EmptyCartWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(height: 200,),
+            SizedBox(
+              height: verticalPadding,
+            ),
             Container(
               child: Column(
                 children: [
-                  Image.asset('assets/empty-cart.png', height: 200, width: 200,color: cartIconColor,),
-                  const SizedBox(height: 30,),
-                  const Text("Seu carrinho está vazío!", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                  Image.asset(
+                    'assets/empty-cart.png',
+                    height: 400,
+                    width: 400,
+                  ),
+                  const Text(
+                    "Seu carrinho está vazío!",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 39,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pushReplacementNamed(context, 'home');
+                    },
+                    child: const ActionPrimaryButton(
+                        buttonText: "Buscar produtos", buttonTextSize: 18),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 10,),
-            InkWell(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, 'home');
-                },
-                child: const ActionPrimaryButton(buttonText: "Buscar produtos", buttonTextSize: 18)),
-            const SizedBox(height: 200,),
+            SizedBox(
+              height: verticalPadding,
+            ),
           ],
         ),
       ),

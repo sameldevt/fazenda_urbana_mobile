@@ -2,71 +2,70 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/dtos/login_dto.dart';
+import 'package:verdeviva/model/user.dart';
 import 'dart:convert';
+
+import 'package:verdeviva/service/user_service.dart';
 
 class AccessService {
   final String contextUrl = "usuario";
 
-  // Future<String> login(LoginDto loginDto) async {
-  //   final response = await http.post(
-  //     Uri.parse('$baseApiUrl/$contextUrl/entrar'),
-  //     body: loginDto.toJson(),
-  //   );
-  //
-  //   return response.body;
-  // }
-  //
-  // Future<String> register(LoginDto loginDto) async {
-  //   final response = await http.post(
-  //     Uri.parse('$baseApiUrl/$contextUrl/entrar'),
-  //     body: loginDto.toJson(),
-  //   );
-  //
-  //   return response.body;
-  // }
-
-  Future<String> recoverPassword(LoginDto loginDto) async {
+  Future<void> recoverPassword(String email, String newPassword) async {
     final response = await http.post(
-      Uri.parse('$baseApiUrl/$contextUrl/entrar'),
-      body: loginDto.toJson(),
+      Uri.parse('$baseApiUrl/$contextUrl/alterar-senha'),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({"email": email, "novaSenha": newPassword}),
     );
 
-    return response.body;
+    final service = UserService();
+    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
   }
 
-  Future<String> login(String email, String password) async {
+  Future<void> login(String email, String password) async {
     http.Response response = await http.post(
       Uri.parse("$baseApiUrl/$contextUrl/entrar"),
-      body: {"email": email, "password": password},
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({"email": email, "senha": password}),
     );
 
-    if (response.statusCode == 400 &&
-        json.decode(response.body) == "Cannot find user") {
+    print(response.statusCode);
+    if(response.statusCode == 404){
       throw UserNotFoundException();
     }
 
-    if (response.statusCode != 200) {
-      //throw const HttpException("");
+    if (response.statusCode == 400) {
+      throw InvalidCredentialsException();
     }
 
-    return saveInfosFromResponse(response.body);
+    final service = UserService();
+
+    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+    //return saveInfosFromResponse(response.body);
   }
 
-  Future<String> register(String email, String password) async {
+  Future<void> register(String nome, String email, String password) async {
     http.Response response = await http.post(
       Uri.parse("$baseApiUrl/$contextUrl/registrar"),
-      body: {"email": email, "password": password},
+      headers: {
+        "Content-Type": "application/json", // Especifica o tipo como JSON
+      },
+      body: jsonEncode({"nome": nome, "email": email, "senha": password}),
     );
 
-    if (response.statusCode != 200) {
-      //TODO: Implementar outros casos
-      switch (response.body) {
-        case "Email already exists":
-          throw UserAlreadyExists();
-      }
+    print(response.statusCode);
+
+    if(response.statusCode == 400){
+      throw UserAlreadyExists();
     }
 
-    return saveInfosFromResponse(response.body);
+    final service = UserService();
+
+    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+    //return saveInfosFromResponse(response.body);
   }
 
   Future<String> saveInfosFromResponse(String body) async {
@@ -83,3 +82,4 @@ class AccessService {
 }
 class UserNotFoundException implements Exception {}
 class UserAlreadyExists implements Exception {}
+class InvalidCredentialsException implements Exception {}

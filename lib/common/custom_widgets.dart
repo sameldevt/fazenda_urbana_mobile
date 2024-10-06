@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/service/user_service.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -108,8 +110,10 @@ class CustomBottomNavBar extends StatelessWidget {
       enableFeedback: false,
       showUnselectedLabels: true,
       currentIndex: currentIndex,
-      selectedItemColor: barItemsColor, // Cor do ícone e texto selecionados
-      unselectedItemColor: Colors.black, // Cor do ícone e texto não selecionados
+      selectedItemColor: barItemsColor,
+      // Cor do ícone e texto selecionados
+      unselectedItemColor: Colors.black,
+      // Cor do ícone e texto não selecionados
       selectedLabelStyle: TextStyle(color: barItemsColor),
       unselectedLabelStyle: const TextStyle(color: Colors.black),
       selectedIconTheme: IconThemeData(color: barItemsColor, size: 30),
@@ -145,17 +149,24 @@ class CustomBottomNavBar extends StatelessWidget {
   }
 }
 
-class CustomDrawer extends StatelessWidget {
+class LoggedDrawer extends StatefulWidget {
   final Function(int) onItemSelected;
+  final User user;
 
-  const CustomDrawer({super.key, required this.onItemSelected});
+  const LoggedDrawer({super.key, required this.onItemSelected, required this.user});
+
+  @override
+  State<LoggedDrawer> createState() => _LoggedDrawerState();
+}
+
+class _LoggedDrawerState extends State<LoggedDrawer> {
+  final _userService = UserService();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final barColor = theme.colorScheme.primary;
     final barItemsColor = theme.colorScheme.onPrimary;
-
     return Drawer(
       elevation: 10.0,
       backgroundColor: Colors.white,
@@ -171,7 +182,7 @@ class CustomDrawer extends StatelessWidget {
           DrawerHeader(
             decoration: BoxDecoration(color: barColor),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 Navigator.pushNamed(context, 'account');
               },
               child: Column(
@@ -188,7 +199,7 @@ class CustomDrawer extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Nome do Usuário',
+                    widget.user.name,
                     style: TextStyle(
                       fontSize: 22,
                       color: barItemsColor,
@@ -196,7 +207,7 @@ class CustomDrawer extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'email@exemplo.com',
+                    widget.user.email,
                     style: TextStyle(
                       fontSize: 16,
                       color: barItemsColor,
@@ -285,9 +296,102 @@ class CustomDrawer extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               onTap: () {
-                Navigator.pushReplacementNamed(context, 'login');
+                _userService.deleteUserInfo().then((value) {
+                  Navigator.pushReplacementNamed(context, 'home');
+                });
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class NotLoggedDrawer extends StatefulWidget {
+  const NotLoggedDrawer({super.key});
+
+  @override
+  State<NotLoggedDrawer> createState() => _NotLoggedDrawerState();
+}
+
+class _NotLoggedDrawerState extends State<NotLoggedDrawer> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final barColor = theme.colorScheme.primary;
+    final barItemsColor = theme.colorScheme.onPrimary;
+    return Drawer(
+      elevation: 10.0,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(0),
+          bottomRight: Radius.circular(0),
+        ),
+      ),
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: BoxDecoration(color: barColor),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/missing-user.png',
+                  height: 80,
+                  width: 80,
+                  color: Colors.white,
+                ),
+                Text(
+                  'Você não está conectado',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: barItemsColor,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(24.0, 16, 0, 0),
+            child: Text(
+              'Atalhos',
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.home_outlined,
+              size: 32,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Página Inicial',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'home');
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.account_circle_outlined,
+              size: 32,
+              color: Colors.black,
+            ),
+            title: const Text(
+              'Acessar conta',
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, 'login');
+            },
           ),
         ],
       ),

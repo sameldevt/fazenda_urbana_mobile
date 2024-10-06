@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:verdeviva/screens/access/change_password_screen.dart';
+import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
 import 'package:verdeviva/screens/account/account_screen.dart';
+import 'package:verdeviva/screens/account/address_screen.dart';
+import 'package:verdeviva/screens/account/change_password_screen.dart';
 import 'package:verdeviva/screens/account/create_card_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/cart_screen.dart';
@@ -18,21 +20,20 @@ import 'package:verdeviva/screens/purchase/payment_status_screen.dart';
 import 'package:verdeviva/screens/purchase/shipping_option_screen.dart';
 import 'package:verdeviva/screens/test_screen.dart';
 
+import 'screens/purchase/not_logged_screen.dart';
+
 void main() {
-  runApp(const App(isLogged: false));
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
-  final bool isLogged;
-
-  const App({super.key, required this.isLogged});
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Projeto mobile VerdeViva',
-      //initialRoute: 'test',
-      //initialRoute: (isLogged) ? "test" : "test",
       initialRoute: "home",
       theme: ThemeData(
         colorScheme: ColorScheme(
@@ -56,10 +57,12 @@ class App extends StatelessWidget {
         "home": (context) => const HomeScreen(),
         "account": (context) => const AccountScreen(),
         "register": (context) => const RegisterScreen(),
-        "change-pass": (context) => const ChangePasswordScreen(),
+        "recover-pass": (context) => const RecoverPasswordScreen(),
+        "change-pass": (context) => ChangePasswordScreen(),
         "cart": (context) => const CartScreen(),
         "personal-data": (context) => const PersonalDataScreen(),
         "address": (context) => const ShippingOptionScreen(),
+        "create-address": (context) => AddressScreen(),
         "orders": (context) => const OrdersScreen(),
         "confirm-order": (context) => const ConfirmOrderScreen(),
         "shipping": (context) => const ShippingOptionScreen(),
@@ -71,6 +74,7 @@ class App extends StatelessWidget {
         "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
         "create-card": (context) => const CreateCardScreen(),
         "card": (context) => const CardOptionScreen(),
+        "not-logged": (context) => const NotLoggedScreen()
         //"purchase-sumary": (context) => PurchaseSumaryScreen(),
       },
     );

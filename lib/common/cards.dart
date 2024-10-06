@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/market/product_info_screen.dart';
 
-const double _cardWidth = 170.0;
-const double _cardHeight = 140.0;
-const double _cardElevation = 10.0;
-
 class ShopCard extends StatelessWidget {
   final Product product;
+  final double _cardWidth = 170.0;
+  final double _cardHeight = 120.0;
+  final double _cardElevation = 10.0;
 
   const ShopCard({
     super.key,
@@ -18,6 +17,7 @@ class ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final divisorColor = theme.colorScheme.surfaceBright;
+    final questionMarkColor = theme.colorScheme.primary.withOpacity(0.5);
 
     return InkWell(
       onTap: () {
@@ -36,7 +36,7 @@ class ShopCard extends StatelessWidget {
               children: [
                 Image.network(
                   product.imageUrl,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   width: double.infinity,
                   height: 150,
                   errorBuilder: (BuildContext context, Object exception,
@@ -45,6 +45,15 @@ class ShopCard extends StatelessWidget {
                       width: double.infinity,
                       height: 150,
                       color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/sad-face-2.png", height: 70, width: 70, color: questionMarkColor,),
+                          const SizedBox(height: 15,),
+                          Text("Imagem indisponível", style: TextStyle(color: questionMarkColor,fontSize: 16),),
+                          //Icon(Icons.question_mark_rounded, size: 80, color: questionMarkColor,),
+                        ],
+                      ),
                     );
                   },
                 ),

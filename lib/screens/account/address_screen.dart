@@ -31,7 +31,7 @@ class _AddressScreenState extends State<AddressScreen> {
             children: [
               Align(
                 alignment: Alignment.center,
-                child: _PersonalDataForm(),
+                child: _AddressDataForm(),
               ),
             ],
           ),
@@ -41,14 +41,14 @@ class _AddressScreenState extends State<AddressScreen> {
   }
 }
 
-class _PersonalDataForm extends StatefulWidget {
-  _PersonalDataForm({super.key});
+class _AddressDataForm extends StatefulWidget {
+  _AddressDataForm({super.key});
 
   @override
-  State<_PersonalDataForm> createState() => _PersonalDataFormState();
+  State<_AddressDataForm> createState() => _AddressDataFormState();
 }
 
-class _PersonalDataFormState extends State<_PersonalDataForm> {
+class _AddressDataFormState extends State<_AddressDataForm> {
   final _formKey = GlobalKey<FormState>();
 
   final Map<String, String> defaultAddress = {

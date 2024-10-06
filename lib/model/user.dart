@@ -1,3 +1,6 @@
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:verdeviva/service/user_service.dart';
+
 class User {
   final int id;
   final String name;
@@ -25,19 +28,65 @@ class User {
     required this.additionalInformation,
   });
 
+  bool hasAddress() {
+    return street.isNotEmpty &&
+        number.isNotEmpty &&
+        city.isNotEmpty &&
+        zipCode.isNotEmpty &&
+        state.isNotEmpty &&
+        complement.isNotEmpty;
+  }
+
+  factory User.simple(String name, String email){
+    return User(
+      id: 0,
+      name: name,
+      phone: '',
+      email: email,
+      street: '',
+      number: '',
+      city: '',
+      zipCode: '',
+      complement: '',
+      state: '',
+      additionalInformation: '',
+    );
+  }
+
+  static Future<User?> fromSharedPreferences() async {
+    final userService = UserService();
+    return await userService.loadUserInfo();
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['Id'] ?? 0,
-      name: json['Nome'] ?? '',
-      phone: json['Telefone'] ?? '',
-      email: json['Email'] ?? '',
-      street: json['Logradouro'] ?? '',
-      number: json['Numero'] ?? '',
-      city: json['Cidade'] ?? '',
-      zipCode: json['CEP'] ?? '',
-      complement: json['Complemento'] ?? '',
-      state: json['Estado'] ?? '',
-      additionalInformation: json['InformacoesAdicionais'] ?? '',
+      id: json['id'] ?? 0,
+      name: json['nome'] ?? '',
+      phone: json['telefone'] ?? '',
+      email: json['email'] ?? '',
+      street: json['logradouro'] ?? '',
+      number: json['numero'] ?? '',
+      city: json['cidade'] ?? '',
+      zipCode: json['cEP'] ?? '',
+      complement: json['complemento'] ?? '',
+      state: json['estado'] ?? '',
+      additionalInformation: json['informacoesAdicionais'] ?? '',
     );
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      "id": id,
+      "nome": name,
+      "telefone": phone ?? '',
+      "email": email,
+      "logradouro": street ?? '',
+      "numero": number ?? '',
+      "cidade": city ?? '',
+      "cEP": zipCode ?? '',
+      "complemento": complement ?? '',
+      "estado": state ?? '',
+      "informacoesAdicionais": additionalInformation ?? ''
+    };
   }
 }

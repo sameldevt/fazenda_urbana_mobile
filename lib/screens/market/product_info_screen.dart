@@ -85,6 +85,9 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final questionMarkColor = theme.colorScheme.primary.withOpacity(0.5);
+
     return Column(
       children: [
         Align(
@@ -106,6 +109,15 @@ class _Header extends StatelessWidget {
                 width: 300,
                 height: 300,
                 color: Colors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/sad-face-2.png", height: 150, width: 150, color: questionMarkColor,),
+                    const SizedBox(height: 30,),
+                    Text("Imagem indisponível", style: TextStyle(color: questionMarkColor, fontSize: 30),),
+                    //Icon(Icons.question_mark_rounded, size: 80, color: questionMarkColor,),
+                  ],
+                ),
               );
             },
           ),
@@ -464,7 +476,7 @@ class _SeeTooSection extends StatefulWidget {
 }
 
 class _SeeTooSectionState extends State<_SeeTooSection> {
-  final ProductService _productService = new ProductService();
+  final ProductService _productService = ProductService();
   final List<Product> _products = [];
 
   @override
@@ -473,7 +485,6 @@ class _SeeTooSectionState extends State<_SeeTooSection> {
     _productService.getAll().then((result) {
       setState(() {
         _products.addAll(result);
-        print(_products.length);
       });
     });
   }

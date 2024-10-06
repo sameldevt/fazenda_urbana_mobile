@@ -35,20 +35,20 @@ class Product {
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['Id'] ?? 0,
-      name: json['Nome'] ?? '',
-      description: json['Descricao'] ?? '',
-      unitPrice: (json['PrecoUnitario'] as num).toDouble(),
-      pricePerKilo: (json['PrecoQuilo'] as num).toDouble(),
-      stockQuantity: json['QuantidadeEstoque'] ?? 0,
-      categoryName: json['NomeCategoria'] ?? '',
-      categoryDescription: json['DescricaoCategoria'] ?? '',
-      imageUrl: json['ImagemUrl'] ?? '',
-      calories: (json['Calorias'] as num).toDouble(),
-      proteins: (json['Proteinas'] as num).toDouble(),
-      carbohydrates: (json['Carboidratos'] as num).toDouble(),
-      fibers: (json['Fibras'] as num).toDouble(),
-      fats: (json['Gorduras'] as num).toDouble(),
+      id: json['id'] ?? 0,
+      name: json['nome'] ?? '',
+      description: json['descricao'] ?? '',
+      unitPrice: (json['precoUnitario'] as num).toDouble(),
+      pricePerKilo: (json['precoQuilo'] as num).toDouble(),
+      stockQuantity: json['quantidadeEstoque'] ?? 0,
+      categoryName: json['nomeCategoria'] ?? '',
+      categoryDescription: json['descricaoCategoria'] ?? '',
+      imageUrl: json['imagemUrl'] ?? '',
+      calories: (json['calorias'] as num).toDouble(),
+      proteins: (json['proteinas'] as num).toDouble(),
+      carbohydrates: (json['carboidratos'] as num).toDouble(),
+      fibers: (json['fibras'] as num).toDouble(),
+      fats: (json['gorduras'] as num).toDouble(),
     );
   }
 }

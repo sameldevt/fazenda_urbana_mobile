@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/cards.dart';
 import 'package:verdeviva/common/custom_widgets.dart';
-import 'package:verdeviva/common/sections.dart';
 import 'package:verdeviva/model/product.dart';
-import 'package:verdeviva/screens/access/change_password_screen.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/account/account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/cart_screen.dart';
 import 'package:verdeviva/screens/market/orders_screen.dart';
-import 'package:verdeviva/services/product_service.dart';
+import 'package:verdeviva/service/product_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,11 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
     const CartScreen(),
     const OrdersScreen(),
     const AccountScreen(),
-    const ChangePasswordScreen(),
+    const RecoverPasswordScreen(),
     const PersonalDataScreen(),
   ];
-
   int _currentPageIndex = 0;
+  User? user;
 
   void _onItemSelected(int index) {
     setState(() {
@@ -35,15 +35,32 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void loadUser() async {
+    User? loadedUser = await User.fromSharedPreferences();
+    setState(() {
+      user = loadedUser;
+    });
+  }
+
+  @override
+  void initState() {
+    loadUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final background = theme.colorScheme.surface;
-
     return Scaffold(
       backgroundColor: background,
       appBar: const CustomAppBar(),
-      drawer: CustomDrawer(onItemSelected: _onItemSelected),
+      drawer: user == null
+          ? const NotLoggedDrawer()
+          : LoggedDrawer(
+              onItemSelected: _onItemSelected,
+              user: user!,
+            ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: _screens[_currentPageIndex],
@@ -60,14 +77,19 @@ class _MainPageScreen extends StatefulWidget {
 }
 
 class _MainPageScreenState extends State<_MainPageScreen> {
-  final ProductService _productService = new ProductService();
+  final ProductService _productService = ProductService();
   final List<Product> _products = [];
+
+  void _loadProducts() async {
+    final products = await _productService.getAll();
+     setState(() {
+       _products.addAll(products);
+     });
+  }
 
   @override
   void initState() {
-    _productService.getAll().then((result) {
-      _products.addAll(result);
-    });
+    _loadProducts();
     super.initState();
   }
 
@@ -85,14 +107,14 @@ class _MainPageScreenState extends State<_MainPageScreen> {
                     crossAxisCount: 2,
                     crossAxisSpacing: 1.0,
                     mainAxisSpacing: 1.0,
-                    childAspectRatio: 3 / 4,
+                    childAspectRatio: 0.85,
                   ),
                   itemCount: _products.length,
                   itemBuilder: (context, index) {
                     final item = _products[index];
-                     return ShopCard(
+                    return ShopCard(
                       product: item,
-                     );
+                    );
                   },
                 ),
               ),
@@ -178,4 +200,3 @@ class _FilterSectionState extends State<_FilterSection> {
     );
   }
 }
-

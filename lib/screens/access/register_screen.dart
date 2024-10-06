@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/service/access_service.dart';
+import 'package:verdeviva/service/user_service.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -81,11 +84,41 @@ class _RegisterForm extends StatefulWidget {
 
 class _RegisterFormState extends State<_RegisterForm> {
   final _formKey = GlobalKey<FormState>();
+  final _loginService = new AccessService();
 
   String? _nomeCompleto;
   String? _email;
-  String? _telefone;
   String? _password;
+
+  void _showDialog(error){
+    String title = "";
+    String content = "";
+
+    switch(error){
+      case UserAlreadyExists _:
+        title = "Usuário já cadastrado.";
+        content = "O e-mail informado já possui cadastro.";
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            TextButton(
+              child: const Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,7 +203,7 @@ class _RegisterFormState extends State<_RegisterForm> {
                   hintText: 'Digite sua senha',
                   border: OutlineInputBorder(),
                 ),
-                keyboardType: TextInputType.emailAddress,
+                keyboardType: TextInputType.text,
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -191,8 +224,26 @@ class _RegisterFormState extends State<_RegisterForm> {
             onTap: () {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
-                // Processar dados aqui
-              }
+              _loginService.register(_nomeCompleto!, _email!, _password!).then((result) {
+                UserService userService = UserService();
+                userService.saveUserInfo(User.simple(_nomeCompleto!, _email!));
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Conta criada com sucesso!"),
+                    duration: Duration(seconds: 2), // Duração do SnackBar
+                    action: SnackBarAction(
+                      label: "Undo",
+                      onPressed: () {
+                          // Ação ao clicar no botão do SnackBar
+                      },
+                    ),
+                  ),);
+                  Navigator.pushReplacementNamed(context, 'login');
+                }).catchError((error) {
+                  _showDialog(error);
+                });
+              };
             },
             child: const ActionPrimaryButton(
               buttonText: 'Criar conta',

@@ -11,6 +11,9 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final questionMarkColor = theme.colorScheme.primary.withOpacity(0.5);
+
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(
@@ -37,9 +40,17 @@ class ProductCard extends StatelessWidget {
                   errorBuilder: (BuildContext context, Object exception,
                       StackTrace? stackTrace) {
                     return Container(
-                      width: 300,
-                      height: 300,
+                      width: double.infinity,
                       color: Colors.transparent,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset("assets/sad-face-2.png", height: 80, width: 80, color: questionMarkColor,),
+                          const SizedBox(height: 15,),
+                          Text("Imagem indisponível", style: TextStyle(color: questionMarkColor, fontSize: 16),),
+                          //Icon(Icons.question_mark_rounded, size: 80, color: questionMarkColor,),
+                        ],
+                      ),
                     );
                   },
                 ),

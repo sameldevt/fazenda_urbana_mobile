@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/dtos/login_dto.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/service/access_service.dart';
+import 'package:verdeviva/service/user_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -80,10 +83,48 @@ class _LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<_LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _loginService = new AccessService();
+  final _loginService = AccessService();
+  final _userService = UserService();
 
   String? _email;
   String? _password;
+
+  void _showDialog(error){
+    String title = "";
+    String content = "";
+    TextButton registerButton = TextButton(onPressed: (){}, child: Text(""));
+
+    switch(error){
+      case InvalidCredentialsException _:
+        title = "Senha incorreta.";
+        content = "A senha digitada não está correta";
+        break;
+      case UserNotFoundException _:
+        title = "Usuário não cadastrado.";
+        content = "O e-mail informando não possui cadastro.";
+        registerButton = TextButton(onPressed: (){Navigator.pushReplacementNamed(context, 'register');}, child: Text("Criar nova conta"));
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: <Widget>[
+            registerButton,
+            TextButton(
+              child: const Text("Fechar"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +181,7 @@ class _LoginFormState extends State<_LoginForm> {
                     hintText: 'Digite sua senha',
                     border: OutlineInputBorder(),
                   ),
-                  keyboardType: TextInputType.emailAddress,
+                  keyboardType: TextInputType.text,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -161,12 +202,10 @@ class _LoginFormState extends State<_LoginForm> {
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  //var loginDto = new LoginDto(email: _email!, password: _password!);
-
                   _loginService.login(_email!, _password!).then((result) {
                     Navigator.pushReplacementNamed(context, 'home');
                   }).catchError((error) {
-                    print("Erro ao fazer login: $error");
+                    _showDialog(error);
                   });
                 };
               },
