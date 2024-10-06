@@ -84,43 +84,67 @@ class _LoginForm extends StatefulWidget {
 class _LoginFormState extends State<_LoginForm> {
   final _formKey = GlobalKey<FormState>();
   final _loginService = AccessService();
-  final _userService = UserService();
 
   String? _email;
   String? _password;
 
-  void _showDialog(error){
-    String title = "";
+  void _showDialog(error) {
     String content = "";
-    TextButton registerButton = TextButton(onPressed: (){}, child: Text(""));
+    String image = "";
 
     switch(error){
       case InvalidCredentialsException _:
-        title = "Senha incorreta.";
-        content = "A senha digitada não está correta";
+        content = "A senha digitada está incorreta";
+        image = "assets/wrong-password.png";
         break;
       case UserNotFoundException _:
-        title = "Usuário não cadastrado.";
         content = "O e-mail informando não possui cadastro.";
-        registerButton = TextButton(onPressed: (){Navigator.pushReplacementNamed(context, 'register');}, child: Text("Criar nova conta"));
+        image = "assets/not-found.png";
         break;
     }
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            registerButton,
-            TextButton(
-              child: const Text("Fechar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
             ),
-          ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  image,
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    content,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -205,6 +229,7 @@ class _LoginFormState extends State<_LoginForm> {
                   _loginService.login(_email!, _password!).then((result) {
                     Navigator.pushReplacementNamed(context, 'home');
                   }).catchError((error) {
+                    print(error);
                     _showDialog(error);
                   });
                 };
@@ -239,7 +264,7 @@ class _ForgotPasswordSection extends StatelessWidget {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  Navigator.pushNamed(context, 'change-pass');
+                  Navigator.pushNamed(context, 'recover-pass');
                 },
             ),
           ],

@@ -207,7 +207,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
                     ),
                   ),
                   Text(
-                    widget.user.email,
+                    widget.user.contact.email,
                     style: TextStyle(
                       fontSize: 16,
                       color: barItemsColor,

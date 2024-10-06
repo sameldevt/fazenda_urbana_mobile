@@ -177,7 +177,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                     enabled: isEditable,
                     //controller: controller,
                     decoration: InputDecoration(
-                      hintText: widget.user.email,
+                      hintText: widget.user.contact.email,
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -212,7 +212,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                     enabled: isEditable,
                     //controller: controller,
                     decoration: InputDecoration(
-                      hintText: widget.user.phone,
+                      hintText: widget.user.contact.phone,
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,

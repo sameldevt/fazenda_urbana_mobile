@@ -90,31 +90,106 @@ class _RegisterFormState extends State<_RegisterForm> {
   String? _email;
   String? _password;
 
-  void _showDialog(error){
-    String title = "";
+  void _showErrorDialog(error) {
     String content = "";
+    String image = "";
 
     switch(error){
       case UserAlreadyExists _:
-        title = "Usuário já cadastrado.";
-        content = "O e-mail informado já possui cadastro.";
-        break;
+        content = "O e-mail informado já possui cadastro";
+        image = "assets/something-wrong.png";
     }
 
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: <Widget>[
-            TextButton(
-              child: const Text("Fechar"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
             ),
-          ],
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  image,
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    content,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/account-created.png',
+                  height: 300,
+                  width: 300,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Conta criada com sucesso!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, 'login');
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Entrar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
@@ -225,23 +300,9 @@ class _RegisterFormState extends State<_RegisterForm> {
               if (_formKey.currentState!.validate()) {
                 _formKey.currentState!.save();
               _loginService.register(_nomeCompleto!, _email!, _password!).then((result) {
-                UserService userService = UserService();
-                userService.saveUserInfo(User.simple(_nomeCompleto!, _email!));
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("Conta criada com sucesso!"),
-                    duration: Duration(seconds: 2), // Duração do SnackBar
-                    action: SnackBarAction(
-                      label: "Undo",
-                      onPressed: () {
-                          // Ação ao clicar no botão do SnackBar
-                      },
-                    ),
-                  ),);
-                  Navigator.pushReplacementNamed(context, 'login');
+                  _showDialog();
                 }).catchError((error) {
-                  _showDialog(error);
+                  _showErrorDialog(error);
                 });
               };
             },

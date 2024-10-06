@@ -78,6 +78,12 @@ flutter:
     - assets/user-not-found.png
     - assets/something-wrong.png
     - assets/fixing.png
+    - assets/wrong-password.png
+    - assets/not-found.png
+    - assets/account-created.png
+    - assets/missing.png
+    - assets/exit.png
+    - assets/server-error.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

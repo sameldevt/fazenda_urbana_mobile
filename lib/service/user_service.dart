@@ -18,7 +18,6 @@ class UserService {
   Future<User?> loadUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     String userInfoJson = prefs.getString(_userKey) ?? "";
-    print(userInfoJson);
 
     if (userInfoJson.isNotEmpty) {
       Map<String, dynamic> userMap = jsonDecode(userInfoJson);
@@ -31,5 +30,12 @@ class UserService {
   Future<void> deleteUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_userKey);
+  }
+
+  Future<void> updateAddress(Map<String, String> info) async {
+    final prefs = await SharedPreferences.getInstance();
+    String userInfoJson = prefs.getString(_userKey) ?? "";
+
+    return null;
   }
 }

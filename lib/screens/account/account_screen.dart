@@ -29,7 +29,7 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.10;
+    final verticalPadding = screenHeight * 0.18;
 
     final theme = Theme.of(context);
     final appBarColor = theme.colorScheme.primary;
@@ -107,12 +107,8 @@ class _AccountInfo extends StatelessWidget {
           ),
         ),
         Text(
-          user.email,
+          user.contact.email,
           style: TextStyle(fontSize: 20, color: Colors.grey),
-        ),
-        Text(
-          'Membro desde 24/01/2018',
-          style: TextStyle(fontSize: 14, color: Colors.grey),
         ),
       ],
     );
@@ -134,7 +130,7 @@ class _Buttons extends StatelessWidget {
           height: 8,
         ),
         NavigationSecondaryButton(
-          route: 'address',
+          route: 'address-list',
           buttonText: 'Endereços',
           buttonTextSize: 20,
         ),

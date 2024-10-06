@@ -4,52 +4,26 @@ import 'package:verdeviva/service/user_service.dart';
 class User {
   final int id;
   final String name;
-  final String phone;
-  final String email;
-  final String street;
-  final String number;
-  final String city;
-  final String zipCode;
-  final String complement;
-  final String state;
-  final String additionalInformation;
+  final Contact contact;
+  final List<Address> addresses;
 
   const User({
     required this.id,
     required this.name,
-    required this.phone,
-    required this.email,
-    required this.street,
-    required this.number,
-    required this.city,
-    required this.zipCode,
-    required this.complement,
-    required this.state,
-    required this.additionalInformation,
+    required this.contact,
+    required this.addresses,
   });
 
   bool hasAddress() {
-    return street.isNotEmpty &&
-        number.isNotEmpty &&
-        city.isNotEmpty &&
-        zipCode.isNotEmpty &&
-        state.isNotEmpty &&
-        complement.isNotEmpty;
+    return addresses.isEmpty;
   }
 
-  factory User.simple(String name, String email){
+  factory User.simple(String name, String email) {
     return User(
       id: 0,
       name: name,
-      phone: '',
-      email: email,
-      street: '',
-      number: '',
-      city: '',
-      zipCode: '',
-      complement: '',
-      state: '',
-      additionalInformation: '',
+      contact: Contact.empty(),
+      addresses: [],
     );
   }
 
@@ -62,31 +36,87 @@ class User {
     return User(
       id: json['id'] ?? 0,
       name: json['nome'] ?? '',
-      phone: json['telefone'] ?? '',
-      email: json['email'] ?? '',
-      street: json['logradouro'] ?? '',
-      number: json['numero'] ?? '',
-      city: json['cidade'] ?? '',
-      zipCode: json['cEP'] ?? '',
-      complement: json['complemento'] ?? '',
-      state: json['estado'] ?? '',
-      additionalInformation: json['informacoesAdicionais'] ?? '',
+      contact: Contact.fromJson(json['contato']),
+      addresses: (json['enderecos'] as List)
+          .map((addressJson) => Address.fromJson(addressJson))
+          .toList(),
     );
   }
 
-  Map<String, dynamic> toJson(){
+  Map<String, dynamic> toJson() {
     return {
       "id": id,
       "nome": name,
-      "telefone": phone ?? '',
-      "email": email,
-      "logradouro": street ?? '',
-      "numero": number ?? '',
-      "cidade": city ?? '',
-      "cEP": zipCode ?? '',
-      "complemento": complement ?? '',
-      "estado": state ?? '',
-      "informacoesAdicionais": additionalInformation ?? ''
+      "contato": contact.toJson(),
+      "enderecos": addresses.map((address) => address.toJson()).toList(),
+    };
+  }
+}
+
+class Address {
+  final String street;
+  final String number;
+  final String city;
+  final String zipCode;
+  final String complement;
+  final String state;
+
+  const Address({
+    required this.street,
+    required this.number,
+    required this.city,
+    required this.zipCode,
+    required this.complement,
+    required this.state,
+  });
+
+  factory Address.fromJson(Map<String, dynamic> json) {
+    return Address(
+      street: json['street'] ?? '',
+      number: json['number'] ?? '',
+      city: json['city'] ?? '',
+      zipCode: json['zipCode'] ?? '',
+      complement: json['complement'] ?? '',
+      state: json['state'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'street': street,
+      'number': number,
+      'city': city,
+      'zipCode': zipCode,
+      'complement': complement,
+      'state': state,
+    };
+  }
+}
+
+class Contact {
+  final String phone;
+  final String email;
+
+  const Contact({
+    required this.phone,
+    required this.email,
+  });
+
+  factory Contact.empty() {
+    return const Contact(phone: '', email: '');
+  }
+
+  factory Contact.fromJson(Map<String, dynamic> json) {
+    return Contact(
+      phone: json['phone'] ?? '',
+      email: json['email'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'phone': phone,
+      'email': email,
     };
   }
 }

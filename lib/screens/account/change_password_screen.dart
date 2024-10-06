@@ -242,7 +242,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                       _formKey.currentState!.save();
                       if (password == passwordAgain) {
                         _accessService
-                            .recoverPassword(user!.email, password)
+                            .recoverPassword(user!.contact.email, password)
                             .then((value) {
                           _showDialog();
                         });

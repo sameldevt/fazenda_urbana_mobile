@@ -19,6 +19,10 @@ class AccessService {
       body: jsonEncode({"email": email, "novaSenha": newPassword}),
     );
 
+    if(response.statusCode == 404){
+      throw UserNotFoundException();
+    }
+
     final service = UserService();
     service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
   }
@@ -33,6 +37,7 @@ class AccessService {
     );
 
     print(response.statusCode);
+
     if(response.statusCode == 404){
       throw UserNotFoundException();
     }
@@ -47,13 +52,20 @@ class AccessService {
     //return saveInfosFromResponse(response.body);
   }
 
-  Future<void> register(String nome, String email, String password) async {
+  Future<void> register(String name, String email, String password) async {
     http.Response response = await http.post(
       Uri.parse("$baseApiUrl/$contextUrl/registrar"),
       headers: {
         "Content-Type": "application/json", // Especifica o tipo como JSON
       },
-      body: jsonEncode({"nome": nome, "email": email, "senha": password}),
+      body: jsonEncode({
+        "nome": name,
+        "senha": password,
+        "contato": {
+          "telefone": "",
+          "email": email
+        }
+      }),
     );
 
     print(response.statusCode);

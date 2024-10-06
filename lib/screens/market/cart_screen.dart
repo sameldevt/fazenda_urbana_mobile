@@ -370,7 +370,7 @@ class _EmptyCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.05; // 5% do tamanho da altura
+    final verticalPadding = screenHeight * 0.06; // 5% do tamanho da altura
 
     final theme = Theme.of(context);
 
@@ -398,6 +398,7 @@ class _EmptyCartWidget extends StatelessWidget {
                   SizedBox(
                     height: 39,
                   ),
+                  SizedBox(height: verticalPadding,),
                   InkWell(
                     onTap: () {
                       Navigator.pushReplacementNamed(context, 'home');
@@ -407,10 +408,7 @@ class _EmptyCartWidget extends StatelessWidget {
                   ),
                 ],
               ),
-            ),
-            SizedBox(
-              height: verticalPadding,
-            ),
+            )
           ],
         ),
       ),

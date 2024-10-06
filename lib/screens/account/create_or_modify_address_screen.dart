@@ -1,70 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/service/user_service.dart';
 
-class AddressScreen extends StatefulWidget {
-  const AddressScreen({super.key});
+class CreateOrModifyAddressScreen extends StatefulWidget {
+  final addressIndex;
+  const CreateOrModifyAddressScreen({super.key, required this.addressIndex});
 
   @override
-  State<AddressScreen> createState() => _AddressScreenState();
+  State<CreateOrModifyAddressScreen> createState() => _CreateOrModifyAddressScreenState();
 }
 
-class _AddressScreenState extends State<AddressScreen> {
+class _CreateOrModifyAddressScreenState extends State<CreateOrModifyAddressScreen> {
+  User? user;
+  void loadUser() async {
+    final userData = await User.fromSharedPreferences();
+    setState(() {
+      user = userData;
+    });
+  }
+
+  @override
+  void initState() {
+    loadUser();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+        backgroundColor: appBarColor,
+        title: Text(
+          user!.hasAddress() ? 'Editar endereço' : 'Criar endereço',
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        title: Text('Endereço padrão'),
-        centerTitle: true,
-      ),
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(appPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Align(
-                alignment: Alignment.center,
-                child: _AddressDataForm(),
-              ),
-            ],
-          ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
         ),
       ),
+      backgroundColor: background,
+      body: _EditAddressDataForm(user: user!, addressIndex: widget.addressIndex,),
     );
   }
 }
 
-class _AddressDataForm extends StatefulWidget {
-  _AddressDataForm({super.key});
+class _EditAddressDataForm extends StatefulWidget {
+  final User user;
+  final int addressIndex;
+  _EditAddressDataForm({super.key, required this.user, required this.addressIndex});
 
   @override
-  State<_AddressDataForm> createState() => _AddressDataFormState();
+  State<_EditAddressDataForm> createState() => _EditAddressDataFormState();
 }
 
-class _AddressDataFormState extends State<_AddressDataForm> {
+class _EditAddressDataFormState extends State<_EditAddressDataForm> {
   final _formKey = GlobalKey<FormState>();
-
-  final Map<String, String> defaultAddress = {
-    "address": "Rua das Flores",
-    "number": "1000",
-    "complement": "Apto 31",
-    "CEP": "10101-010",
-    "city": "São Paulo",
-    "state": "SP",
-    "aditionalInfo": "Entregar para o Sr. Fulano."
-  };
-
+  final _userService = UserService();
   bool isEditable = false;
+
+  late Address address;
+
+  final Map<String, String> addressInfo = {
+    "street": address.street,
+    "number": address.number,
+    "complement": address.complement,
+    "zipCode": address.zipCode,
+    "city": address.city,
+    "state": address.state
+  };
 
   @override
   Widget build(BuildContext context) {
+    address = widget.user.addresses.elementAt(widget.addressIndex);
     return Form(
       key: _formKey,
       child: Padding(
@@ -84,7 +99,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                   enabled: isEditable,
                   //controller: controller,
                   decoration: InputDecoration(
-                    hintText: defaultAddress['address'],
+                    hintText: 'Rua das Flores',
                     border: const OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.text,
@@ -118,7 +133,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                         TextFormField(
                           enabled: isEditable,
                           decoration: InputDecoration(
-                            hintText: defaultAddress['number'],
+                            hintText: '1000',
                             border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.number,
@@ -152,7 +167,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                         TextFormField(
                           enabled: isEditable,
                           decoration: InputDecoration(
-                            hintText: defaultAddress['complement'],
+                            hintText: 'Apto 31',
                             border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.text,
@@ -187,7 +202,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                           enabled: isEditable,
                           obscureText: true,
                           decoration: InputDecoration(
-                            hintText: defaultAddress['CEP'],
+                            hintText: '10101-010',
                             border: OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.text,
@@ -226,7 +241,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                         TextFormField(
                           enabled: isEditable,
                           decoration: InputDecoration(
-                            hintText: defaultAddress['city'],
+                            hintText: 'São Paulo',
                             border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.text,
@@ -260,7 +275,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                         TextFormField(
                           enabled: isEditable,
                           decoration: InputDecoration(
-                            hintText: defaultAddress['state'],
+                            hintText: 'SP',
                             border: const OutlineInputBorder(),
                           ),
                           keyboardType: TextInputType.text,
@@ -292,7 +307,7 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                   enabled: isEditable,
                   //controller: controller,
                   decoration: InputDecoration(
-                    hintText: defaultAddress['aditionalInfo'],
+                    hintText: 'Portão branco',
                     border: const OutlineInputBorder(),
                   ),
                   keyboardType: TextInputType.text,
@@ -304,6 +319,13 @@ class _AddressDataFormState extends State<_AddressDataForm> {
                 ),
               ],
             ),
+            InkWell(onTap: (){
+              if(isEditable){
+                _userService.updateAddress(addressInfo);
+              }
+              isEditable = !isEditable;
+            },child: ActionPrimaryButton(buttonText: isEditable ? 'Salvar alterações' : 'Editar', buttonTextSize: 20)),
+            ActionSecondaryButton(buttonText: 'Voltar', buttonTextSize: 16),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: SizedBox(

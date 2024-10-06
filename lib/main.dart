@@ -3,7 +3,8 @@ import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
 import 'package:verdeviva/screens/account/account_screen.dart';
-import 'package:verdeviva/screens/account/address_screen.dart';
+import 'package:verdeviva/screens/account/address_list_screen.dart';
+import 'package:verdeviva/screens/account/create_or_modify_address_screen.dart';
 import 'package:verdeviva/screens/account/change_password_screen.dart';
 import 'package:verdeviva/screens/account/create_card_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
@@ -62,7 +63,8 @@ class App extends StatelessWidget {
         "cart": (context) => const CartScreen(),
         "personal-data": (context) => const PersonalDataScreen(),
         "address": (context) => const ShippingOptionScreen(),
-        "create-address": (context) => AddressScreen(),
+        "create-address": (context) => CreateOrModifyAddressScreen(),
+        "address-list": (context) => AddressListScreen(),
         "orders": (context) => const OrdersScreen(),
         "confirm-order": (context) => const ConfirmOrderScreen(),
         "shipping": (context) => const ShippingOptionScreen(),
