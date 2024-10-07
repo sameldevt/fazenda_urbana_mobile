@@ -47,14 +47,24 @@ class UserService {
       headers: {
         "Content-Type": "application/json",
       },
-      body: jsonEncode({"email": "", "senha": ""}),
+      body: jsonEncode({
+        "email": "",
+        "endereco": {
+          "street": "",
+          "number": "",
+          "complement": "",
+          "zipCode": "",
+          "city": "",
+          "state": ""
+        }
+      }),
     );
 
-    if(response.statusCode == 500){
+    if (response.statusCode == 500) {
       throw ServerErrorException();
     }
 
-    if(response.statusCode == 404){
+    if (response.statusCode == 404) {
       throw UserNotFoundException();
     }
 
