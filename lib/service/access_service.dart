@@ -19,6 +19,10 @@ class AccessService {
       body: jsonEncode({"email": email, "novaSenha": newPassword}),
     );
 
+    if(response.statusCode == 500){
+      throw ServerErrorException();
+    }
+
     if(response.statusCode == 404){
       throw UserNotFoundException();
     }
@@ -36,7 +40,9 @@ class AccessService {
       body: jsonEncode({"email": email, "senha": password}),
     );
 
-    print(response.statusCode);
+    if(response.statusCode == 500){
+      throw ServerErrorException();
+    }
 
     if(response.statusCode == 404){
       throw UserNotFoundException();
@@ -68,7 +74,9 @@ class AccessService {
       }),
     );
 
-    print(response.statusCode);
+    if(response.statusCode == 500){
+      throw ServerErrorException();
+    }
 
     if(response.statusCode == 400){
       throw UserAlreadyExists();
@@ -95,3 +103,4 @@ class AccessService {
 class UserNotFoundException implements Exception {}
 class UserAlreadyExists implements Exception {}
 class InvalidCredentialsException implements Exception {}
+class ServerErrorException implements Exception {}

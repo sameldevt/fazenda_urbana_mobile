@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:verdeviva/service/access_service.dart';
 
 class UserService {
   final String _userKey = "user_info";
+  final String contextUrl = "usuario";
 
   Future<void> saveUserInfo(User user) async {
     final prefs = await SharedPreferences.getInstance();
@@ -37,5 +39,32 @@ class UserService {
     String userInfoJson = prefs.getString(_userKey) ?? "";
 
     return null;
+  }
+
+  Future<void> createAddress(Map<String, String> address) async {
+    http.Response response = await http.post(
+      Uri.parse("$baseApiUrl/$contextUrl/cadastrar-endereco"),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({"email": "", "senha": ""}),
+    );
+
+    if(response.statusCode == 500){
+      throw ServerErrorException();
+    }
+
+    if(response.statusCode == 404){
+      throw UserNotFoundException();
+    }
+
+    if (response.statusCode == 400) {
+      throw InvalidCredentialsException();
+    }
+
+    final service = UserService();
+
+    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+    //return saveInfosFromResponse(response.body);
   }
 }

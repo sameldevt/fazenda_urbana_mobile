@@ -15,11 +15,11 @@ class CartService {
     await prefs.setStringList(_cartKey, cart);
   }
 
-  Future<List<ProductToCart>> getProducts() async {
+  Future<Set<ProductToCart>> getProducts() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList(_cartKey) ?? [];
 
-    return cart.map((item) => ProductToCart.fromJson(jsonDecode(item))).toList();
+    return cart.map((item) => ProductToCart.fromJson(jsonDecode(item))).toSet();
   }
 
   Future<void> removeProduct(int productId) async {

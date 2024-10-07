@@ -147,6 +147,10 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
         content = "O e-mail informando não possui cadastro.";
         image = "assets/not-found.png";
         break;
+      case ServerErrorException _:
+        content = "Ocorreu um erro inesperado";
+        image = "assets/server-error.png";
+        break;
     }
 
     showDialog(

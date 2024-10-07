@@ -15,12 +15,27 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final CartService _cartService = CartService();
-  final List<ProductToCart> _products = [];
+  final Set<ProductToCart> _products = {};
 
   Future<void> _loadProducts() async {
-    List<ProductToCart> products = await _cartService.getProducts();
+    Set<ProductToCart> products = await _cartService.getProducts();
     setState(() {
       _products.addAll(products);
+    });
+  }
+
+  void onChanged(ProductToCart product, String change) {
+    setState(() {
+      switch (change) {
+        case 'remove':
+          _cartService.removeProduct(product.id);
+          _products.remove(product);
+          break;
+        case 'update':
+          _products.remove(product);
+          _products.add(product);
+          break;
+      }
     });
   }
 
@@ -58,10 +73,10 @@ class _CartScreenState extends State<CartScreen> {
                   const _Header(),
                   _CartItemsSection(
                     products: _products,
+                    onChanged: onChanged,
                   ),
                   _ContinuePurchaseSection(
-                    products: _products,
-                  ),
+                      products: _products, onChanged: onChanged),
                 ],
               ),
             ),
@@ -88,24 +103,16 @@ class _Header extends StatelessWidget {
 }
 
 class _CartItemsSection extends StatefulWidget {
-  final List<ProductToCart> products;
+  final Set<ProductToCart> products;
+  final Function(ProductToCart product, String change) onChanged;
 
-  const _CartItemsSection({required this.products});
+  const _CartItemsSection({required this.products, required this.onChanged});
 
   @override
   State<_CartItemsSection> createState() => _CartItemsSectionState();
 }
 
 class _CartItemsSectionState extends State<_CartItemsSection> {
-  final CartService _cartService = CartService();
-
-  void _removeProduct(ProductToCart product) {
-    setState(() {
-      _cartService.removeProduct(product.id);
-      widget.products.remove(product);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -117,10 +124,12 @@ class _CartItemsSectionState extends State<_CartItemsSection> {
             child: ListView.separated(
               itemCount: widget.products.length,
               itemBuilder: (context, index) {
-                final product = widget.products[index];
+                // Converte o Set em uma lista
+                var productList = widget.products.toList();
+                var product = productList[index]; // Acesse pelo índice
                 return _CartItemCard(
                   product: product,
-                  onDelete: _removeProduct,
+                  onChanged: widget.onChanged,
                 );
               },
               separatorBuilder: (context, index) => const Divider(
@@ -139,9 +148,9 @@ class _CartItemsSectionState extends State<_CartItemsSection> {
 
 class _CartItemCard extends StatefulWidget {
   final ProductToCart product;
-  final Function(ProductToCart) onDelete;
+  final Function(ProductToCart product, String change) onChanged;
 
-  const _CartItemCard({required this.product, required this.onDelete});
+  const _CartItemCard({required this.product, required this.onChanged});
 
   @override
   State<_CartItemCard> createState() => _CartItemCardState();
@@ -166,10 +175,16 @@ class _CartItemCardState extends State<_CartItemCard> {
   ];
   int _selectedQuantity = 0;
 
-  void updateItemPrice(ProductToCart product, int selectedQuantity) {
+  void _updateItemPrice(ProductToCart product, int selectedQuantity) {
     product.totalPrice = selectedQuantity > 5
         ? product.basePrice * (selectedQuantity / 1000)
         : product.basePrice * selectedQuantity;
+
+    widget.onChanged(product, 'update');
+  }
+
+  void _removeProduct(ProductToCart product) {
+    widget.onChanged(product, 'remove');
   }
 
   @override
@@ -223,11 +238,9 @@ class _CartItemCardState extends State<_CartItemCard> {
                     DropdownButton<int>(
                       value: _selectedQuantity,
                       onChanged: (int? newValue) {
-                        setState(() {
-                          _selectedQuantity = newValue!;
-                          widget.product.quantity = _selectedQuantity;
-                          updateItemPrice(widget.product, _selectedQuantity);
-                        });
+                        _selectedQuantity = newValue!;
+                        widget.product.quantity = _selectedQuantity;
+                        _updateItemPrice(widget.product, _selectedQuantity);
                       },
                       items:
                           _quantities.map<DropdownMenuItem<int>>((int value) {
@@ -259,9 +272,7 @@ class _CartItemCardState extends State<_CartItemCard> {
                   size: 40,
                 ),
                 onPressed: () {
-                  setState(() {
-                    widget.onDelete(widget.product);
-                  });
+                  _removeProduct(widget.product);
                 },
               ),
               Text(
@@ -278,9 +289,11 @@ class _CartItemCardState extends State<_CartItemCard> {
 }
 
 class _ContinuePurchaseSection extends StatefulWidget {
-  final List<ProductToCart> products;
+  final Set<ProductToCart> products;
+  final Function(ProductToCart product, String change) onChanged;
 
-  const _ContinuePurchaseSection({required this.products});
+  const _ContinuePurchaseSection(
+      {required this.products, required this.onChanged});
 
   @override
   State<_ContinuePurchaseSection> createState() =>
@@ -398,7 +411,9 @@ class _EmptyCartWidget extends StatelessWidget {
                   SizedBox(
                     height: 39,
                   ),
-                  SizedBox(height: verticalPadding,),
+                  SizedBox(
+                    height: verticalPadding,
+                  ),
                   InkWell(
                     onTap: () {
                       Navigator.pushReplacementNamed(context, 'home');

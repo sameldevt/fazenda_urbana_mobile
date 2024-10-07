@@ -61,10 +61,16 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: verticalPadding,),
-                    _Header(user: user!,),
+                    SizedBox(
+                      height: verticalPadding,
+                    ),
+                    _Header(
+                      user: user!,
+                    ),
                     _AccountInfo(user: user!),
-                    SizedBox(height: verticalPadding,),
+                    SizedBox(
+                      height: verticalPadding,
+                    ),
                     _Buttons(),
                   ],
                 ),
@@ -79,6 +85,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
 class _Header extends StatelessWidget {
   User user;
+
   _Header({required this.user});
 
   @override
@@ -94,6 +101,7 @@ class _Header extends StatelessWidget {
 
 class _AccountInfo extends StatelessWidget {
   User user;
+
   _AccountInfo({required this.user});
 
   @override
@@ -101,9 +109,18 @@ class _AccountInfo extends StatelessWidget {
     return Column(
       children: [
         Center(
-          child: Icon(
-            Icons.account_circle_sharp,
-            size: 200,
+          child: ClipOval(
+            child: user.profilePic.isEmpty
+                ? Image.asset(
+                  'assets/profile.png',
+                  height: 250,
+                  width: 250,
+                  fit: BoxFit.cover,
+                )
+                : Icon(
+                    Icons.account_circle_sharp,
+                    size: 200,
+                  ),
           ),
         ),
         Text(

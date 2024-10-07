@@ -63,7 +63,6 @@ class App extends StatelessWidget {
         "cart": (context) => const CartScreen(),
         "personal-data": (context) => const PersonalDataScreen(),
         "address": (context) => const ShippingOptionScreen(),
-        "create-address": (context) => CreateOrModifyAddressScreen(),
         "address-list": (context) => AddressListScreen(),
         "orders": (context) => const OrdersScreen(),
         "confirm-order": (context) => const ConfirmOrderScreen(),

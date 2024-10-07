@@ -4,12 +4,14 @@ import 'package:verdeviva/service/user_service.dart';
 class User {
   final int id;
   final String name;
+  final String profilePic;
   final Contact contact;
   final List<Address> addresses;
 
   const User({
     required this.id,
     required this.name,
+    required this.profilePic,
     required this.contact,
     required this.addresses,
   });
@@ -22,6 +24,7 @@ class User {
     return User(
       id: 0,
       name: name,
+      profilePic: "",
       contact: Contact.empty(),
       addresses: [],
     );
@@ -36,6 +39,7 @@ class User {
     return User(
       id: json['id'] ?? 0,
       name: json['nome'] ?? '',
+      profilePic: json['fotoPerfil'] ?? '',
       contact: Contact.fromJson(json['contato']),
       addresses: (json['enderecos'] as List)
           .map((addressJson) => Address.fromJson(addressJson))

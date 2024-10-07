@@ -2,11 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
-import 'package:verdeviva/model/dtos/login_dto.dart';
-import 'package:verdeviva/model/user.dart';
-import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/service/access_service.dart';
-import 'package:verdeviva/service/user_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -92,7 +88,7 @@ class _LoginFormState extends State<_LoginForm> {
     String content = "";
     String image = "";
 
-    switch(error){
+    switch (error) {
       case InvalidCredentialsException _:
         content = "A senha digitada está incorreta";
         image = "assets/wrong-password.png";
@@ -100,6 +96,10 @@ class _LoginFormState extends State<_LoginForm> {
       case UserNotFoundException _:
         content = "O e-mail informando não possui cadastro.";
         image = "assets/not-found.png";
+        break;
+      case ServerErrorException _:
+        content = "Ocorreu um erro inesperado";
+        image = "assets/server-error.png";
         break;
     }
 
@@ -232,7 +232,8 @@ class _LoginFormState extends State<_LoginForm> {
                     print(error);
                     _showDialog(error);
                   });
-                };
+                }
+                ;
               },
               child: const ActionPrimaryButton(
                   buttonText: 'Acessar conta', buttonTextSize: 20),

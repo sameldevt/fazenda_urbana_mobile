@@ -98,6 +98,10 @@ class _RegisterFormState extends State<_RegisterForm> {
       case UserAlreadyExists _:
         content = "O e-mail informado já possui cadastro";
         image = "assets/something-wrong.png";
+      case ServerErrorException _:
+        content = "Ocorreu um erro inesperado";
+        image = "assets/server-error.png";
+        break;
     }
 
     showDialog(
