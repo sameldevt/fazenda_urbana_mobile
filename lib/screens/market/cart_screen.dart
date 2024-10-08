@@ -383,9 +383,7 @@ class _EmptyCartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.06; // 5% do tamanho da altura
-
-    final theme = Theme.of(context);
+    final verticalPadding = screenHeight * 0.10;
 
     return Padding(
       padding: const EdgeInsets.all(appPadding),

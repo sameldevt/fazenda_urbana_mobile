@@ -238,7 +238,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
               style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             onTap: () {
-              Navigator.pushNamed(context, 'home');
+              Navigator.pushReplacementNamed(context, 'home');
             },
           ),
           ListTile(
@@ -376,7 +376,7 @@ class _NotLoggedDrawerState extends State<NotLoggedDrawer> {
               style: TextStyle(fontSize: 20, color: Colors.black),
             ),
             onTap: () {
-              Navigator.pushNamed(context, 'home');
+              Navigator.pushReplacementNamed(context, 'home');
             },
           ),
           ListTile(

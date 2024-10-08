@@ -42,39 +42,42 @@ class UserService {
   }
 
   Future<void> createAddress(Map<String, String> address) async {
-    http.Response response = await http.post(
-      Uri.parse("$baseApiUrl/$contextUrl/cadastrar-endereco"),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "email": "",
-        "endereco": {
-          "street": "",
-          "number": "",
-          "complement": "",
-          "zipCode": "",
-          "city": "",
-          "state": ""
-        }
-      }),
-    );
+    final userService = UserService();
+    userService.loadUserInfo().then((user) async {
+      final email = user!.contact.email;
+      http.Response response = await http.post(
+        Uri.parse("$baseApiUrl/$contextUrl/cadastrar-endereco"),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "email": email,
+          "logradouro": address['street'],
+          "numero": address['number'],
+          "cidade": address['city'],
+          "cep": address['zipCode'],
+          "complemento": address['complement'],
+          "estado": address['state'],
+          "informacoesAdicionais": address['additionalInfo']
+        }),
+      );
 
-    if (response.statusCode == 500) {
-      throw ServerErrorException();
-    }
+      if (response.statusCode == 500) {
+        throw ServerErrorException();
+      }
 
-    if (response.statusCode == 404) {
-      throw UserNotFoundException();
-    }
+      if (response.statusCode == 404) {
+        throw UserNotFoundException();
+      }
 
-    if (response.statusCode == 400) {
-      throw InvalidCredentialsException();
-    }
+      if (response.statusCode == 400) {
+        throw InvalidCredentialsException();
+      }
 
-    final service = UserService();
+      final service = UserService();
 
-    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+      service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+    });
     //return saveInfosFromResponse(response.body);
   }
 }

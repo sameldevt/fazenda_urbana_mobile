@@ -368,7 +368,8 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
     "complement": "",
     "zipCode": "",
     "city": "",
-    "state": ""
+    "state": "",
+    "additionalInfo": ""
   };
 
   void _showErrorDialog(error) {
@@ -470,10 +471,10 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(context, 'home');
+                    Navigator.pop(context);
                   },
                   child: const ActionPrimaryButton(
-                    buttonText: 'Entrar',
+                    buttonText: 'Ok',
                     buttonTextSize: 16,
                   ),
                 ),
@@ -505,277 +506,311 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
         ),
       ),
       backgroundColor: background,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: ListView(
         children: [
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
                     children: [
-                      const Text(
-                        'Endereço',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Endereço',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextFormField(
+                            //controller: controller,
+                            decoration: InputDecoration(
+                              hintText: 'Rua das Flores',
+                              border: const OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, insira seu endereço!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              addressInfo['street'] = value!;
+                            },
+                          ),
+                        ],
                       ),
-                      TextFormField(
-                        //controller: controller,
-                        decoration: InputDecoration(
-                          hintText: 'Rua das Flores',
-                          border: const OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, insira seu endereço!';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {},
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Número',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: '1000',
+                                      border: const OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira o número do seu endereço!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['number'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Complemento',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Apto 31',
+                                      border: const OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira o complemento do seu endereço!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['complement'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'CEP',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: '10101-010',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira seu CEP!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['zipCode'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Cidade',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: 'São Paulo',
+                                      border: const OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira a sua cidade!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['city'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Estado',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: InputDecoration(
+                                      hintText: 'SP',
+                                      border: const OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira seu estado!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['state'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Informações adicionais',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextFormField(
+                            decoration: InputDecoration(
+                              hintText: 'Portão branco',
+                              border: const OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {},
+                            onSaved: (value) {
+                              addressInfo['additionalInfo'] = value!;
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Número',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: '1000',
-                                  border: const OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.number,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor, insira o número do seu endereço!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Complemento',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'Apto 31',
-                                  border: const OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.text,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor, insira o complemento do seu endereço!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'CEP',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextFormField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  hintText: '10101-010',
-                                  border: OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.text,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor, insira seu CEP!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Cidade',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'São Paulo',
-                                  border: const OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.text,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor, insira a sua cidade!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Estado',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              TextFormField(
-                                decoration: InputDecoration(
-                                  hintText: 'SP',
-                                  border: const OutlineInputBorder(),
-                                ),
-                                keyboardType: TextInputType.text,
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor, insira seu estado!';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {},
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Informações adicionais',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Portão branco',
-                          border: const OutlineInputBorder(),
-                        ),
-                        keyboardType: TextInputType.text,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        validator: (value) {},
-                        onSaved: (value) {},
-                      ),
-                    ],
-                  ),
-                ],
+                ),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                InkWell(
-                  onTap: () {
-                    _userService.createAddress(addressInfo).then((result) {
-                      _showDialog();
-                    }).catchError((error) {
-                      _showErrorDialog(error);
-                    });
-                  },
-                  child: ActionPrimaryButton(
-                    buttonText: 'Cadastrar',
-                    buttonTextSize: 20,
-                  ),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          _userService
+                              .createAddress(addressInfo)
+                              .then((result) {
+                            print(addressInfo);
+                            _showDialog();
+                          }).catchError((error) {
+                            _showErrorDialog(error);
+                          });
+                        }
+                      },
+                      child: ActionPrimaryButton(
+                        buttonText: 'Cadastrar',
+                        buttonTextSize: 20,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    InkWell(
+                      onTap: () {},
+                      child: ActionSecondaryButton(
+                        buttonText: 'Voltar',
+                        buttonTextSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 8),
-                InkWell(
-                  onTap: () {},
-                  child: ActionSecondaryButton(
-                    buttonText: 'Voltar',
-                    buttonTextSize: 16,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
-
 }

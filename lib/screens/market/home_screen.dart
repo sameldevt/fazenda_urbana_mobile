@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/cards.dart';
+import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/common/custom_widgets.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/model/user.dart';
@@ -80,11 +82,11 @@ class _MainPageScreenState extends State<_MainPageScreen> {
   final ProductService _productService = ProductService();
   final List<Product> _products = [];
 
-  void _loadProducts() async {
+  Future<void> _loadProducts() async {
     final products = await _productService.getAll();
-     setState(() {
-       _products.addAll(products);
-     });
+    setState(() {
+      _products.addAll(products);
+    });
   }
 
   @override
@@ -97,14 +99,16 @@ class _MainPageScreenState extends State<_MainPageScreen> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const _FilterSection(),
+        _FilterSection(),
         Expanded(
-          child: Column(
-            children: [
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
+          child: RefreshIndicator(
+            onRefresh: _loadProducts, // A função de atualização
+            child: _products.isEmpty
+                ? _NoProductsScreen() // Mostra tela de "sem produtos"
+                : GridView.builder(
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2, // Define 2 colunas no grid
                     crossAxisSpacing: 1.0,
                     mainAxisSpacing: 1.0,
                     childAspectRatio: 0.85,
@@ -117,11 +121,65 @@ class _MainPageScreenState extends State<_MainPageScreen> {
                     );
                   },
                 ),
-              ),
-            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _NoProductsScreen extends StatefulWidget {
+  const _NoProductsScreen({super.key});
+
+  @override
+  State<_NoProductsScreen> createState() => _NoProductsScreenState();
+}
+
+class _NoProductsScreenState extends State<_NoProductsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.10;
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(appPadding),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: verticalPadding,
+                ),
+                Container(
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        'assets/server-error.png',
+                        height: 400,
+                        width: 400,
+                      ),
+                      const Text(
+                        "Não foi possível carregar a lista de produtos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: verticalPadding,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+
     );
   }
 }
