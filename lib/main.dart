@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:verdeviva/providers/cart_provider.dart';
+import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
 import 'package:verdeviva/screens/access/register_screen.dart';
@@ -33,51 +36,57 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Projeto mobile VerdeViva',
-      initialRoute: "home",
-      theme: ThemeData(
-        colorScheme: ColorScheme(
-          brightness: Brightness.light,
-          primary: Colors.lightGreen.shade700,
-          onPrimary: Colors.white,
-          secondary: Colors.lightGreen.shade300,
-          onSecondary: Colors.black,
-          tertiary: Colors.lightGreen.shade100,
-          onTertiary: Colors.black,
-          surfaceBright: Colors.white,
-          error: Colors.red,
-          onError: Colors.white,
-          surface: Colors.white,
-          onSurface: Colors.black,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => CartProvider()),
+      ],
+      child: MaterialApp(
+        title: 'Projeto mobile VerdeViva',
+        initialRoute: "home",
+        theme: ThemeData(
+          colorScheme: ColorScheme(
+            brightness: Brightness.light,
+            primary: Colors.lightGreen.shade700,
+            onPrimary: Colors.white,
+            secondary: Colors.lightGreen.shade300,
+            onSecondary: Colors.black,
+            tertiary: Colors.lightGreen.shade100,
+            onTertiary: Colors.black,
+            surfaceBright: Colors.white,
+            error: Colors.red,
+            onError: Colors.white,
+            surface: Colors.white,
+            onSurface: Colors.black,
+          ),
         ),
+        routes: {
+          "test": (context) => const TestScreen(),
+          "login": (context) => const LoginScreen(),
+          "home": (context) => const HomeScreen(),
+          "account": (context) => const AccountScreen(),
+          "register": (context) => const RegisterScreen(),
+          "recover-pass": (context) => const RecoverPasswordScreen(),
+          "change-pass": (context) => ChangePasswordScreen(),
+          "cart": (context) => const CartScreen(),
+          "personal-data": (context) => const PersonalDataScreen(),
+          "address": (context) => const ShippingOptionScreen(),
+          "address-list": (context) => AddressScreen(),
+          "orders": (context) => const OrdersScreen(),
+          "confirm-order": (context) => const ConfirmOrderScreen(),
+          "shipping": (context) => const ShippingOptionScreen(),
+          "payment": (context) => const PaymentOptionScreen(),
+          "pix-payment": (context) => const PixScreen(),
+          "card-payment": (context) => const CardOptionScreen(),
+          "payment-status": (context) => const PaymentStatusScreen(),
+          "order-details": (context) => const OrderDetailsScreen(),
+          "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
+          "create-card": (context) => const CreateCardScreen(),
+          "card": (context) => const CardOptionScreen(),
+          "not-logged": (context) => const NotLoggedScreen()
+          //"purchase-sumary": (context) => PurchaseSumaryScreen(),
+        },
       ),
-      routes: {
-        "test": (context) => const TestScreen(),
-        "login": (context) => const LoginScreen(),
-        "home": (context) => const HomeScreen(),
-        "account": (context) => const AccountScreen(),
-        "register": (context) => const RegisterScreen(),
-        "recover-pass": (context) => const RecoverPasswordScreen(),
-        "change-pass": (context) => ChangePasswordScreen(),
-        "cart": (context) => const CartScreen(),
-        "personal-data": (context) => const PersonalDataScreen(),
-        "address": (context) => const ShippingOptionScreen(),
-        "address-list": (context) => AddressScreen(),
-        "orders": (context) => const OrdersScreen(),
-        "confirm-order": (context) => const ConfirmOrderScreen(),
-        "shipping": (context) => const ShippingOptionScreen(),
-        "payment": (context) => const PaymentOptionScreen(),
-        "pix-payment": (context) => const PixScreen(),
-        "card-payment": (context) => const CardOptionScreen(),
-        "payment-status": (context) => const PaymentStatusScreen(),
-        "order-details": (context) => const OrderDetailsScreen(),
-        "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
-        "create-card": (context) => const CreateCardScreen(),
-        "card": (context) => const CardOptionScreen(),
-        "not-logged": (context) => const NotLoggedScreen()
-        //"purchase-sumary": (context) => PurchaseSumaryScreen(),
-      },
     );
   }
 }
