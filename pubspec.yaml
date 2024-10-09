@@ -85,6 +85,7 @@ flutter:
     - assets/exit.png
     - assets/server-error.png
     - assets/profile.png
+    - assets/purchase.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

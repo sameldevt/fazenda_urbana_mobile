@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/order.dart';
+import 'package:verdeviva/model/product.dart';
+import 'package:verdeviva/providers/cart_provider.dart';
+import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/screens/market/orders_screen.dart';
 
 class BoletoScreen extends StatefulWidget {
@@ -46,7 +52,7 @@ class _BoletoScreenState extends State<BoletoScreen> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(appPadding),
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
@@ -95,12 +101,8 @@ class _BarCodeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Center(
-          child: Icon(
-            Icons.check,
-            color: Colors.green,
-            size: 200,
-          ),
+        Center(
+          child: Image.asset('assets/purchase.png'),
         ),
         const SizedBox(
           height: 30,
@@ -150,92 +152,124 @@ class _OrderInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              'Resumo do pedido',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-          ),
-          const Row(
+    String calculateTotalPrice(Set<ProductToCart> products, Order order) {
+      final shippingCost = order.shippingCost;
+
+      double total =
+          products.fold(0.0, (total, product) => total + product.totalPrice) +
+              shippingCost;
+
+      return total.toStringAsFixed(2);
+    }
+
+    String calculateTotalItemsPrice(Set<ProductToCart> products) {
+      double total =
+      products.fold(0.0, (total, product) => total + product.totalPrice);
+      return total.toStringAsFixed(2);
+    }
+
+    return Consumer<OrderProvider>(
+      builder: (context, orderProvider, child){
+        final cartProvider = Provider.of<CartProvider>(context);
+        final products = cartProvider.products;
+        final order = orderProvider.order!;
+
+        return Container(
+          height: 250,
+          color: Colors.white,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Produtos (2)',
-                style: TextStyle(
-                  fontSize: 14,
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Resumo do pedido',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 14,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Produtos (${order.items.length})',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    'R\$ ${calculateTotalItemsPrice(products)}',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Frete',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    'R\$ ${order.shippingCost}',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Total',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'R\$ ${calculateTotalPrice(products, order)}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              InkWell(
+                onTap: () {
+                  orderProvider.clearOrder();
+                  cartProvider.clearCart();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OrdersScreen(),
+                    ),
+                  );
+                },
+                child: const ActionPrimaryButton(
+                  buttonText: 'Ver pedidos',
+                  buttonTextSize: 20,
                 ),
+              ),
+              InkWell(
+                onTap: (){
+                  orderProvider.clearOrder();
+                  cartProvider.clearCart();
+                  Navigator.pushReplacementNamed(context, 'home');
+                },
+                child: const ActionSecondaryButton(
+                    buttonText: 'Voltar ao início',
+                    buttonTextSize: 18),
               ),
             ],
           ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Frete',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'R\$ 2,99',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          InkWell(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrdersScreen(),
-                ),
-              );
-            },
-            child: const ActionPrimaryButton(
-              buttonText: 'Ver pedidos',
-              buttonTextSize: 20,
-            ),
-          ),
-          const NavigationSecondaryButton(
-              route: 'home',
-              buttonText: 'Voltar ao início',
-              buttonTextSize: 20),
-        ],
-      ),
+        );
+      }
     );
   }
 }

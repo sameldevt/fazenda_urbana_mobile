@@ -15,6 +15,20 @@ class CartService {
     await prefs.setStringList(_cartKey, cart);
   }
 
+  Future<void> updateProduct(ProductToCart productToCart) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> cart = prefs.getStringList(_cartKey) ?? [];
+
+    cart.removeWhere((item) {
+      final product = ProductToCart.fromJson(jsonDecode(item));
+      return product.id == productToCart.id;
+    });
+
+    cart.add(jsonEncode(productToCart.toJson()));
+
+    await prefs.setStringList(_cartKey, cart);
+  }
+
   Future<Set<ProductToCart>> getProducts() async {
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList(_cartKey) ?? [];
@@ -22,13 +36,13 @@ class CartService {
     return cart.map((item) => ProductToCart.fromJson(jsonDecode(item))).toSet();
   }
 
-  Future<void> removeProduct(int productId) async {
+  Future<void> removeProduct(ProductToCart productToRemove) async {
     final prefs = await SharedPreferences.getInstance();
     List<String> cart = prefs.getStringList(_cartKey) ?? [];
 
     cart.removeWhere((item) {
       final product = ProductToCart.fromJson(jsonDecode(item));
-      return product.id == productId;
+      return product.id == productToRemove.id;
     });
 
     await prefs.setStringList(_cartKey, cart);

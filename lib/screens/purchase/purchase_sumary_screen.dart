@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/product.dart';
+import 'package:verdeviva/providers/cart_provider.dart';
+import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
 import 'package:verdeviva/screens/purchase/payment/boleto_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/pix_screen.dart';
 
 class PurchaseSummaryScreen extends StatelessWidget {
-  final String paymentMethod;
-
-  const PurchaseSummaryScreen({super.key, required this.paymentMethod});
+  const PurchaseSummaryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +50,7 @@ class PurchaseSummaryScreen extends StatelessWidget {
                       height: 8,
                     ),
                     _SummaryItemsSection(),
-                    _ConfirmPurchaseSection(
-                      paymentMethod: paymentMethod,
-                    ),
+                    _ConfirmPurchaseSection(),
                   ],
                 ),
               ),
@@ -81,48 +81,46 @@ class _Header extends StatelessWidget {
 }
 
 class _SummaryItemsSection extends StatelessWidget {
-  final List<Product> items = [];
-
-  _SummaryItemsSection();
-
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Colors.white,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.60,
-              child: ListView.separated(
-                itemCount: items.length,
-                itemBuilder: (context, index) {
-                  final product = items[index];
-                  return _SummaryItemCard(
-                    product: product
-                  );
-                },
-                separatorBuilder: (context, index) => const Divider(
-                  color: Colors.grey,
-                  thickness: 0.5,
-                  indent: 10.0,
-                  endIndent: 10.0,
+    return Consumer<CartProvider>(builder: (context, cartProvider, child) {
+      final items = cartProvider.products.toList();
+
+      return SingleChildScrollView(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.60,
+                child: ListView.separated(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final product = items[index];
+                    return _SummaryItemCard(product: product);
+                  },
+                  separatorBuilder: (context, index) => const Divider(
+                    color: Colors.grey,
+                    thickness: 0.5,
+                    indent: 10.0,
+                    endIndent: 10.0,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 
 class _SummaryItemCard extends StatefulWidget {
-  final Product product;
+  final ProductToCart product;
 
   const _SummaryItemCard({required this.product});
 
@@ -168,7 +166,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 8),
-                  const Column(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -180,7 +178,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
                         ),
                       ),
                       Text(
-                        '1 kg',
+                        '${widget.product.quantity > 5 ? '${widget.product.quantity} g' : '${widget.product.quantity} kg' }',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -199,7 +197,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'R\$ ${widget.product.pricePerKilo} / kg',
+                  'R\$ ${widget.product.totalPrice.toStringAsFixed(2)} ',
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                   overflow: TextOverflow.ellipsis, // Evita overflow de texto
                 ),
@@ -213,9 +211,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
 }
 
 class _ConfirmPurchaseSection extends StatefulWidget {
-  final String paymentMethod;
-
-  const _ConfirmPurchaseSection({required this.paymentMethod});
+  const _ConfirmPurchaseSection();
 
   @override
   State<_ConfirmPurchaseSection> createState() =>
@@ -223,122 +219,143 @@ class _ConfirmPurchaseSection extends StatefulWidget {
 }
 
 class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
+  String calculateTotalPrice(Set<ProductToCart> products, Order order) {
+    final shippingCost = order.shippingCost;
+
+    double total =
+        products.fold(0.0, (total, product) => total + product.totalPrice) +
+            shippingCost;
+
+    return total.toStringAsFixed(2);
+  }
+
+  String calculateTotalItemsPrice(Set<ProductToCart> products) {
+    double total =
+        products.fold(0.0, (total, product) => total + product.totalPrice);
+    return total.toStringAsFixed(2);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 180,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Forma de pagamento: '),
-              Text(() {
-                switch (widget.paymentMethod) {
-                  case 'card':
-                    return 'Cartão';
-                  case 'pix':
-                    return 'Pix';
-                  case 'boleto':
-                    return 'Boleto';
-                  default:
-                    return '';
-                }
-              }()),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Produtos (2)',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Frete',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              Text(
-                'R\$ 2,99',
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    Widget screen;
+    return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
+      final cartProvider = Provider.of<CartProvider>(context);
+      final orderProducts = cartProvider.products;
+      final order = orderProvider.order!;
 
-                    switch (widget.paymentMethod) {
-                      case 'card':
-                        screen = const CardScreen();
-                        break;
-                      case 'boleto':
-                        screen = const BoletoScreen();
-                        break;
-                      case 'pix':
-                        screen = const PixScreen();
-                        break;
-                      default:
-                        screen = const Scaffold();
-                    }
+      return Container(
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Forma de pagamento: '),
+                Text(() {
+                  switch (order.paymentMethod) {
+                    case 'card':
+                      return 'Cartão';
+                    case 'pix':
+                      return 'Pix';
+                    case 'boleto':
+                      return 'Boleto';
+                    default:
+                      return '';
+                  }
+                }()),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Produtos (${order.items.length})',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  'R\$ ${calculateTotalItemsPrice(orderProducts)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Frete',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  'R\$ ${order.shippingCost}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'R\$ ${calculateTotalPrice(orderProducts, order)}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Center(
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      Widget screen;
 
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => screen),
-                      (Route<dynamic> route) => false,
-                    );
-                  });
-                },
-                child: const ActionPrimaryButton(
-                  buttonText: 'Confirmar pedido',
-                  buttonTextSize: 20,
+                      switch (order.paymentMethod) {
+                        case 'card':
+                          screen = const CardScreen();
+                          break;
+                        case 'boleto':
+                          screen = const BoletoScreen();
+                          break;
+                        case 'pix':
+                          screen = const PixScreen();
+                          break;
+                        default:
+                          screen = const Scaffold();
+                      }
+
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => screen),
+                        (Route<dynamic> route) => false,
+                      );
+                    });
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Confirmar pedido',
+                    buttonTextSize: 20,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }

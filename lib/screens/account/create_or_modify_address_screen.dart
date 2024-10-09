@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/service/access_service.dart';
 import 'package:verdeviva/service/user_service.dart';
+
+import '../../providers/user_provider.dart';
 
 class EditAddressScreen extends StatefulWidget {
   final int addressIndex;
@@ -70,7 +73,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
       body: Form(
         key: _formKey,
         child: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -87,9 +90,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                   TextFormField(
                     enabled: isEditable,
                     //controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Rua das Flores',
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -121,9 +124,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                           ),
                           TextFormField(
                             enabled: isEditable,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: '1000',
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.number,
                             autovalidateMode:
@@ -155,9 +158,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                           ),
                           TextFormField(
                             enabled: isEditable,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'Apto 31',
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.text,
                             autovalidateMode:
@@ -190,7 +193,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                           TextFormField(
                             enabled: isEditable,
                             obscureText: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: '10101-010',
                               border: OutlineInputBorder(),
                             ),
@@ -229,9 +232,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                           ),
                           TextFormField(
                             enabled: isEditable,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'São Paulo',
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.text,
                             autovalidateMode:
@@ -263,9 +266,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                           ),
                           TextFormField(
                             enabled: isEditable,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               hintText: 'SP',
-                              border: const OutlineInputBorder(),
+                              border: OutlineInputBorder(),
                             ),
                             keyboardType: TextInputType.text,
                             autovalidateMode:
@@ -297,9 +300,9 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                   TextFormField(
                     enabled: isEditable,
                     //controller: controller,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: 'Portão branco',
-                      border: const OutlineInputBorder(),
+                      border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.text,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -318,7 +321,8 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                   child: ActionPrimaryButton(
                       buttonText: isEditable ? 'Salvar alterações' : 'Editar',
                       buttonTextSize: 20)),
-              ActionSecondaryButton(buttonText: 'Voltar', buttonTextSize: 16),
+              const ActionSecondaryButton(
+                  buttonText: 'Voltar', buttonTextSize: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: SizedBox(
@@ -329,7 +333,7 @@ class _EditAddressScreenState extends State<EditAddressScreen> {
                       backgroundColor: Colors.black,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(color: Colors.white)),
+                          side: const BorderSide(color: Colors.white)),
                     ),
                     onPressed: () {
                       setState(() {
@@ -371,6 +375,335 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
     "state": "",
     "additionalInfo": ""
   };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appBarColor,
+        title: const Text(
+          'Cadastrar endereço',
+          style: TextStyle(
+              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+          size: 30,
+        ),
+      ),
+      backgroundColor: background,
+      body: ListView(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Endereço',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextFormField(
+                            //controller: controller,
+                            decoration: const InputDecoration(
+                              hintText: 'Rua das Flores',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, insira seu endereço!';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              addressInfo['street'] = value!;
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Número',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: '1000',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.number,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira o número do seu endereço!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['number'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Complemento',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: 'Apto 31',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira o complemento do seu endereço!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['complement'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'CEP',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: '10101-010',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira seu CEP!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['zipCode'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Cidade',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: 'São Paulo',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira a sua cidade!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['city'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Estado',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  TextFormField(
+                                    decoration: const InputDecoration(
+                                      hintText: 'SP',
+                                      border: OutlineInputBorder(),
+                                    ),
+                                    keyboardType: TextInputType.text,
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Por favor, insira seu estado!';
+                                      }
+                                      return null;
+                                    },
+                                    onSaved: (value) {
+                                      addressInfo['state'] = value!;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Informações adicionais',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextFormField(
+                            decoration: const InputDecoration(
+                              hintText: 'Portão branco',
+                              border: OutlineInputBorder(),
+                            ),
+                            keyboardType: TextInputType.text,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            validator: (value) {},
+                            onSaved: (value) {
+                              addressInfo['additionalInfo'] = value!;
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          _formKey.currentState!.save();
+                          Provider.of<UserProvider>(context, listen: false)
+                              .createAddress(addressInfo)
+                              .then((result) {
+                            _showDialog();
+                          }).catchError((error) {
+                            _showErrorDialog(error);
+                          });
+                        }
+                      },
+                      child: const ActionPrimaryButton(
+                        buttonText: 'Cadastrar',
+                        buttonTextSize: 20,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const ActionSecondaryButton(
+                        buttonText: 'Voltar',
+                        buttonTextSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
   void _showErrorDialog(error) {
     String content = "";
@@ -414,10 +747,11 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                   width: 300,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
+                  padding: const EdgeInsets.only(bottom: 20.0),
                   child: Text(
                     content,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -471,7 +805,8 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushReplacementNamed(
+                        context, 'address-list');
                   },
                   child: const ActionPrimaryButton(
                     buttonText: 'Ok',
@@ -483,334 +818,6 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final appBarColor = theme.colorScheme.primary;
-    final background = theme.colorScheme.surface;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: const Text(
-          'Cadastrar endereço',
-          style: TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
-      backgroundColor: background,
-      body: ListView(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Endereço',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          TextFormField(
-                            //controller: controller,
-                            decoration: InputDecoration(
-                              hintText: 'Rua das Flores',
-                              border: const OutlineInputBorder(),
-                            ),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor, insira seu endereço!';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              addressInfo['street'] = value!;
-                            },
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Número',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: '1000',
-                                      border: const OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Por favor, insira o número do seu endereço!';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      addressInfo['number'] = value!;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Complemento',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: 'Apto 31',
-                                      border: const OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Por favor, insira o complemento do seu endereço!';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      addressInfo['complement'] = value!;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'CEP',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: '10101-010',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Por favor, insira seu CEP!';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      addressInfo['zipCode'] = value!;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Cidade',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: 'São Paulo',
-                                      border: const OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Por favor, insira a sua cidade!';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      addressInfo['city'] = value!;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Estado',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    decoration: InputDecoration(
-                                      hintText: 'SP',
-                                      border: const OutlineInputBorder(),
-                                    ),
-                                    keyboardType: TextInputType.text,
-                                    autovalidateMode:
-                                        AutovalidateMode.onUserInteraction,
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'Por favor, insira seu estado!';
-                                      }
-                                      return null;
-                                    },
-                                    onSaved: (value) {
-                                      addressInfo['state'] = value!;
-                                    },
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Informações adicionais',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                          ),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              hintText: 'Portão branco',
-                              border: const OutlineInputBorder(),
-                            ),
-                            keyboardType: TextInputType.text,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            validator: (value) {},
-                            onSaved: (value) {
-                              addressInfo['additionalInfo'] = value!;
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          _userService
-                              .createAddress(addressInfo)
-                              .then((result) {
-                            print(addressInfo);
-                            _showDialog();
-                          }).catchError((error) {
-                            _showErrorDialog(error);
-                          });
-                        }
-                      },
-                      child: ActionPrimaryButton(
-                        buttonText: 'Cadastrar',
-                        buttonTextSize: 20,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    InkWell(
-                      onTap: () {},
-                      child: ActionSecondaryButton(
-                        buttonText: 'Voltar',
-                        buttonTextSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

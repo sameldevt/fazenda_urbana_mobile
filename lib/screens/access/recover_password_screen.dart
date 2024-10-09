@@ -3,8 +3,6 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/service/access_service.dart';
 
-import '../../model/user.dart';
-
 class RecoverPasswordScreen extends StatelessWidget {
   const RecoverPasswordScreen({super.key});
 
@@ -89,116 +87,6 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
   String? _email;
   String? _newPassword;
   String? _newPasswordAgain;
-
-  void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          child: Container(
-            height: 500,
-            width: 400,
-            padding: const EdgeInsets.all(appPadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/fixing.png',
-                  height: 300,
-                  width: 300,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    'Sua senha foi alterada com sucesso!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const ActionPrimaryButton(
-                    buttonText: 'Voltar',
-                    buttonTextSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showErrorDialog(error) {
-    String content = "";
-    String image = "";
-
-    switch(error){
-      case UserNotFoundException _:
-        content = "O e-mail informando não possui cadastro.";
-        image = "assets/not-found.png";
-        break;
-      case ServerErrorException _:
-        content = "Ocorreu um erro inesperado";
-        image = "assets/server-error.png";
-        break;
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          child: Container(
-            height: 500,
-            width: 400,
-            padding: const EdgeInsets.all(appPadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  image,
-                  height: 300,
-                  width: 300,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    content,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const ActionPrimaryButton(
-                    buttonText: 'Voltar',
-                    buttonTextSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +222,116 @@ class _ChangePasswordFormState extends State<_ChangePasswordForm> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/fixing.png',
+                  height: 300,
+                  width: 300,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Sua senha foi alterada com sucesso!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showErrorDialog(error) {
+    String content = "";
+    String image = "";
+
+    switch (error) {
+      case UserNotFoundException _:
+        content = "O e-mail informando não possui cadastro.";
+        image = "assets/not-found.png";
+        break;
+      case ServerErrorException _:
+        content = "Ocorreu um erro inesperado";
+        image = "assets/server-error.png";
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  image,
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    content,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

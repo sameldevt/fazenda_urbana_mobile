@@ -41,6 +41,13 @@ class UserService {
     return null;
   }
 
+  Future<void> deleteAddress(Address address) async {
+    final prefs = await SharedPreferences.getInstance();
+    String userInfoJson = prefs.getString(_userKey) ?? "";
+
+    return null;
+  }
+
   Future<void> createAddress(Map<String, String> address) async {
     final userService = UserService();
     userService.loadUserInfo().then((user) async {
@@ -78,6 +85,5 @@ class UserService {
 
       service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
     });
-    //return saveInfosFromResponse(response.body);
   }
 }

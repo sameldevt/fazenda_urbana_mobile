@@ -1,10 +1,9 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verdeviva/common/constants.dart';
-import 'package:verdeviva/model/dtos/login_dto.dart';
 import 'package:verdeviva/model/user.dart';
-import 'dart:convert';
-
 import 'package:verdeviva/service/user_service.dart';
 
 class AccessService {
@@ -19,11 +18,11 @@ class AccessService {
       body: jsonEncode({"email": email, "novaSenha": newPassword}),
     );
 
-    if(response.statusCode == 500){
+    if (response.statusCode == 500) {
       throw ServerErrorException();
     }
 
-    if(response.statusCode == 404){
+    if (response.statusCode == 404) {
       throw UserNotFoundException();
     }
 
@@ -31,7 +30,7 @@ class AccessService {
     service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
   }
 
-  Future<void> login(String email, String password) async {
+  Future<User> login(String email, String password) async {
     http.Response response = await http.post(
       Uri.parse("$baseApiUrl/$contextUrl/entrar"),
       headers: {
@@ -40,11 +39,11 @@ class AccessService {
       body: jsonEncode({"email": email, "senha": password}),
     );
 
-    if(response.statusCode == 500){
+    if (response.statusCode == 500) {
       throw ServerErrorException();
     }
 
-    if(response.statusCode == 404){
+    if (response.statusCode == 404) {
       throw UserNotFoundException();
     }
 
@@ -52,9 +51,7 @@ class AccessService {
       throw InvalidCredentialsException();
     }
 
-    final service = UserService();
-
-    service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+    return User.fromJson(jsonDecode(response.body));
     //return saveInfosFromResponse(response.body);
   }
 
@@ -67,18 +64,15 @@ class AccessService {
       body: jsonEncode({
         "nome": name,
         "senha": password,
-        "contato": {
-          "telefone": "",
-          "email": email
-        }
+        "contato": {"telefone": "", "email": email}
       }),
     );
 
-    if(response.statusCode == 500){
+    if (response.statusCode == 500) {
       throw ServerErrorException();
     }
 
-    if(response.statusCode == 400){
+    if (response.statusCode == 400) {
       throw UserAlreadyExists();
     }
 
@@ -100,7 +94,11 @@ class AccessService {
     return map["accessToken"];
   }
 }
+
 class UserNotFoundException implements Exception {}
+
 class UserAlreadyExists implements Exception {}
+
 class InvalidCredentialsException implements Exception {}
+
 class ServerErrorException implements Exception {}

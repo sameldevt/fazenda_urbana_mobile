@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/service/user_service.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -151,19 +153,21 @@ class CustomBottomNavBar extends StatelessWidget {
 
 class LoggedDrawer extends StatefulWidget {
   final Function(int) onItemSelected;
-  final User user;
 
-  const LoggedDrawer({super.key, required this.onItemSelected, required this.user});
+  const LoggedDrawer({super.key, required this.onItemSelected});
 
   @override
   State<LoggedDrawer> createState() => _LoggedDrawerState();
 }
 
 class _LoggedDrawerState extends State<LoggedDrawer> {
-  final _userService = UserService();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context, listen: true).user;
+
+    print(user == null);
+
     final theme = Theme.of(context);
     final barColor = theme.colorScheme.primary;
     final barItemsColor = theme.colorScheme.onPrimary;
@@ -199,7 +203,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    widget.user.name,
+                    user!.name,
                     style: TextStyle(
                       fontSize: 22,
                       color: barItemsColor,
@@ -207,7 +211,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
                     ),
                   ),
                   Text(
-                    widget.user.contact.email,
+                    user!.contact.email,
                     style: TextStyle(
                       fontSize: 16,
                       color: barItemsColor,
@@ -296,7 +300,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               onTap: () {
-                _userService.deleteUserInfo().then((value) {
+                Provider.of<UserProvider>(context, listen: false).deleteUserInfo().then((value) {
                   Navigator.pushReplacementNamed(context, 'home');
                 });
               },

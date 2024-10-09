@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/service/access_service.dart';
+
+import '../../providers/user_provider.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
@@ -93,70 +96,10 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
   String passwordAgain = '';
   User? user;
 
-  void loadUser() async {
-    User? loadedUser = await User.fromSharedPreferences();
-    setState(() {
-      user = loadedUser;
-    });
-  }
-
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
-
-  void _showDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          child: Container(
-            height: 500,
-            width: 400,
-            padding: const EdgeInsets.all(appPadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/fixing.png',
-                  height: 300,
-                  width: 300,
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    'Sua senha foi alterada com sucesso!',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const ActionPrimaryButton(
-                    buttonText: 'Voltar',
-                    buttonTextSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final verticalPadding = MediaQuery.of(context).size.height * 0.50;
+    user = Provider.of<UserProvider>(context).user!;
 
     return Center(
       child: Form(
@@ -260,6 +203,54 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/fixing.png',
+                  height: 300,
+                  width: 300,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Sua senha foi alterada com sucesso!',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

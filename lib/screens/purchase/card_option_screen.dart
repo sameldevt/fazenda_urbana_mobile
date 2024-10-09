@@ -150,7 +150,7 @@ class _CardOptionsState extends State<_CardOptions> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const PurchaseSummaryScreen(paymentMethod: 'card')),
+                          const PurchaseSummaryScreen()),
                 );
               });
             },

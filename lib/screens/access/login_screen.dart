@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/service/access_service.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -84,72 +86,6 @@ class _LoginFormState extends State<_LoginForm> {
   String? _email;
   String? _password;
 
-  void _showDialog(error) {
-    String content = "";
-    String image = "";
-
-    switch (error) {
-      case InvalidCredentialsException _:
-        content = "A senha digitada está incorreta";
-        image = "assets/wrong-password.png";
-        break;
-      case UserNotFoundException _:
-        content = "O e-mail informando não possui cadastro.";
-        image = "assets/not-found.png";
-        break;
-      case ServerErrorException _:
-        content = "Ocorreu um erro inesperado";
-        image = "assets/server-error.png";
-        break;
-    }
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          child: Container(
-            height: 500,
-            width: 400,
-            padding: const EdgeInsets.all(appPadding),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  image,
-                  height: 300,
-                  width: 300,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text(
-                    content,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const ActionPrimaryButton(
-                    buttonText: 'Voltar',
-                    buttonTextSize: 16,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -226,14 +162,16 @@ class _LoginFormState extends State<_LoginForm> {
               onTap: () {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  _loginService.login(_email!, _password!).then((result) {
-                    Navigator.pushReplacementNamed(context, 'home');
+                  _loginService.login(_email!, _password!).then((user) {
+                    Provider.of<UserProvider>(context, listen: false)
+                        .saveUserInfo(user)
+                        .then((result) {
+                      Navigator.pushReplacementNamed(context, 'home');
+                    });
                   }).catchError((error) {
-                    print(error);
                     _showDialog(error);
                   });
                 }
-                ;
               },
               child: const ActionPrimaryButton(
                   buttonText: 'Acessar conta', buttonTextSize: 20),
@@ -241,6 +179,73 @@ class _LoginFormState extends State<_LoginForm> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showDialog(error) {
+    String content = "";
+    String image = "";
+
+    switch (error) {
+      case InvalidCredentialsException _:
+        content = "A senha digitada está incorreta";
+        image = "assets/wrong-password.png";
+        break;
+      case UserNotFoundException _:
+        content = "O e-mail informando não possui cadastro.";
+        image = "assets/not-found.png";
+        break;
+      case ServerErrorException _:
+        content = "Ocorreu um erro inesperado";
+        image = "assets/server-error.png";
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 500,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  image,
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    content,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

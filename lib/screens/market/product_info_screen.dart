@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/providers/cart_provider.dart';
 import 'package:verdeviva/service/cart_service.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/screens/market/widgets/product_card.dart';
@@ -316,6 +318,7 @@ class _ButtonsState extends State<_Buttons> {
         Center(
           child: InkWell(
             onTap: () {
+              Provider.of<CartProvider>(context, listen: false).addProduct(widget.productToCart);
               Navigator.pushNamed(context, 'cart');
             },
             child: const ActionPrimaryButton(
@@ -330,7 +333,7 @@ class _ButtonsState extends State<_Buttons> {
         Center(
           child: InkWell(
             onTap: () {
-              _cartService.addProduct(widget.productToCart);
+              Provider.of<CartProvider>(context, listen: false).addProduct(widget.productToCart);
               showModalBottomSheet(
                 context: context,
                 shape: const RoundedRectangleBorder(

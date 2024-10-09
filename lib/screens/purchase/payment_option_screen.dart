@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/order.dart';
+import 'package:verdeviva/model/product.dart';
+import 'package:verdeviva/providers/cart_provider.dart';
+import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/screens/purchase/card_option_screen.dart';
 import 'package:verdeviva/screens/purchase/payment/card_screen.dart';
 import 'package:verdeviva/screens/purchase/purchase_sumary_screen.dart';
@@ -147,7 +152,7 @@ class _PaymentOptions extends StatelessWidget {
       case 0:
         return Icons.credit_card;
       case 1:
-        return Icons.picture_as_pdf; // Ícone para boleto bancário
+        return Icons.picture_as_pdf;
       case 2:
         return Icons.pix;
       default:
@@ -170,118 +175,146 @@ class _PaymentOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          color: Colors.grey,
-          thickness: 0.5,
-          indent: 10.0,
-          endIndent: 10.0,
-        ),
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return InkWell(
-            onTap: () {
-              Widget screen;
+    return Consumer<OrderProvider>(
+      builder: (context, orderProvider, child) {
+        return Expanded(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const Divider(
+              color: Colors.grey,
+              thickness: 0.5,
+              indent: 10.0,
+              endIndent: 10.0,
+            ),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Widget screen;
 
-              switch (index) {
-                case 0:
-                  screen = const CardOptionScreen();
-                  break;
-                case 1:
-                  screen = const PurchaseSummaryScreen(paymentMethod: 'boleto');
-                  break;
-                case 2:
-                  screen = const PurchaseSummaryScreen(paymentMethod: 'pix');
-                  break;
-                default:
-                  screen = const CardScreen();
-              }
+                  switch (index) {
+                    case 0:
+                      screen = const CardOptionScreen();
+                      orderProvider.addPaymentMethod('card');
+                      break;
+                    case 1:
+                      screen = const PurchaseSummaryScreen();
+                      orderProvider.addPaymentMethod('boleto');
+                      break;
+                    case 2:
+                      screen = const PurchaseSummaryScreen();
+                      orderProvider.addPaymentMethod('pix');
+                      break;
+                    default:
+                      screen = const CardScreen();
+                  }
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => screen),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => screen),
+                  );
+                },
+                child: _buildPaymentOption(
+                  value: index + 1,
+                  label: _getPaymentLabel(index),
+                  icon: _getPaymentIcon(index),
+                  details: _getPaymentDetails(index),
+                ),
               );
             },
-            child: _buildPaymentOption(
-              value: index + 1,
-              label: _getPaymentLabel(index),
-              icon: _getPaymentIcon(index),
-              details: _getPaymentDetails(index),
-            ),
-          );
-        },
-      ),
+          ),
+        );
+      }
     );
   }
 }
 
-class _OrderInfo extends StatelessWidget {
+class _OrderInfo extends StatefulWidget {
   const _OrderInfo();
 
   @override
+  State<_OrderInfo> createState() => _OrderInfoState();
+}
+
+class _OrderInfoState extends State<_OrderInfo> {
+  String calculateTotalPrice(Set<ProductToCart> products, Order order) {
+    final shippingCost = order.shippingCost;
+
+    double total =
+        products.fold(0.0, (total, product) => total + product.totalPrice) +
+            shippingCost;
+
+    return total.toStringAsFixed(2);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 100,
-      color: Colors.white,
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Produtos (2)',
-                style: TextStyle(
-                  fontSize: 14,
+    return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
+      final products = Provider.of<CartProvider>(context).products;
+      final order = orderProvider.order!;
+
+      return Container(
+        height: 100,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Produtos (${products.length})',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 14,
+                Text(
+                  'R\$ ${products.fold(0.0, (total, product) => total + product.totalPrice).toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Frete',
-                style: TextStyle(
-                  fontSize: 14,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Frete',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text(
-                'R\$ 2,99',
-                style: TextStyle(
-                  fontSize: 14,
+                Text(
+                  'R\$ ${order.shippingCost.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                'R\$ 18,99',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  'R\$ ${calculateTotalPrice(products, order)}',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+              ],
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
+

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/screens/account/create_or_modify_address_screen.dart';
+import 'package:verdeviva/service/access_service.dart';
+
+import '../../providers/user_provider.dart';
 
 class AddressScreen extends StatefulWidget {
   const AddressScreen({super.key});
@@ -12,28 +16,15 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  User? user;
   bool isLoading = true;
-
-  void loadUser() async {
-    final userData = await User.fromSharedPreferences();
-    setState(() {
-      user = userData;
-      isLoading = false;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    loadUser();
-  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appBarColor = theme.colorScheme.primary;
     final background = theme.colorScheme.surface;
+
+    final user = Provider.of<UserProvider>(context).user!;
 
     return Scaffold(
       appBar: AppBar(
@@ -49,80 +40,83 @@ class _AddressScreenState extends State<AddressScreen> {
         ),
       ),
       backgroundColor: background,
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : !(user!.hasAddress())
-          ? _AddressList(user: user!)
-          : _HasNoAddressScreen(),
+      body: user.hasAddress() ? _AddressList() : const HasNoAddressScreen(),
     );
   }
 }
 
 class _AddressList extends StatefulWidget {
-  final User user;
-
-  const _AddressList({super.key, required this.user});
+  const _AddressList();
 
   @override
   State<_AddressList> createState() => _AddressListState();
 }
 
 class _AddressListState extends State<_AddressList> {
-  final addresses = [];
+  List<Address> addresses = [];
 
   Future<void> refresh() async {
-    setState(() {
-      addresses.clear();
-      addresses.addAll(widget.user.addresses);
-    });
+    setState(() {});
+  }
+
+  void onDelete(Address address){
+      addresses.remove(address);
+      refresh();
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user!;
+    addresses = user.addresses;
 
-    return Expanded(
-      child: RefreshIndicator(
-        onRefresh: refresh,
-        child: ListView.separated(
-          separatorBuilder: (context, index) => const Divider(
-            color: Colors.grey,
-            thickness: 0.5,
+    print(addresses.length);
+
+    return Padding(
+      padding: const EdgeInsets.all(appPadding),
+      child: Column(children: [
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: refresh,
+            child: ListView.separated(
+              separatorBuilder: (context, index) => const Divider(
+                color: Colors.grey,
+                thickness: 0.5,
+              ),
+              itemCount: addresses.length,
+              itemBuilder: (context, index) {
+                final address = addresses[index];
+                return _AddressCard(
+                  address: address,
+                  onDelete: onDelete,
+                );
+              },
+            ),
           ),
-          itemCount: addresses.length,
-          itemBuilder: (context, index) {
-            final address = addresses[index];
-            return InkWell(
-              child: _AddressCard(
-                street: address.street,
-                number: address.number,
-                city: address.city,
-                zipCode: address.zipCode,
-                complement: address.complement,
-                state: address.state,
+        ),
+        InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CreateAddressScreen(),
               ),
             );
           },
+          child: const ActionPrimaryButton(
+              buttonText: "Cadastrar endereço", buttonTextSize: 18),
         ),
-      ),
+      ]),
     );
   }
 }
 
 class _AddressCard extends StatefulWidget {
-  final String street;
-  final String number;
-  final String city;
-  final String zipCode;
-  final String complement;
-  final String state;
+  final Address address;
+  final Function(Address) onDelete;
 
   const _AddressCard({
-    required this.street,
-    required this.number,
-    required this.city,
-    required this.zipCode,
-    required this.complement,
-    required this.state,
+    required this.address,
+    required this.onDelete
   });
 
   @override
@@ -132,6 +126,13 @@ class _AddressCard extends StatefulWidget {
 class _AddressCardState extends State<_AddressCard> {
   @override
   Widget build(BuildContext context) {
+    print(widget.address.zipCode);
+    print(widget.address.city);
+    print(widget.address.street);
+    print(widget.address.state);
+    print(widget.address.complement);
+    print(widget.address.number);
+
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -143,25 +144,25 @@ class _AddressCardState extends State<_AddressCard> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.location_on, size: 40, color: Colors.green),
+            const Icon(Icons.location_on, size: 40, color: Colors.green),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.street,
+                    widget.address.street,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'bairro',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${widget.city}, ${widget.zipCode}',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    '${widget.address.city}, ${widget.address.zipCode}',
+                    style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -180,7 +181,11 @@ class _AddressCardState extends State<_AddressCard> {
                       ),
                       const SizedBox(width: 8),
                       TextButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          _showDialog(widget.address).then((value){
+                            widget.onDelete(widget.address);
+                          });
+                        },
                         icon: Icon(Icons.delete, color: Colors.redAccent),
                         label: Text('Excluir',
                             style: TextStyle(color: Colors.redAccent)),
@@ -195,15 +200,73 @@ class _AddressCardState extends State<_AddressCard> {
       ),
     );
   }
+
+  Future<void> _showDialog(address) async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 530,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/something-wrong.png',
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Você tem certeza que deseja excluir esse endereço?',
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Provider.of<UserProvider>(context).deleteAddress(address);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Confirmar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+                SizedBox(height: 10,),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionSecondaryButton(
+                    buttonText: 'Voltar',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
-class _HasNoAddressScreen extends StatelessWidget {
-  const _HasNoAddressScreen({super.key});
+class HasNoAddressScreen extends StatelessWidget {
+  const HasNoAddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.17;
+    final verticalPadding = screenHeight * 0.05;
 
     return Scaffold(
       body: Padding(
@@ -241,7 +304,6 @@ class _HasNoAddressScreen extends StatelessWidget {
                     builder: (context) => CreateAddressScreen(),
                   ),
                 );
-                Navigator.pushNamed(context, 'create-address');
               },
               child: const ActionPrimaryButton(
                   buttonText: "Cadastrar endereço", buttonTextSize: 18),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/service/user_service.dart';
 
 class PersonalDataScreen extends StatefulWidget {
@@ -12,20 +14,6 @@ class PersonalDataScreen extends StatefulWidget {
 }
 
 class _PersonalDataScreenState extends State<PersonalDataScreen> {
-  User? user;
-  void loadUser() async {
-    final userData = await User.fromSharedPreferences();
-    setState(() {
-      user = userData;
-    });
-  }
-
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -65,7 +53,7 @@ class _PersonalDataScreenState extends State<PersonalDataScreen> {
                       const SizedBox(
                         height: 8,
                       ),
-                      _PersonalDataForm(user: user!,),
+                      _PersonalDataForm(),
                     ],
                   ),
                 ),
@@ -97,8 +85,7 @@ class _Header extends StatelessWidget {
 }
 
 class _PersonalDataForm extends StatefulWidget {
-  User user;
-  _PersonalDataForm({required this.user});
+  const _PersonalDataForm();
 
   @override
   State<_PersonalDataForm> createState() => _PersonalDataFormState();
@@ -108,24 +95,11 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
   final _formKey = GlobalKey<FormState>();
   final _userService = UserService();
   bool isEditable = false;
-  User? user;
-
-  void loadUser() async {
-    User? loadedUser = await User.fromSharedPreferences();
-    setState(() {
-      user = loadedUser;
-    });
-  }
-
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     final verticalPadding = MediaQuery.of(context).size.height * 0.29;
+    final user = Provider.of<UserProvider>(context).user!;
 
     return Center(
       child: Form(
@@ -147,7 +121,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                     enabled: isEditable,
                     //controller: controller,
                     decoration: InputDecoration(
-                      hintText: widget.user.name,
+                      hintText: user.name,
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.text,
@@ -177,7 +151,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                     enabled: isEditable,
                     //controller: controller,
                     decoration: InputDecoration(
-                      hintText: widget.user.contact.email,
+                      hintText: user.contact.email,
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.emailAddress,
@@ -212,7 +186,7 @@ class _PersonalDataFormState extends State<_PersonalDataForm> {
                     enabled: isEditable,
                     //controller: controller,
                     decoration: InputDecoration(
-                      hintText: widget.user.contact.phone,
+                      hintText: user.contact.phone,
                       border: const OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,

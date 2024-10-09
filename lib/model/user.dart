@@ -17,7 +17,7 @@ class User {
   });
 
   bool hasAddress() {
-    return addresses.isEmpty;
+    return addresses.isNotEmpty;
   }
 
   factory User.simple(String name, String email) {
@@ -76,12 +76,12 @@ class Address {
 
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
-      street: json['street'] ?? '',
-      number: json['number'] ?? '',
-      city: json['city'] ?? '',
-      zipCode: json['zipCode'] ?? '',
-      complement: json['complement'] ?? '',
-      state: json['state'] ?? '',
+      street: json['logradouro'] ?? '',
+      number: json['numero'] ?? '',
+      city: json['cidade'] ?? '',
+      zipCode: json['cep'] ?? '',
+      complement: json['complemento'] ?? '',
+      state: json['estado'] ?? '',
     );
   }
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
-import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/providers/user_provider.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -11,26 +12,10 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  User? user;
-
-  void loadUser() async {
-    final userData = await User.fromSharedPreferences();
-    setState(() {
-      user = userData;
-    });
-  }
-
-  @override
-  void initState() {
-    loadUser();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.18;
-
+    final verticalPadding = screenHeight * 0.05;
     final theme = Theme.of(context);
     final appBarColor = theme.colorScheme.primary;
     final background = theme.colorScheme.surface;
@@ -57,21 +42,19 @@ class _AccountScreenState extends State<AccountScreen> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.all(appPadding),
+                padding: const EdgeInsets.all(appPadding),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SizedBox(
                       height: verticalPadding,
                     ),
-                    _Header(
-                      user: user!,
-                    ),
-                    _AccountInfo(user: user!),
+                    const _Header(),
+                    const _AccountInfo(),
                     SizedBox(
                       height: verticalPadding,
                     ),
-                    _Buttons(),
+                    const _Buttons(),
                   ],
                 ),
               ),
@@ -84,40 +67,40 @@ class _AccountScreenState extends State<AccountScreen> {
 }
 
 class _Header extends StatelessWidget {
-  User user;
-
-  _Header({required this.user});
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
+
     return Center(
       child: Text(
-        user.name,
-        style: TextStyle(fontSize: 34),
+        user!.name,
+        style: const TextStyle(fontSize: 34),
       ),
     );
   }
 }
 
 class _AccountInfo extends StatelessWidget {
-  User user;
-
-  _AccountInfo({required this.user});
+  const _AccountInfo();
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user!;
+
     return Column(
       children: [
         Center(
           child: ClipOval(
             child: user.profilePic.isEmpty
                 ? Image.asset(
-                  'assets/profile.png',
-                  height: 250,
-                  width: 250,
-                  fit: BoxFit.cover,
-                )
-                : Icon(
+                    'assets/profile.png',
+                    height: 250,
+                    width: 250,
+                    fit: BoxFit.cover,
+                  )
+                : const Icon(
                     Icons.account_circle_sharp,
                     size: 200,
                   ),
@@ -125,7 +108,7 @@ class _AccountInfo extends StatelessWidget {
         ),
         Text(
           user.contact.email,
-          style: TextStyle(fontSize: 20, color: Colors.grey),
+          style: const TextStyle(fontSize: 20, color: Colors.grey),
         ),
       ],
     );

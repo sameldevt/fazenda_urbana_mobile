@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/model/user.dart';
-import 'package:verdeviva/service/cart_service.dart';
-import 'package:verdeviva/service/user_service.dart';
+import 'package:verdeviva/providers/order_provider.dart';
+import 'package:verdeviva/providers/user_provider.dart';
+
+import '../../providers/cart_provider.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -14,36 +17,19 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final CartService _cartService = CartService();
-  final Set<ProductToCart> _products = {};
-
-  Future<void> _loadProducts() async {
-    Set<ProductToCart> products = await _cartService.getProducts();
-    setState(() {
-      _products.addAll(products);
-    });
-  }
+  Set<ProductToCart> _products = {};
 
   void onChanged(ProductToCart product, String change) {
-    setState(() {
-      switch (change) {
-        case 'remove':
-          _cartService.removeProduct(product.id);
-          _products.remove(product);
-          break;
-        case 'update':
-          _products.remove(product);
-          _products.add(product);
-          break;
-      }
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    //_cartService.clearCart();
-    _loadProducts();
+    switch (change) {
+      case 'remove':
+        Provider.of<CartProvider>(context, listen: false)
+            .removeProduct(product);
+        break;
+      case 'update':
+        Provider.of<CartProvider>(context, listen: false)
+            .updateProduct(product);
+        break;
+    }
   }
 
   @override
@@ -63,23 +49,30 @@ class _CartScreenState extends State<CartScreen> {
         ),
         iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      body: _products.isEmpty
-          ? const _EmptyCartWidget()
-          : Padding(
-              padding: const EdgeInsets.all(appPadding),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const _Header(),
-                  _CartItemsSection(
-                    products: _products,
-                    onChanged: onChanged,
+      body: Consumer<CartProvider>(
+        builder: (context, cartProvider, child) {
+          _products = cartProvider.products;
+
+          return _products.isEmpty
+              ? const _EmptyCartWidget()
+              : Padding(
+                  padding: const EdgeInsets.all(appPadding),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const _Header(),
+                      _CartItemsSection(
+                        onChanged: onChanged,
+                      ),
+                      _ContinuePurchaseSection(
+                        products: _products,
+                        onChanged: onChanged,
+                      ),
+                    ],
                   ),
-                  _ContinuePurchaseSection(
-                      products: _products, onChanged: onChanged),
-                ],
-              ),
-            ),
+                );
+        },
+      ),
     );
   }
 }
@@ -103,10 +96,9 @@ class _Header extends StatelessWidget {
 }
 
 class _CartItemsSection extends StatefulWidget {
-  final Set<ProductToCart> products;
   final Function(ProductToCart product, String change) onChanged;
 
-  const _CartItemsSection({required this.products, required this.onChanged});
+  const _CartItemsSection({required this.onChanged});
 
   @override
   State<_CartItemsSection> createState() => _CartItemsSectionState();
@@ -115,6 +107,8 @@ class _CartItemsSection extends StatefulWidget {
 class _CartItemsSectionState extends State<_CartItemsSection> {
   @override
   Widget build(BuildContext context) {
+    final products = Provider.of<CartProvider>(context, listen: true).products;
+
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,10 +116,9 @@ class _CartItemsSectionState extends State<_CartItemsSection> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.60,
             child: ListView.separated(
-              itemCount: widget.products.length,
+              itemCount: products.length,
               itemBuilder: (context, index) {
-                // Converte o Set em uma lista
-                var productList = widget.products.toList();
+                var productList = products.toList();
                 var product = productList[index]; // Acesse pelo índice
                 return _CartItemCard(
                   product: product,
@@ -310,119 +303,117 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 120,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Produtos (${widget.products.length})',
-                style: const TextStyle(
-                  fontSize: 14,
+    return Consumer<UserProvider>(builder: (context, userProvider, child) {
+      final user = userProvider.user;
+      final orderProvider = Provider.of<OrderProvider>(context);
+
+      return Container(
+        height: 120,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Produtos (${widget.products.length})',
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              Text(
-                'R\$ ${calculateTotalPrice()}',
-                style: const TextStyle(
-                  fontSize: 14,
+                Text(
+                  'R\$ ${calculateTotalPrice()}',
+                  style: const TextStyle(
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Total',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Total',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                'R\$ ${calculateTotalPrice()}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  'R\$ ${calculateTotalPrice()}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 4.0),
-            child: Center(
-              child: InkWell(
-                onTap: () {
-                  String route = '';
-                  User.fromSharedPreferences().then((value) {
-                    value == null
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Center(
+                child: InkWell(
+                  onTap: () {
+                    user == null
                         ? Navigator.pushNamed(context, 'not-logged')
-                        : Navigator.pushNamed(context, 'address');
-                  });
-                },
-                child: const ActionPrimaryButton(
-                  buttonText: "Continuar a compra",
-                  buttonTextSize: 20,
+                        : orderProvider.createOrder().then((value) {
+                            orderProvider
+                                .addItems(widget.products)
+                                .then((value) {
+                              Navigator.pushNamed(context, 'address');
+                            });
+                          });
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: "Continuar a compra",
+                    buttonTextSize: 20,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
 class _EmptyCartWidget extends StatelessWidget {
-  const _EmptyCartWidget({super.key});
+  const _EmptyCartWidget();
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
-    final verticalPadding = screenHeight * 0.10;
+    final verticalPadding = screenHeight * 0.08;
 
     return Padding(
       padding: const EdgeInsets.all(appPadding),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              height: verticalPadding,
-            ),
-            Container(
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/empty-cart.png',
-                    height: 400,
-                    width: 400,
-                  ),
-                  const Text(
-                    "Seu carrinho está vazío!",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(
-                    height: 39,
-                  ),
-                  SizedBox(
-                    height: verticalPadding,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushReplacementNamed(context, 'home');
-                    },
-                    child: const ActionPrimaryButton(
-                        buttonText: "Buscar produtos", buttonTextSize: 18),
-                  ),
-                ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: verticalPadding),
+        child: Container(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/empty-cart.png',
+                height: 400,
+                width: 400,
               ),
-            )
-          ],
+              const Text(
+                "Seu carrinho está vazío!",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 39,
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, 'home');
+                },
+                child: const ActionPrimaryButton(
+                    buttonText: "Buscar produtos", buttonTextSize: 18),
+              ),
+            ],
+          ),
         ),
       ),
     );

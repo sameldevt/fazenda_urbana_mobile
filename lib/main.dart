@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:verdeviva/providers/cart_provider.dart';
+import 'package:verdeviva/providers/order_provider.dart';
+import 'package:verdeviva/providers/product_provider.dart';
 import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/access/login_screen.dart';
@@ -40,10 +42,11 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => UserProvider()),
         ChangeNotifierProvider(create: (context) => CartProvider()),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
+        ChangeNotifierProvider(create: (context) => OrderProvider())
       ],
       child: MaterialApp(
         title: 'Projeto mobile VerdeViva',
-        initialRoute: "home",
         theme: ThemeData(
           colorScheme: ColorScheme(
             brightness: Brightness.light,
@@ -86,7 +89,42 @@ class App extends StatelessWidget {
           "not-logged": (context) => const NotLoggedScreen()
           //"purchase-sumary": (context) => PurchaseSumaryScreen(),
         },
+        home: const InitialScreen(),
       ),
     );
   }
 }
+
+class InitialScreen extends StatelessWidget {
+  const InitialScreen({Key? key}) : super(key: key);
+
+  Future<void> _loadAllProviders(BuildContext context) async {
+    await Future.wait([
+      Provider.of<UserProvider>(context, listen: false).loadUser(),
+      Provider.of<ProductProvider>(context, listen: false).loadAll(),
+      Provider.of<CartProvider>(context, listen: false).loadCart(),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _loadAllProviders(context),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(child: Text('Error: ${snapshot.error}')),
+          );
+        } else {
+          return const HomeScreen();
+        }
+      },
+    );
+  }
+}
+
+
