@@ -35,4 +35,23 @@ class OrderService {
       throw InvalidCredentialsException();
     }
   }
+
+  Future<List<Order>> getAll() async {
+    final response = await http.get(Uri.parse('$baseApiUrl/$contextUrl/buscar-todos'));
+    List<dynamic> responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 500) {
+      throw ServerErrorException();
+    }
+
+    if (response.statusCode == 404) {
+      throw UserNotFoundException();
+    }
+
+    if (response.statusCode == 400) {
+      throw InvalidCredentialsException();
+    }
+
+    return responseBody.map((product) => Order.fromJson(product)).toList();
+  }
 }

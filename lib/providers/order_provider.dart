@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/service/order_service.dart';
 
 import '../model/order.dart';
 
 class OrderProvider with ChangeNotifier {
   Order? order = Order();
+  List<Order> orders = [];
+
+  Future<void> getAll() async {
+    OrderService orderService = OrderService();
+    orders = await orderService.getAll();
+    notifyListeners();
+  }
 
   Future<void> createOrder() async {
     order ??= Order();
@@ -15,7 +23,7 @@ class OrderProvider with ChangeNotifier {
   Future<void> addItems(Set<ProductToCart> products) async {
     final orderItems = products
         .map((p) => OrderItem(
-            productId: p.id, quantity: p.quantity, subTotal: p.totalPrice))
+            productImage: p.imageUrl, productId: p.id, quantity: p.quantity, subTotal: p.totalPrice))
         .toList();
 
     order!.items.addAll(orderItems);

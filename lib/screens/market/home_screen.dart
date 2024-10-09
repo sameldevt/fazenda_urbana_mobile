@@ -11,7 +11,7 @@ import 'package:verdeviva/screens/access/recover_password_screen.dart';
 import 'package:verdeviva/screens/account/account_screen.dart';
 import 'package:verdeviva/screens/account/personal_data_screen.dart';
 import 'package:verdeviva/screens/market/cart_screen.dart';
-import 'package:verdeviva/screens/market/orders_screen.dart';
+import 'package:verdeviva/screens/account/orders_screen.dart';
 
 import '../../providers/user_provider.dart';
 

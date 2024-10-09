@@ -7,7 +7,7 @@ import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/product.dart';
 import 'package:verdeviva/providers/cart_provider.dart';
 import 'package:verdeviva/providers/order_provider.dart';
-import 'package:verdeviva/screens/market/orders_screen.dart';
+import 'package:verdeviva/screens/account/orders_screen.dart';
 
 class PixScreen extends StatefulWidget {
   const PixScreen({super.key});
