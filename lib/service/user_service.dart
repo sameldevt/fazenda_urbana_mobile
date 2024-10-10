@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:verdeviva/service/access_service.dart';
@@ -32,6 +33,25 @@ class UserService {
   Future<void> deleteUserInfo() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_userKey);
+  }
+
+  Future<List<Order>> getOrders() async {
+    final response = await http.get(Uri.parse('$baseApiUrl/$contextUrl/buscar-todos'));
+    List<dynamic> responseBody = jsonDecode(response.body);
+
+    if (response.statusCode == 500) {
+      throw ServerErrorException();
+    }
+
+    if (response.statusCode == 404) {
+      throw UserNotFoundException();
+    }
+
+    if (response.statusCode == 400) {
+      throw InvalidCredentialsException();
+    }
+
+    return responseBody.map((product) => Order.fromJson(product)).toList();
   }
 
   Future<void> updateAddress(Map<String, String> info) async {

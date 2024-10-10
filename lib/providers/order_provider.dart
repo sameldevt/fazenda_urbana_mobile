@@ -7,13 +7,6 @@ import '../model/order.dart';
 
 class OrderProvider with ChangeNotifier {
   Order? order = Order();
-  List<Order> orders = [];
-
-  Future<void> getAll() async {
-    OrderService orderService = OrderService();
-    orders = await orderService.getAll();
-    notifyListeners();
-  }
 
   Future<void> createOrder() async {
     order ??= Order();

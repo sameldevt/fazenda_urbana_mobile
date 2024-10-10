@@ -82,7 +82,6 @@ class App extends StatelessWidget {
           "pix-payment": (context) => const PixScreen(),
           "card-payment": (context) => const CardOptionScreen(),
           "payment-status": (context) => const PaymentStatusScreen(),
-          "order-details": (context) => const OrderDetailsScreen(),
           "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
           "create-card": (context) => const CreateCardScreen(),
           "card": (context) => const CardOptionScreen(),
@@ -101,6 +100,7 @@ class InitialScreen extends StatelessWidget {
   Future<void> _loadAllProviders(BuildContext context) async {
     await Future.wait([
       Provider.of<UserProvider>(context, listen: false).loadUser(),
+      Provider.of<UserProvider>(context, listen: false).getOrders(),
       Provider.of<ProductProvider>(context, listen: false).loadAll(),
       Provider.of<CartProvider>(context, listen: false).loadCart(),
     ]);
@@ -115,10 +115,11 @@ class InitialScreen extends StatelessWidget {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text('Error: ${snapshot.error}')),
-          );
+        //}
+        // else if (snapshot.hasError) {
+        //   return Scaffold(
+        //     body: Center(child: Text('Error: ${snapshot.error}')),
+        //   );
         } else {
           return const HomeScreen();
         }

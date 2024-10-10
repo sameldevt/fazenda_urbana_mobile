@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
+import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/providers/order_provider.dart';
+import 'package:verdeviva/providers/user_provider.dart';
+import 'package:verdeviva/screens/account/order_details_screen.dart';
 
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
@@ -13,27 +17,40 @@ class OrdersScreen extends StatelessWidget {
     final appBarColor = theme.colorScheme.primary;
     final background = theme.colorScheme.surface;
 
-    return Scaffold(
-      backgroundColor: background,
-      appBar: AppBar(
-        backgroundColor: appBarColor,
-        title: const Text(
-          'Meus pedidos',
-          style: TextStyle(
-              fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        iconTheme: const IconThemeData(color: Colors.white, size: 30),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(appPadding),
-        child: Column(
-          children: [
-            Align(alignment: Alignment.centerLeft, child: _Header()),
-            Expanded(child: _OrderList()),
-            //Center(child: _DoubtCard())
-          ],
-        ),
-      ),
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        final orders = userProvider.orders;
+
+        return Scaffold(
+          backgroundColor: background,
+          appBar: AppBar(
+            backgroundColor: appBarColor,
+            title: const Text(
+              'Meus pedidos',
+              style: TextStyle(
+                  fontSize: 22,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+            iconTheme: const IconThemeData(color: Colors.white, size: 30),
+          ),
+          body: Padding(
+            padding: EdgeInsets.all(appPadding),
+            child: orders == null
+                ? _NoOrdersScreen()
+                : Column(
+                    children: [
+                      Align(alignment: Alignment.centerLeft, child: _Header()),
+                      Expanded(
+                          child: _OrderList(
+                        orders: orders,
+                      )),
+                      //Center(child: _DoubtCard())
+                    ],
+                  ),
+          ),
+        );
+      },
     );
   }
 }
@@ -54,7 +71,9 @@ class _Header extends StatelessWidget {
 }
 
 class _OrderList extends StatefulWidget {
-  const _OrderList();
+  final List<Order> orders;
+
+  const _OrderList({required this.orders});
 
   @override
   State<_OrderList> createState() => _OrderListState();
@@ -63,39 +82,65 @@ class _OrderList extends StatefulWidget {
 class _OrderListState extends State<_OrderList> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
-      orderProvider.getAll();
-      final orders = orderProvider.orders;
+    return ListView.builder(
+        itemCount: widget.orders.length,
+        itemBuilder: (context, index) {
+          final order = widget.orders[index];
+          return _OrderCard(order: order);
+        });
+  }
+}
 
-      return ListView.builder(
-          itemCount: orders.length,
-          itemBuilder: (context, index) {
-            final order = orders[index];
-            return _OrderCard(
-                orderImage: 'https://rb.gy/2xfabn',
-                //orderImage: order.items[0].productImage,
-                date: order.orderDate!,
-                orderNumber: order.id.toString(),
-                status: order.status!,
-                price: order.finalPrice!.toStringAsFixed(2));
-          });
-    });
+class _NoOrdersScreen extends StatefulWidget {
+  const _NoOrdersScreen({super.key});
+
+  @override
+  State<_NoOrdersScreen> createState() => _NoOrdersScreenState();
+}
+
+class _NoOrdersScreenState extends State<_NoOrdersScreen> {
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.08;
+
+    return Padding(
+      padding: const EdgeInsets.all(appPadding),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: verticalPadding),
+        child: Column(
+          children: [
+            Image.asset(
+              'assets/item-not-found.png',
+              height: 400,
+              width: 400,
+            ),
+            const Text(
+              "Você não tem pedidos!",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 37,),
+            InkWell(
+              onTap: () {
+                Navigator.pushReplacementNamed(context, 'home');
+              },
+              child: const ActionPrimaryButton(
+                  buttonText: "Buscar produtos", buttonTextSize: 18),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class _OrderCard extends StatelessWidget {
-  final String orderImage;
-  final String orderNumber;
-  final String status;
-  final String date;
-  final String price;
+  final Order order;
 
-  const _OrderCard(
-      {required this.orderImage,
-      required this.orderNumber,
-      required this.status,
-      required this.date,
-      required this.price});
+  const _OrderCard({
+    required this.order,
+  });
 
   Text _convertOrderStatus(String orderStatus) {
     String? text;
@@ -169,7 +214,10 @@ class _OrderCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: InkWell(
         onTap: () {
-          Navigator.pushNamed(context, 'order-details');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrderDetailsScreen(order: order)));
         },
         child: Card(
           color: Colors.white,
@@ -187,11 +235,11 @@ class _OrderCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        formatDate(date),
+                        formatDate(order.orderDate!),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'R\$ $price',
+                        'R\$ ${order.finalPrice}',
                         style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -211,7 +259,7 @@ class _OrderCard extends StatelessWidget {
                         height: 100,
                         width: 100,
                         child: Image.network(
-                          orderImage,
+                          order.items.last.productImage,
                           fit: BoxFit.contain,
                           width: 100,
                           height: 100,
@@ -232,13 +280,13 @@ class _OrderCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _convertOrderStatus(status),
+                            _convertOrderStatus(order.status!),
                             const SizedBox(
                               height: 10,
                             ),
                             SizedBox(
                               width: 200,
-                              child: _converMessage(status),
+                              child: _converMessage(order.status!),
                             ),
                           ],
                         ),

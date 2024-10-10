@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/service/user_service.dart';
 
 class UserProvider with ChangeNotifier {
   final userService = UserService();
   User? user;
+  List<Order>? orders;
 
   Future<void> loadUser() async {
     user = await userService.loadUserInfo();
@@ -37,6 +39,11 @@ class UserProvider with ChangeNotifier {
 
   Future<void> createAddress(Map<String, String> address) async {
     await userService.createAddress(address);
+    notifyListeners();
+  }
+
+  Future<void> getOrders() async {
+    orders = await userService.getOrders();
     notifyListeners();
   }
 }

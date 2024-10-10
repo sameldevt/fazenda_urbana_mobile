@@ -1,43 +1,85 @@
 import 'package:flutter/material.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/product.dart';
-import 'package:verdeviva/screens/market/widgets/product_card.dart';
+import 'package:intl/intl.dart';
+
+import '../../model/order.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
-  const OrderDetailsScreen({super.key});
+  final Order order;
+
+  const OrderDetailsScreen({required this.order, super.key});
 
   @override
   State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-  Icon _getIconForStatus(String status) {
-    IconData iconData;
-    Color color;
 
-    switch (status) {
-      case 'Em transito':
-        iconData = Icons.access_time;
-        color = Colors.black;
-        break;
-      case 'Entregue':
-        iconData = Icons.check;
+  Text _convertOrderStatus(String orderStatus) {
+    String? text;
+    Color? color;
+
+    switch (orderStatus) {
+      case 'ENTREGUE':
+        text = 'Entregue';
         color = Colors.green;
         break;
-      case 'Cancelado':
-        iconData = Icons.cancel_outlined;
-        color = Colors.red;
-        break;
-      default:
-        iconData = Icons.help;
+      case 'EM_TRANSITO':
+        text = 'Em transito';
         color = Colors.grey;
+        break;
+      case 'PAGO':
+        text = 'Pago';
+        color = Colors.yellow;
+        break;
+      case 'AGUARDANDO_PAGAMENTO':
+        text = 'Pendente';
+        color = Colors.grey;
+      case 'CANCELADO':
+        text = 'Cancelado';
+        color = Colors.red;
     }
 
-    return Icon(
-      iconData,
-      color: color,
-      size: 40,
+    return Text(
+      text!,
+      style:
+      TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color!),
     );
+  }
+
+  Text _converMessage(status) {
+    String? text;
+
+    switch (status) {
+      case 'ENTREGUE':
+        text = 'Pedido entregue.';
+        break;
+      case 'EM_TRANSITO':
+        text = 'Seu pedido está em transito.';
+        break;
+      case 'PAGO':
+        text = 'Seu pedido foi pago e logo será enviado.';
+        break;
+      case 'AGUARDANDO_PAGAMENTO':
+        text = 'Estamos aguardando o pagamento do pedido.';
+      case 'CANCELADO':
+        text = 'Este pedido foi cancelado';
+    }
+
+    return Text(
+      text!,
+      softWrap: true,
+      maxLines: 2,
+      style: const TextStyle(
+          fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+    );
+  }
+
+  String formatDate(String isoString) {
+    DateTime date = DateTime.parse(isoString);
+    String formattedDate = DateFormat('MMMM d, yyyy').format(date);
+    return formattedDate;
   }
 
   Text _getDescriptionForStatus(String status) {
@@ -63,40 +105,26 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final appBarColor = theme.colorScheme.primary;
+    final background = theme.colorScheme.surface;
+
     return Scaffold(
+      backgroundColor: background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        titleTextStyle: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
+        backgroundColor: appBarColor,
+        title: Text(
+          'Pedido ${widget.order.id}',
+          style: TextStyle(
+              fontSize: 22, color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        title: const Text('Informações do pedido'),
-        centerTitle: true,
+        iconTheme: const IconThemeData(color: Colors.white, size: 30),
       ),
-      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.all(appPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                      padding: const EdgeInsets.only(right: 8),
-                      child: _getIconForStatus('Em transito')),
-                  const Text(
-                    'Pedido 0104937',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
             Center(
               child: _getDescriptionForStatus('Em transito'),
             ),
@@ -180,9 +208,7 @@ class _CartListState extends State<_CartList> {
       itemCount: products.length,
       itemBuilder: (context, index) {
         final product = products[index];
-        return _CartItem(
-          product: product
-        );
+        return _CartItem(product: product);
       },
     );
   }

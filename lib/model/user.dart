@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/service/user_service.dart';
 
 class User {
@@ -7,8 +8,9 @@ class User {
   final String profilePic;
   final Contact contact;
   final List<Address> addresses;
+  List<Order>? orders;
 
-  const User({
+  User({
     required this.id,
     required this.name,
     required this.profilePic,
