@@ -94,7 +94,7 @@ class _MainPageScreenState extends State<_MainPageScreen> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 1.0,
                       mainAxisSpacing: 1.0,
-                      childAspectRatio: 0.85,
+                      childAspectRatio: 0.80,
                     ),
                     itemCount: _products.length,
                     itemBuilder: (context, index) {

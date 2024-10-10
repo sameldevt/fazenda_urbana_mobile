@@ -5,7 +5,7 @@ import 'package:verdeviva/screens/market/product_info_screen.dart';
 class ShopCard extends StatelessWidget {
   final Product product;
   final double _cardWidth = 170.0;
-  final double _cardHeight = 120.0;
+  final double _cardHeight = 130.0;
   final double _cardElevation = 10.0;
 
   const ShopCard({

@@ -36,7 +36,7 @@ class UserService {
   }
 
   Future<List<Order>> getOrders() async {
-    final response = await http.get(Uri.parse('$baseApiUrl/$contextUrl/buscar-todos'));
+    final response = await http.get(Uri.parse('$baseApiUrl/pedidos/buscar-todos'));
     List<dynamic> responseBody = jsonDecode(response.body);
 
     if (response.statusCode == 500) {

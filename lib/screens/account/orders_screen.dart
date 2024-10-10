@@ -259,17 +259,17 @@ class _OrderCard extends StatelessWidget {
                         height: 100,
                         width: 100,
                         child: Image.network(
-                          order.items.last.productImage,
+                          'sadfas',//order.items.last.productImage,
                           fit: BoxFit.contain,
                           width: 100,
                           height: 100,
                           errorBuilder: (BuildContext context, Object exception,
                               StackTrace? stackTrace) {
                             return Container(
-                              width: 50,
-                              height: 50,
+                              width: 100,
+                              height: 100,
                               color: Colors.transparent,
-                              child: Image.asset('assets/sad-face.png'),
+                              child: Image.asset('assets/sad-face.png', fit: BoxFit.contain,),
                             );
                           },
                         ),
