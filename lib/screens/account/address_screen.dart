@@ -53,59 +53,59 @@ class _AddressList extends StatefulWidget {
 }
 
 class _AddressListState extends State<_AddressList> {
-  List<Address> addresses = [];
-
   Future<void> refresh() async {
     setState(() {});
   }
 
-  void onDelete(Address address){
-      addresses.remove(address);
-      refresh();
+  void onDelete(Address address) {
+    Provider.of<UserProvider>(context).deleteAddress(address);
+    refresh();
   }
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user!;
-    addresses = user.addresses;
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        final user = userProvider.user!;
+        final addresses = user.addresses;
 
-    print(addresses.length);
-
-    return Padding(
-      padding: const EdgeInsets.all(appPadding),
-      child: Column(children: [
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: refresh,
-            child: ListView.separated(
-              separatorBuilder: (context, index) => const Divider(
-                color: Colors.grey,
-                thickness: 0.5,
+        return Padding(
+          padding: const EdgeInsets.all(appPadding),
+          child: Column(children: [
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: refresh,
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const Divider(
+                    color: Colors.grey,
+                    thickness: 0.5,
+                  ),
+                  itemCount: addresses.length,
+                  itemBuilder: (context, index) {
+                    final address = addresses[index];
+                    return _AddressCard(
+                      address: address,
+                      onDelete: onDelete,
+                    );
+                  },
+                ),
               ),
-              itemCount: addresses.length,
-              itemBuilder: (context, index) {
-                final address = addresses[index];
-                return _AddressCard(
-                  address: address,
-                  onDelete: onDelete,
+            ),
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateAddressScreen(),
+                  ),
                 );
               },
+              child: const ActionPrimaryButton(
+                  buttonText: "Cadastrar endereço", buttonTextSize: 18),
             ),
-          ),
-        ),
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CreateAddressScreen(),
-              ),
-            );
-          },
-          child: const ActionPrimaryButton(
-              buttonText: "Cadastrar endereço", buttonTextSize: 18),
-        ),
-      ]),
+          ]),
+        );
+      },
     );
   }
 }
@@ -114,10 +114,7 @@ class _AddressCard extends StatefulWidget {
   final Address address;
   final Function(Address) onDelete;
 
-  const _AddressCard({
-    required this.address,
-    required this.onDelete
-  });
+  const _AddressCard({required this.address, required this.onDelete});
 
   @override
   State<_AddressCard> createState() => _AddressCardState();
@@ -126,13 +123,6 @@ class _AddressCard extends StatefulWidget {
 class _AddressCardState extends State<_AddressCard> {
   @override
   Widget build(BuildContext context) {
-    print(widget.address.zipCode);
-    print(widget.address.city);
-    print(widget.address.street);
-    print(widget.address.state);
-    print(widget.address.complement);
-    print(widget.address.number);
-
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(
@@ -182,7 +172,7 @@ class _AddressCardState extends State<_AddressCard> {
                       const SizedBox(width: 8),
                       TextButton.icon(
                         onPressed: () {
-                          _showDialog(widget.address).then((value){
+                          _showDialog(widget.address).then((value) {
                             widget.onDelete(widget.address);
                           });
                         },
@@ -228,7 +218,8 @@ class _AddressCardState extends State<_AddressCard> {
                   padding: const EdgeInsets.only(bottom: 20.0),
                   child: Text(
                     'Você tem certeza que deseja excluir esse endereço?',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -241,7 +232,9 @@ class _AddressCardState extends State<_AddressCard> {
                     buttonTextSize: 16,
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 InkWell(
                   onTap: () {
                     Navigator.pop(context);
@@ -307,7 +300,7 @@ class HasNoAddressScreen extends StatelessWidget {
               },
               child: const ActionPrimaryButton(
                   buttonText: "Cadastrar endereço", buttonTextSize: 18),
-            ),
+            )
           ],
         ),
       ),

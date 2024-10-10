@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/providers/user_provider.dart';
-import 'package:verdeviva/service/user_service.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key});
@@ -161,14 +161,15 @@ class LoggedDrawer extends StatefulWidget {
 }
 
 class _LoggedDrawerState extends State<LoggedDrawer> {
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: true).user;
-
     final theme = Theme.of(context);
     final barColor = theme.colorScheme.primary;
     final barItemsColor = theme.colorScheme.onPrimary;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.33;
+
     return Drawer(
       elevation: 10.0,
       backgroundColor: Colors.white,
@@ -286,7 +287,7 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 280),
+            padding: EdgeInsets.only(top: verticalPadding),
             child: ListTile(
               leading: const Icon(
                 Icons.exit_to_app,
@@ -298,14 +299,81 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
                 style: TextStyle(fontSize: 20, color: Colors.black),
               ),
               onTap: () {
-                Provider.of<UserProvider>(context, listen: false).deleteUserInfo().then((value) {
-                  Navigator.pushReplacementNamed(context, 'home');
+                _showDialog().then((value) {
+                  if (value) {
+                    Provider.of<UserProvider>(context, listen: false)
+                        .deleteUserInfo()
+                        .then((value) {
+                      Navigator.pushReplacementNamed(context, 'home');
+                    });
+                  } else {
+                    Navigator.pop(context);
+                  }
                 });
               },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Future<bool> _showDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 530,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Image.asset(
+                  'assets/exit.png',
+                  height: 300,
+                  width: 300,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 20.0),
+                  child: Text(
+                    'Tem certeza que deseja sair?',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context, true); // Retorna true
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Sim',
+                    buttonTextSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context, false); // Retorna false
+                  },
+                  child: const ActionSecondaryButton(
+                    buttonText: 'Não',
+                    buttonTextSize: 16,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

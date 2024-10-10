@@ -228,142 +228,82 @@ class _OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OrderDetailsScreen(order: order)));
-        },
-        child: Card(
-          color: Colors.white,
-          elevation: 3.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
-          ),
-          child: SizedBox(
-            height: 165,
-            child: Padding(
-              padding: const EdgeInsets.all(appPadding),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        formatDate(order.orderDate!),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'R\$ ${order.finalPrice!.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.green),
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    color: Colors.grey,
-                    thickness: 0.5,
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: Image.network(
-                          order.items.first.productImage,
-                          fit: BoxFit.contain,
-                          width: 100,
-                          height: 100,
-                          errorBuilder: (BuildContext context, Object exception,
-                              StackTrace? stackTrace) {
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              color: Colors.white,
-                              //child: Image.asset('assets/.png', fit: BoxFit.contain,),
-                            );
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _convertOrderStatus(order.status!),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              width: 200,
-                              child: _converMessage(order.status!),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+      child: Card(
+        color: Colors.white,
+        elevation: 3.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
-      ),
-    );
-  }
-}
-
-class _DoubtCard extends StatelessWidget {
-  const _DoubtCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white, // Cor de fundo do Card
-      elevation: 1.0, // Altura da sombra
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(4.0), // Bordas arredondadas
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
         child: SizedBox(
-          height: 120,
-          width: 260,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const Text(
-                'Dúvidas? WhatsApp:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
-              ),
-              const Text(
-                '+55 (11) 98888-7777',
-                style: TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              Container(
-                alignment: Alignment.center,
-                height: 50,
-                width: 220,
-                decoration: BoxDecoration(
-                  color: const Color(0xEE45DB4B),
-                  borderRadius: BorderRadius.circular(12.0),
-                  border: Border.all(color: Colors.black),
+          height: 165,
+          child: Padding(
+            padding: const EdgeInsets.all(appPadding),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      formatDate(order.orderDate!),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'R\$ ${order.finalPrice!.toStringAsFixed(2)}',
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.green),
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'Mande uma mensagem!',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontWeight:
-                          FontWeight.bold), // Cor do texto para contraste
+                const Divider(
+                  color: Colors.grey,
+                  thickness: 0.5,
+                  height: 10,
                 ),
-              ),
-            ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 100,
+                      width: 100,
+                      child: Image.network(
+                        order.items.first.productImage,
+                        fit: BoxFit.contain,
+                        width: 100,
+                        height: 100,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Container(
+                            width: 100,
+                            height: 100,
+                            color: Colors.white,
+                            //child: Image.asset('assets/.png', fit: BoxFit.contain,),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _convertOrderStatus(order.status!),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: _converMessage(order.status!),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

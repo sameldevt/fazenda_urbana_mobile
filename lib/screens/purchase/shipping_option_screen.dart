@@ -4,12 +4,11 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/product.dart';
-import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/providers/cart_provider.dart';
 import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/screens/account/address_screen.dart';
-import 'package:verdeviva/service/user_service.dart';
+import 'package:verdeviva/screens/account/create_or_modify_address_screen.dart';
 
 class ShippingOptionScreen extends StatefulWidget {
   const ShippingOptionScreen({super.key});
@@ -61,9 +60,72 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                   ),
                 ],
               )
-            : const HasNoAddressScreen(),
+            : const _HasNoAddressScreen(),
       );
     });
+  }
+}
+class _HasNoAddressScreen extends StatelessWidget {
+  const _HasNoAddressScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final verticalPadding = screenHeight * 0.05;
+
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(appPadding),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: verticalPadding,
+            ),
+            Container(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/missing.png',
+                    height: 300,
+                    width: 300,
+                  ),
+                  const Text(
+                    textAlign: TextAlign.center,
+                    "Parece que você não tem nenhum endereço de entrega cadastrado!",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: verticalPadding,
+            ),
+            InkWell(
+              onTap: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CreateAddressScreen(),
+                  ),
+                );
+
+                if (result != null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShippingOptionScreen(),
+                    ),
+                  );
+                }
+              },
+              child: const ActionPrimaryButton(
+                  buttonText: "Cadastrar endereço", buttonTextSize: 18),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

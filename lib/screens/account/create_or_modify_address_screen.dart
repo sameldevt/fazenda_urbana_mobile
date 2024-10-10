@@ -675,6 +675,7 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                               .createAddress(addressInfo)
                               .then((result) {
                             _showDialog();
+                            Navigator.pop(context, true);
                           }).catchError((error) {
                             _showErrorDialog(error);
                           });

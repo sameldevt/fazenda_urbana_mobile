@@ -15,33 +15,33 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user) async {
-    print(user.id);
-    userService.saveUserInfo(user).then((value){
+    userService.saveUserInfo(user).then((value) {
       loadUser();
     });
-    notifyListeners();
   }
 
   Future<void> deleteUserInfo() async {
-    userService.deleteUserInfo().then((value){
+    userService.deleteUserInfo().then((value) {
       user = null;
     });
     notifyListeners();
   }
 
-  Future<void>  updateAddress(Map<String, String> info) async {
+  Future<void> updateAddress(Map<String, String> info) async {
     userService.updateAddress(info);
     notifyListeners();
   }
 
-  Future<void>  deleteAddress(Address address) async {
-    userService.deleteAddress(address);
-    notifyListeners();
+  Future<void> deleteAddress(Address address) async {
+    userService.deleteAddress(address).then((value){
+      loadUser();
+    });
   }
 
   Future<void> createAddress(Map<String, String> address) async {
-    await userService.createAddress(address);
-    notifyListeners();
+    await userService.createAddress(address).then((value) {
+      loadUser();
+    });
   }
 
   Future<void> getOrders(BuildContext context) async {

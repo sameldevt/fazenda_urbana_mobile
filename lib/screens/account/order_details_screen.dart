@@ -15,67 +15,6 @@ class OrderDetailsScreen extends StatefulWidget {
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
-
-  Text _convertOrderStatus(String orderStatus) {
-    String? text;
-    Color? color;
-
-    switch (orderStatus) {
-      case 'ENTREGUE':
-        text = 'Entregue';
-        color = Colors.green;
-        break;
-      case 'EM_TRANSITO':
-        text = 'Em transito';
-        color = Colors.grey;
-        break;
-      case 'PAGO':
-        text = 'Pago';
-        color = Colors.yellow;
-        break;
-      case 'AGUARDANDO_PAGAMENTO':
-        text = 'Pendente';
-        color = Colors.grey;
-      case 'CANCELADO':
-        text = 'Cancelado';
-        color = Colors.red;
-    }
-
-    return Text(
-      text!,
-      style:
-      TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color!),
-    );
-  }
-
-  Text _converMessage(status) {
-    String? text;
-
-    switch (status) {
-      case 'ENTREGUE':
-        text = 'Pedido entregue.';
-        break;
-      case 'EM_TRANSITO':
-        text = 'Seu pedido está em transito.';
-        break;
-      case 'PAGO':
-        text = 'Seu pedido foi pago e logo será enviado.';
-        break;
-      case 'AGUARDANDO_PAGAMENTO':
-        text = 'Estamos aguardando o pagamento do pedido.';
-      case 'CANCELADO':
-        text = 'Este pedido foi cancelado';
-    }
-
-    return Text(
-      text!,
-      softWrap: true,
-      maxLines: 2,
-      style: const TextStyle(
-          fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
-    );
-  }
-
   String formatDate(String isoString) {
     DateTime date = DateTime.parse(isoString);
     String formattedDate = DateFormat('MMMM d, yyyy').format(date);
