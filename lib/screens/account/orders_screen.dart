@@ -8,8 +8,22 @@ import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/screens/account/order_details_screen.dart';
 
-class OrdersScreen extends StatelessWidget {
+class OrdersScreen extends StatefulWidget {
   const OrdersScreen({super.key});
+
+  @override
+  _OrdersScreenState createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.getOrders(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +50,26 @@ class OrdersScreen extends StatelessWidget {
           ),
           body: Padding(
             padding: EdgeInsets.all(appPadding),
-            child: orders == null
+            child: orders == null || orders.isEmpty
                 ? _NoOrdersScreen()
                 : Column(
-                    children: [
-                      Align(alignment: Alignment.centerLeft, child: _Header()),
-                      Expanded(
-                          child: _OrderList(
-                        orders: orders,
-                      )),
-                      //Center(child: _DoubtCard())
-                    ],
+              children: [
+                Align(alignment: Alignment.centerLeft, child: _Header()),
+                Expanded(
+                  child: _OrderList(
+                    orders: orders,
                   ),
+                ),
+                //Center(child: _DoubtCard())
+              ],
+            ),
           ),
         );
       },
     );
   }
 }
+
 
 class _Header extends StatelessWidget {
   const _Header();
@@ -239,7 +255,7 @@ class _OrderCard extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'R\$ ${order.finalPrice}',
+                        'R\$ ${order.finalPrice!.toStringAsFixed(2)}',
                         style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
@@ -259,7 +275,7 @@ class _OrderCard extends StatelessWidget {
                         height: 100,
                         width: 100,
                         child: Image.network(
-                          'sadfas',//order.items.last.productImage,
+                          order.items.first.productImage,
                           fit: BoxFit.contain,
                           width: 100,
                           height: 100,
@@ -268,8 +284,8 @@ class _OrderCard extends StatelessWidget {
                             return Container(
                               width: 100,
                               height: 100,
-                              color: Colors.transparent,
-                              child: Image.asset('assets/sad-face.png', fit: BoxFit.contain,),
+                              color: Colors.white,
+                              //child: Image.asset('assets/.png', fit: BoxFit.contain,),
                             );
                           },
                         ),

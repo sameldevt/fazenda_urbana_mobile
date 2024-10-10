@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:verdeviva/providers/user_provider.dart';
 import 'package:verdeviva/service/access_service.dart';
 
 class UserService {
@@ -35,23 +38,18 @@ class UserService {
     prefs.remove(_userKey);
   }
 
-  Future<List<Order>> getOrders() async {
-    final response = await http.get(Uri.parse('$baseApiUrl/$contextUrl/buscar-pedidos'));
-    List<dynamic> responseBody = jsonDecode(response.body);
+  Future<List<Order>> getOrders(BuildContext context) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.user!.id;
+      final response = await http.get(
+          Uri.parse('$baseApiUrl/$contextUrl/buscar-pedidos?id=${userId}'));
+      List<dynamic> responseBody = jsonDecode(response.body);
 
-    if (response.statusCode == 500) {
-      throw ServerErrorException();
+      return responseBody.map((product) => Order.fromJson(product)).toList();
+    } catch (Exception) {
+      return [];
     }
-
-    if (response.statusCode == 404) {
-      throw UserNotFoundException();
-    }
-
-    if (response.statusCode == 400) {
-      throw InvalidCredentialsException();
-    }
-
-    return responseBody.map((product) => Order.fromJson(product)).toList();
   }
 
   Future<void> updateAddress(Map<String, String> info) async {

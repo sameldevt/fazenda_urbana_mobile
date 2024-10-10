@@ -7,6 +7,7 @@ class UserProvider with ChangeNotifier {
   final userService = UserService();
   User? user;
   List<Order>? orders;
+  bool isLoading = false;
 
   Future<void> loadUser() async {
     user = await userService.loadUserInfo();
@@ -14,6 +15,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user) async {
+    print(user.id);
     userService.saveUserInfo(user).then((value){
       loadUser();
     });
@@ -42,8 +44,14 @@ class UserProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getOrders() async {
-    orders = await userService.getOrders();
+  Future<void> getOrders(BuildContext context) async {
+    isLoading = true;
     notifyListeners();
+    try {
+      orders = await userService.getOrders(context);
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 }

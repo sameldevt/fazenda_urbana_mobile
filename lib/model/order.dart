@@ -18,14 +18,14 @@ class Order {
   factory Order.fromJson(Map<String, dynamic> json) {
     final order = Order();
 
-    order.id = json['id'];
-    order.orderDate = json['dataPedido'];
-    order.deliveryDate = json['dataEntrega'];
-    order.status = json['status'];
-    order.finalPrice = json['total'];
-    order.deliveryAddress = json['enderecoEntrega'];
-    order.paymentMethod = json['formaPagamento'];
-    order.notes = json['observacoes'];
+    order.id = json['id'] ?? '';
+    order.orderDate = json['dataPedido']?? '';
+    order.deliveryDate = json['dataEntrega'] ?? '';
+    order.status = json['status'] ?? '';
+    order.finalPrice = json['total'] ?? '';
+    order.deliveryAddress = json['enderecoEntrega'] ?? '';
+    order.paymentMethod = json['formaPagamento'] ?? '';
+    order.notes = json['observacoes'] ?? '';
     order.items = (json['itens'] as List)
         .map((itemJson) => OrderItem.fromJson(itemJson))
         .toList();
@@ -53,5 +53,13 @@ class OrderItem {
         productId: json['produtoId'],
         quantity: json['quantidade'],
         subTotal: json['subTotal']);
+  }
+
+  Map<String, dynamic> toJson(){
+    return {
+      'produtoId': productId,
+      'quantidade': quantity,
+      'subTotal': subTotal
+    };
   }
 }

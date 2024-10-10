@@ -21,6 +21,7 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const _MainPageScreen(),
@@ -52,8 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
           drawer: user == null
               ? const NotLoggedDrawer()
               : LoggedDrawer(
-            onItemSelected: _onItemSelected,
-          ),
+                  onItemSelected: _onItemSelected,
+                ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: _screens[_currentPageIndex],
@@ -78,36 +79,39 @@ class _MainPageScreenState extends State<_MainPageScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _products = Provider.of<ProductProvider>(context).products;
 
-    return Column(
-      children: [
-        const _FilterSection(),
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: _refreshList,
-            child: _products.isEmpty
-                ? const _NoProductsScreen()
-                : GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 1.0,
-                      mainAxisSpacing: 1.0,
-                      childAspectRatio: 0.80,
+    return Consumer<ProductProvider>(
+        builder: (context, productProvider, child) {
+          final products = productProvider.products;
+          return Column(
+        children: [
+          const _FilterSection(),
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshList,
+              child: products.isEmpty
+                  ? const _NoProductsScreen()
+                  : GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 1.0,
+                        mainAxisSpacing: 1.0,
+                        childAspectRatio: 0.80,
+                      ),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final item = products[index];
+                        return ShopCard(
+                          product: item,
+                        );
+                      },
                     ),
-                    itemCount: _products.length,
-                    itemBuilder: (context, index) {
-                      final item = _products[index];
-                      return ShopCard(
-                        product: item,
-                      );
-                    },
-                  ),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 

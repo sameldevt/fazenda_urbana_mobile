@@ -166,8 +166,6 @@ class _LoggedDrawerState extends State<LoggedDrawer> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context, listen: true).user;
 
-    print(user == null);
-
     final theme = Theme.of(context);
     final barColor = theme.colorScheme.primary;
     final barItemsColor = theme.colorScheme.onPrimary;

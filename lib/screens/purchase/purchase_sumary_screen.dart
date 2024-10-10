@@ -178,7 +178,7 @@ class _SummaryItemCardState extends State<_SummaryItemCard> {
                         ),
                       ),
                       Text(
-                        '${widget.product.quantity > 5 ? '${widget.product.quantity} g' : '${widget.product.quantity} kg' }',
+                        '${widget.product.quantity > 5 ? '${widget.product.quantity} g' : '${widget.product.quantity} kg'}',
                         style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
@@ -225,6 +225,7 @@ class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
     double total =
         products.fold(0.0, (total, product) => total + product.totalPrice) +
             shippingCost;
+    order.finalPrice = total;
 
     return total.toStringAsFixed(2);
   }
@@ -340,10 +341,12 @@ class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
                           screen = const Scaffold();
                       }
 
-                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => screen),
-                        (Route<dynamic> route) => false,
-                      );
+                      orderProvider.confirmOrder().then((value) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => screen),
+                          (Route<dynamic> route) => false,
+                        );
+                      });
                     });
                   },
                   child: const ActionPrimaryButton(

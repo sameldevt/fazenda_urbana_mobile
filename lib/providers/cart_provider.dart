@@ -7,6 +7,9 @@ class CartProvider with ChangeNotifier {
 
   Future<void> loadCart() async {
     products = await _cartService.getProducts();
+    products.forEach((item) {
+      print('Product ID: ${item.id}');
+    });
     notifyListeners();
   }
 
@@ -22,7 +25,7 @@ class CartProvider with ChangeNotifier {
   Future<void> addProduct(ProductToCart product) async {
     await _cartService.addProduct(product);
     await loadCart();
-    notifyListeners();
+    //notifyListeners();
   }
 
   Future<void> removeProduct(ProductToCart product) async {

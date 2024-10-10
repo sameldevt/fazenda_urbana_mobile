@@ -9,6 +9,7 @@ class OrderService {
   final String contextUrl = "pedidos";
 
   Future<void> createOrder(Order order) async {
+    print(order.finalPrice);
     http.Response response = await http.post(
       Uri.parse("$baseApiUrl/$contextUrl/cadastrar"),
       headers: {
@@ -19,7 +20,7 @@ class OrderService {
         "total": order.finalPrice,
         "enderecoEntrega": order.deliveryAddress,
         "formaPagamento": order.paymentMethod,
-        "itens": order.items,
+        "itens": order.items.map((i) => i.toJson()).toList(),
       }),
     );
 
@@ -28,10 +29,12 @@ class OrderService {
     }
 
     if (response.statusCode == 404) {
+      print(response.body);
       throw UserNotFoundException();
     }
 
     if (response.statusCode == 400) {
+      print(response.body);
       throw InvalidCredentialsException();
     }
   }

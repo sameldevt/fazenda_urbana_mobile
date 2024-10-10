@@ -8,8 +8,10 @@ import '../model/order.dart';
 class OrderProvider with ChangeNotifier {
   Order? order = Order();
 
-  Future<void> createOrder() async {
-    order ??= Order();
+  Future<void> createOrder(int clientId) async {
+    clearOrder();
+    order = Order();
+    order!.clientId = clientId;
     notifyListeners();
   }
 
@@ -18,6 +20,13 @@ class OrderProvider with ChangeNotifier {
         .map((p) => OrderItem(
             productImage: p.imageUrl, productId: p.id, quantity: p.quantity, subTotal: p.totalPrice))
         .toList();
+
+    orderItems.forEach((item) {
+      print('Product ID: ${item.productId}');
+      print('Product Image: ${item.productImage}');
+      print('Quantity: ${item.quantity}');
+      print('Subtotal: ${item.subTotal}');
+    });
 
     order!.items.addAll(orderItems);
 
@@ -49,5 +58,10 @@ class OrderProvider with ChangeNotifier {
       order = null;
       notifyListeners();
     }
+  }
+
+  Future<void> confirmOrder() async {
+    final orderService = OrderService();
+    await orderService.createOrder(order!);
   }
 }

@@ -309,8 +309,6 @@ class _Buttons extends StatefulWidget {
 }
 
 class _ButtonsState extends State<_Buttons> {
-  final CartService _cartService = CartService();
-
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -242,7 +242,6 @@ class _OrderInfo extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  orderProvider.clearOrder();
                   cartProvider.clearCart();
                   Navigator.push(
                     context,
@@ -258,7 +257,6 @@ class _OrderInfo extends StatelessWidget {
               ),
               InkWell(
                 onTap: (){
-                  orderProvider.clearOrder();
                   cartProvider.clearCart();
                   Navigator.pushReplacementNamed(context, 'home');
                 },

@@ -356,7 +356,8 @@ class _ContinuePurchaseSectionState extends State<_ContinuePurchaseSection> {
                   onTap: () {
                     user == null
                         ? Navigator.pushNamed(context, 'not-logged')
-                        : orderProvider.createOrder().then((value) {
+                        : orderProvider.createOrder(userProvider.user!.id).then((value) {
+                          print(userProvider.user!.id);
                             orderProvider
                                 .addItems(widget.products)
                                 .then((value) {

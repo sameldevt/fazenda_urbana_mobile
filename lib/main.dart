@@ -82,7 +82,8 @@ class App extends StatelessWidget {
           "pix-payment": (context) => const PixScreen(),
           "card-payment": (context) => const CardOptionScreen(),
           "payment-status": (context) => const PaymentStatusScreen(),
-          "order-confirmation-screen": (context) => const OrderConfirmationScreen(),
+          "order-confirmation-screen": (context) =>
+          const OrderConfirmationScreen(),
           "create-card": (context) => const CreateCardScreen(),
           "card": (context) => const CardOptionScreen(),
           "not-logged": (context) => const NotLoggedScreen()
@@ -94,13 +95,30 @@ class App extends StatelessWidget {
   }
 }
 
-class InitialScreen extends StatelessWidget {
+class InitialScreen extends StatefulWidget {
   const InitialScreen({Key? key}) : super(key: key);
 
-  Future<void> _loadAllProviders(BuildContext context) async {
+  @override
+  _InitialScreenState createState() => _InitialScreenState();
+}
+
+class _InitialScreenState extends State<InitialScreen> {
+  late Future<void> _providersFuture;
+  bool _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (!_isLoading) {
+      _providersFuture = _loadAllProviders();
+      _isLoading = true;
+    }
+  }
+
+  Future<void> _loadAllProviders() async {
     await Future.wait([
       Provider.of<UserProvider>(context, listen: false).loadUser(),
-      Provider.of<UserProvider>(context, listen: false).getOrders(),
       Provider.of<ProductProvider>(context, listen: false).loadAll(),
       Provider.of<CartProvider>(context, listen: false).loadCart(),
     ]);
@@ -109,17 +127,20 @@ class InitialScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _loadAllProviders(context),
+      future: _providersFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        //}
-        // else if (snapshot.hasError) {
-        //   return Scaffold(
-        //     body: Center(child: Text('Error: ${snapshot.error}')),
-        //   );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(
+              child: Text(
+                'Error: ${snapshot.error} ${snapshot.stackTrace}',
+              ),
+            ),
+          );
         } else {
           return const HomeScreen();
         }
@@ -127,5 +148,3 @@ class InitialScreen extends StatelessWidget {
     );
   }
 }
-
-
