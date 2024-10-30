@@ -3,6 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
+import 'package:verdeviva/screens/account/account_screen.dart';
+import 'package:verdeviva/screens/account/address_screen.dart';
+import 'package:verdeviva/screens/market/home_screen.dart';
 import 'package:verdeviva/service/access_service.dart';
 import 'package:verdeviva/service/user_service.dart';
 
@@ -668,14 +671,14 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                 child: Column(
                   children: [
                     InkWell(
-                      onTap: () {
+                      onTap: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          Provider.of<UserProvider>(context, listen: false)
+                          await Provider.of<UserProvider>(context, listen: false)
                               .createAddress(addressInfo)
                               .then((result) {
                             _showDialog();
-                            Navigator.pop(context, true);
+                            //Navigator.pop(context, true);
                           }).catchError((error) {
                             _showErrorDialog(error);
                           });
@@ -758,7 +761,27 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pop(context);
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                          (Route<dynamic> route) => false,
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AccountScreen(),
+                      ),
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddressScreen(),
+                      ),
+                    );
                   },
                   child: const ActionPrimaryButton(
                     buttonText: 'Voltar',
@@ -806,8 +829,27 @@ class _CreateAddressScreenState extends State<CreateAddressScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.pushReplacementNamed(
-                        context, 'address-list');
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeScreen(),
+                      ),
+                          (Route<dynamic> route) => false,
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AccountScreen(),
+                      ),
+                    );
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddressScreen(),
+                      ),
+                    );
                   },
                   child: const ActionPrimaryButton(
                     buttonText: 'Ok',
