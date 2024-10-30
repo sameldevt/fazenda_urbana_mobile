@@ -25,10 +25,10 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
-      final user = userProvider.user;
       final theme = Theme.of(context);
       final appBarColor = theme.colorScheme.primary;
       final background = theme.colorScheme.surface;
+      final addresses = userProvider.user!.addresses;
 
       return Scaffold(
         appBar: AppBar(
@@ -44,7 +44,7 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
           ),
         ),
         backgroundColor: background,
-        body: user!.hasAddress()
+        body: addresses.isNotEmpty
             ? const Column(
                 children: [
                   Expanded(
@@ -107,8 +107,8 @@ class _HasNoAddressScreen extends StatelessWidget {
               height: verticalPadding,
             ),
             InkWell(
-              onTap: () async {
-                final result = await Navigator.push(
+              onTap: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => _CreateAddressScreen(),
@@ -444,7 +444,7 @@ class _CreateAddressScreenState extends State<_CreateAddressScreen> {
                           _formKey.currentState!.save();
                           await Provider.of<UserProvider>(context,
                                   listen: false)
-                              .createAddress(addressInfo)
+                              .createAddress(addressInfo, context)
                               .then((result) {
                             _showDialog();
                             Navigator.pushAndRemoveUntil(

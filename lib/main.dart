@@ -121,6 +121,7 @@ class _InitialScreenState extends State<InitialScreen> {
       Provider.of<UserProvider>(context, listen: false).loadUser(),
       Provider.of<ProductProvider>(context, listen: false).loadAll(),
       Provider.of<CartProvider>(context, listen: false).loadCart(),
+      Provider.of<UserProvider>(context, listen: false).getAddresses(context),
     ]);
   }
 

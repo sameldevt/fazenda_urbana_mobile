@@ -25,6 +25,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
       shadowColor: Colors.black,
       automaticallyImplyLeading: false,
       title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -39,36 +40,36 @@ class _CustomAppBarState extends State<CustomAppBar> {
               },
             ),
           ),
-          Expanded(
-            child: SizedBox(
-              height: kToolbarHeight - 16,
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: 'Pesquisar produto',
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    size: 24,
-                    color: Colors.black,
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 0),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: SizedBox(
+          //     height: kToolbarHeight - 16,
+          //     child: TextFormField(
+          //       decoration: InputDecoration(
+          //         hintText: 'Pesquisar produto',
+          //         prefixIcon: const Icon(
+          //           Icons.search,
+          //           size: 24,
+          //           color: Colors.black,
+          //         ),
+          //         contentPadding: const EdgeInsets.symmetric(vertical: 0),
+          //         filled: true,
+          //         fillColor: Colors.white,
+          //         border: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(20.0),
+          //           borderSide: BorderSide.none,
+          //         ),
+          //         enabledBorder: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(20.0),
+          //           borderSide: BorderSide.none,
+          //         ),
+          //         focusedBorder: OutlineInputBorder(
+          //           borderRadius: BorderRadius.circular(20.0),
+          //           borderSide: BorderSide.none,
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: IconButton(

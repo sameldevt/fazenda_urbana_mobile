@@ -7,6 +7,7 @@ class UserProvider with ChangeNotifier {
   final userService = UserService();
   User? user;
   List<Order>? orders;
+  List<Address>? addresses;
   bool isLoading = false;
 
   Future<void> loadUser() async {
@@ -15,15 +16,13 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> saveUserInfo(User user) async {
-    userService.saveUserInfo(user).then((value) {
-      loadUser();
-    });
+    await userService.saveUserInfo(user);
+    loadUser();
   }
 
   Future<void> deleteUserInfo() async {
-    userService.deleteUserInfo().then((value) {
-      user = null;
-    });
+    await userService.deleteUserInfo();
+    user = null;
     notifyListeners();
   }
 
@@ -33,15 +32,18 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> deleteAddress(Address address) async {
-    userService.deleteAddress(address).then((value){
-      loadUser();
-    });
+    await userService.deleteAddress(address);
+    loadUser();
   }
 
-  Future<void> createAddress(Map<String, String> address) async {
-    await userService.createAddress(address).then((value) {
-      loadUser();
-    });
+  Future<void> createAddress(Map<String, String> address, BuildContext context) async {
+    await userService.createAddress(address, context);
+    loadUser();
+  }
+
+  Future<void> getAddresses(BuildContext context) async {
+    addresses = await userService.getAddresses(context);
+    notifyListeners();
   }
 
   Future<void> getOrders(BuildContext context) async {

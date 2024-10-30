@@ -17,7 +17,6 @@ class UserService {
   Future<void> saveUserInfo(User user) async {
     final prefs = await SharedPreferences.getInstance();
     String userInfo = jsonEncode(user.toJson());
-
     await prefs.setString(_userKey, userInfo);
   }
 
@@ -37,6 +36,26 @@ class UserService {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_userKey);
   }
+
+  Future<List<Address>> getAddresses(BuildContext context) async {
+    try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final userId = userProvider.user!.id;
+      final response = await http.get(Uri.parse('$baseApiUrl/cliente/buscar/$userId'));
+
+      Map<String, dynamic> responseBody = jsonDecode(response.body);
+
+      List<dynamic> enderecosList = responseBody['enderecos'];
+
+      print('deu certo');
+      return enderecosList.map((endereco) => Address.fromJson(endereco)).toList();
+    } catch (e) {
+      print(e);
+      print('deu pau');
+      return [];
+    }
+  }
+
 
   Future<List<Order>> getOrders(BuildContext context) async {
     try {
@@ -66,7 +85,7 @@ class UserService {
     return null;
   }
 
-  Future<void> createAddress(Map<String, String> address) async {
+  Future<void> createAddress(Map<String, String> address, context) async {
     final userService = UserService();
     userService.loadUserInfo().then((user) async {
       final email = user!.contact.email;
@@ -99,9 +118,8 @@ class UserService {
         throw InvalidCredentialsException();
       }
 
-      final service = UserService();
-
-      service.saveUserInfo(User.fromJson(jsonDecode(response.body)));
+      print(response.body);
+      userService.saveUserInfo(User.fromJson(jsonDecode(response.body)));
     });
   }
 }
