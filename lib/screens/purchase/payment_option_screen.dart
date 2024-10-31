@@ -137,10 +137,8 @@ class _PaymentOptions extends StatelessWidget {
   String _getPaymentLabel(int index) {
     switch (index) {
       case 0:
-        return 'Cartão';
-      case 1:
         return 'Boleto Bancário';
-      case 2:
+      case 1:
         return 'Pix';
       default:
         return '';
@@ -150,10 +148,8 @@ class _PaymentOptions extends StatelessWidget {
   IconData _getPaymentIcon(int index) {
     switch (index) {
       case 0:
-        return Icons.credit_card;
-      case 1:
         return Icons.picture_as_pdf;
-      case 2:
+      case 1:
         return Icons.pix;
       default:
         return Icons.payment;
@@ -163,10 +159,8 @@ class _PaymentOptions extends StatelessWidget {
   String _getPaymentDetails(int index) {
     switch (index) {
       case 0:
-        return 'Com desconto de 5%.';
-      case 1:
         return 'Pague com boleto bancário.';
-      case 2:
+      case 1:
         return 'Com desconto de 8%.';
       default:
         return '';
@@ -185,7 +179,7 @@ class _PaymentOptions extends StatelessWidget {
               indent: 10.0,
               endIndent: 10.0,
             ),
-            itemCount: 3,
+            itemCount: 2,
             itemBuilder: (context, index) {
               return InkWell(
                 onTap: () {
@@ -193,14 +187,10 @@ class _PaymentOptions extends StatelessWidget {
 
                   switch (index) {
                     case 0:
-                      screen = const CardOptionScreen();
-                      orderProvider.addPaymentMethod('card');
-                      break;
-                    case 1:
                       screen = const PurchaseSummaryScreen();
                       orderProvider.addPaymentMethod('boleto');
                       break;
-                    case 2:
+                    case 1:
                       screen = const PurchaseSummaryScreen();
                       orderProvider.addPaymentMethod('pix');
                       break;
