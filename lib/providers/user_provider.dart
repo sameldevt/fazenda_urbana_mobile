@@ -7,7 +7,7 @@ class UserProvider with ChangeNotifier {
   final userService = UserService();
   User? user;
   List<Order>? orders;
-  List<Address>? addresses;
+  List<Address> addresses = [];
   bool isLoading = false;
 
   Future<void> loadUser() async {
@@ -41,9 +41,9 @@ class UserProvider with ChangeNotifier {
     loadUser();
   }
 
-  Future<void> getAddresses(BuildContext context) async {
-    addresses = await userService.getAddresses(context);
-    notifyListeners();
+  Future<List<Address>> getAddresses(BuildContext context) async {
+    addresses = await userService.loadAddresses(context);
+    return addresses!;
   }
 
   Future<void> getOrders(BuildContext context) async {

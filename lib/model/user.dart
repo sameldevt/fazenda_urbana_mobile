@@ -43,9 +43,10 @@ class User {
       name: json['nome'],
       profilePic: json['fotoPerfil'] ?? '',
       contact: Contact.fromJson(json['contato']),
-      addresses: (json['enderecos'] as List)
-          .map((addressJson) => Address.fromJson(addressJson))
-          .toList(),
+      addresses: List.generate(
+        json['enderecos'].length,
+            (index) => Address.fromJson(json['enderecos'][index]),
+      ),
     );
   }
 
@@ -76,14 +77,19 @@ class Address {
     required this.state,
   });
 
+  @override
+  String toString() {
+    return '$street $number $city $zipCode $complement $state';
+  }
+
   factory Address.fromJson(Map<String, dynamic> json) {
     return Address(
       street: json['logradouro'] ?? '',
       number: json['numero'] ?? '',
-      city: json['cidade'] ?? '',
-      zipCode: json['cep'] ?? '',
-      complement: json['complemento'] ?? '',
-      state: json['estado'] ?? '',
+      city: json['cidade']?? '',
+      zipCode: json['cep']?? '',
+      complement: json['complemento']?? '',
+      state: json['estado']?? '',
     );
   }
 

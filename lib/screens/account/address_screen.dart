@@ -4,7 +4,6 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/screens/account/create_or_modify_address_screen.dart';
-import 'package:verdeviva/service/access_service.dart';
 
 import '../../providers/user_provider.dart';
 
@@ -16,15 +15,11 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  bool isLoading = true;
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final appBarColor = theme.colorScheme.primary;
     final background = theme.colorScheme.surface;
-
-    final user = Provider.of<UserProvider>(context).user!;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +27,10 @@ class _AddressScreenState extends State<AddressScreen> {
         title: const Text(
           'Seus endereços',
           style: TextStyle(
-              fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+            fontSize: 18,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -40,13 +38,42 @@ class _AddressScreenState extends State<AddressScreen> {
         ),
       ),
       backgroundColor: background,
-      body: user.hasAddress() ? _AddressList() : const HasNoAddressScreen(),
+      body: Consumer<UserProvider>(
+        builder: (context, userProvider, child) {
+          return FutureBuilder<List<Address>>(
+            future: userProvider.getAddresses(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                    color: background, // Define a cor de fundo enquanto carrega
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: const Text("Erro ao carregar endereços"),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                final addresses = snapshot.data!;
+                return _AddressList(addresses: addresses); // Passa a lista de endereços
+              } else {
+                return HasNoAddressScreen();
+              }
+            },
+          );
+        },
+      ),
     );
   }
 }
 
+
 class _AddressList extends StatefulWidget {
-  const _AddressList();
+  final List<Address>
+      addresses; // Adiciona um parâmetro para a lista de endereços
+
+  const _AddressList({required this.addresses}); // Construtor atualizado
 
   @override
   State<_AddressList> createState() => _AddressListState();
@@ -54,58 +81,54 @@ class _AddressList extends StatefulWidget {
 
 class _AddressListState extends State<_AddressList> {
   Future<void> refresh() async {
-    setState(() {});
-  }
-
-  void onDelete(Address address) {
-    Provider.of<UserProvider>(context).deleteAddress(address);
-    refresh();
+    setState(
+        () {}); // Este método pode ser utilizado para atualizar a lista, se necessário
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(
-      builder: (context, userProvider, child) {
-        final user = userProvider.user!;
-        final addresses = user.addresses;
-
-        return Padding(
-          padding: const EdgeInsets.all(appPadding),
-          child: Column(children: [
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: refresh,
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => const Divider(
-                    color: Colors.grey,
-                    thickness: 0.5,
-                  ),
-                  itemCount: addresses.length,
-                  itemBuilder: (context, index) {
-                    final address = addresses[index];
-                    return _AddressCard(
-                      address: address,
-                      onDelete: onDelete,
-                    );
-                  },
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(appPadding),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index) => const Divider(
+                color: Colors.grey,
+                thickness: 0.5,
               ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateAddressScreen(),
-                  ),
+              itemCount: widget.addresses.length, // Acessa a lista de endereços
+              itemBuilder: (context, index) {
+                final address = widget.addresses[index];
+                return _AddressCard(
+                  address: address,
+                  onDelete: (address) {
+// Obtém o provider novamente
+                    final userProvider =
+                        Provider.of<UserProvider>(context, listen: false);
+                    userProvider.deleteAddress(address);
+                    refresh(); // Chama o método refresh após deletar
+                  },
                 );
               },
-              child: const ActionPrimaryButton(
-                  buttonText: "Cadastrar endereço", buttonTextSize: 18),
             ),
-          ]),
-        );
-      },
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateAddressScreen(),
+                ),
+              );
+            },
+            child: const ActionPrimaryButton(
+              buttonText: "Cadastrar endereço",
+              buttonTextSize: 18,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -142,22 +165,15 @@ class _AddressCardState extends State<_AddressCard> {
                 children: [
                   Text(
                     widget.address.street,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'bairro',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     '${widget.address.city}, ${widget.address.zipCode}',
                     style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Brasil',
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                   ),
                   const SizedBox(height: 12),
                   Row(

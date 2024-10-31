@@ -4,6 +4,7 @@ import 'package:verdeviva/common/buttons.dart';
 import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/model/order.dart';
 import 'package:verdeviva/model/product.dart';
+import 'package:verdeviva/model/user.dart';
 import 'package:verdeviva/providers/cart_provider.dart';
 import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/providers/user_provider.dart';
@@ -24,50 +25,69 @@ class ShippingOptionScreen extends StatefulWidget {
 class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<UserProvider>(builder: (context, userProvider, child) {
-      final theme = Theme.of(context);
-      final appBarColor = theme.colorScheme.primary;
-      final background = theme.colorScheme.surface;
-      final addresses = userProvider.user!.addresses;
+    return Consumer<UserProvider>(
+      builder: (context, userProvider, child) {
+        final theme = Theme.of(context);
+        final appBarColor = theme.colorScheme.primary;
+        final background = theme.colorScheme.surface;
 
-      return Scaffold(
-        appBar: AppBar(
-          backgroundColor: appBarColor,
-          title: const Text(
-            'Escolha como receber',
-            style: TextStyle(
-                fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
+        return Scaffold(
+          appBar: AppBar(
+            backgroundColor: appBarColor,
+            title: const Text(
+              'Escolha como receber',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+              size: 30,
+            ),
           ),
-          iconTheme: const IconThemeData(
-            color: Colors.white,
-            size: 30,
-          ),
-        ),
-        backgroundColor: background,
-        body: addresses.isNotEmpty
-            ? const Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(appPadding),
-                      child: Column(
-                        children: [
-                          _Header(),
-                          SizedBox(
-                            height: 8,
-                          ),
-                          _ShippingOptions(),
-                          _OrderInfo(),
-                        ],
+          backgroundColor: background,
+          body: FutureBuilder<List<Address>>(
+            future: userProvider.getAddresses(context),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return const Center(
+                  child: Text("Erro ao carregar endereços"),
+                );
+              } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                return const Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(appPadding),
+                        child: Column(
+                          children: [
+                            _Header(),
+                            SizedBox(height: 8),
+                            _ShippingOptions(),
+                            _OrderInfo(),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
-            : const _HasNoAddressScreen(),
-      );
-    });
+                  ],
+                );
+              } else {
+                // Caso a lista de endereços esteja vazia
+                return const _HasNoAddressScreen();
+              }
+            },
+          ),
+        );
+      },
+    );
   }
+
 }
 
 class _HasNoAddressScreen extends StatelessWidget {
@@ -621,8 +641,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(builder: (context, userProvider, child) {
-      final user = userProvider.user!;
-      final address = user.addresses[0];
+      final address = userProvider.addresses[0];
 
       return Column(
         children: [
@@ -799,9 +818,7 @@ class _OrderInfoState extends State<_OrderInfo> {
   String calculateTotalPrice(Set<ProductToCart> products, Order order) {
     final shippingCost = order.shippingCost;
 
-    double total =
-        products.fold(0.0, (total, product) => total + product.totalPrice) +
-            shippingCost;
+    double total = products.fold(0.0, (total, product) => total + product.totalPrice) + shippingCost;
 
     return total.toStringAsFixed(2);
   }
@@ -810,7 +827,11 @@ class _OrderInfoState extends State<_OrderInfo> {
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, orderProvider, child) {
       final products = Provider.of<CartProvider>(context).products;
-      final order = orderProvider.order!;
+      final order = orderProvider.order;
+
+      if (order == null) {
+        return const Center(child: Text("Erro: pedido não disponível"));
+      }
 
       return Container(
         height: 180,
@@ -823,61 +844,48 @@ class _OrderInfoState extends State<_OrderInfo> {
               children: [
                 Text(
                   'Produtos (${products.length})',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
                 Text(
                   'R\$ ${products.fold(0.0, (total, product) => total + product.totalPrice).toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Frete',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: TextStyle(fontSize: 14),
                 ),
                 Text(
                   'R\$ ${order.shippingCost.toStringAsFixed(2)}',
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Total',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   'R\$ ${calculateTotalPrice(products, order)}',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 4.0),
               child: Center(
                 child: NavigationPrimaryButton(
-                    route: 'payment',
-                    buttonText: 'Continuar a compra',
-                    buttonTextSize: 20),
+                  route: 'payment',
+                  buttonText: 'Continuar a compra',
+                  buttonTextSize: 20,
+                ),
               ),
             ),
           ],

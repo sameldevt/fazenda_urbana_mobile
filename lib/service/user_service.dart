@@ -32,30 +32,30 @@ class UserService {
     return null;
   }
 
-  Future<void> deleteUserInfo() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove(_userKey);
-  }
-
-  Future<List<Address>> getAddresses(BuildContext context) async {
+  Future<List<Address>> loadAddresses(BuildContext context) async {
     try {
       final userProvider = Provider.of<UserProvider>(context, listen: false);
       final userId = userProvider.user!.id;
-      final response = await http.get(Uri.parse('$baseApiUrl/cliente/buscar/$userId'));
 
-      Map<String, dynamic> responseBody = jsonDecode(response.body);
+      final response = await http.get(
+        Uri.parse('$baseApiUrl/cliente/buscar/$userId'),
+      );
 
-      List<dynamic> enderecosList = responseBody['enderecos'];
+      final Map<String, dynamic> responseBody = jsonDecode(response.body);
+      print(responseBody);
+      List<dynamic> addressesJson = responseBody['enderecos'];
 
-      print('deu certo');
-      return enderecosList.map((endereco) => Address.fromJson(endereco)).toList();
+      return addressesJson.map((address) => Address.fromJson(address)).toList();
     } catch (e) {
-      print(e);
-      print('deu pau');
+      print('Erro ao carregar endereços: $e');
       return [];
     }
   }
 
+  Future<void> deleteUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(_userKey);
+  }
 
   Future<List<Order>> getOrders(BuildContext context) async {
     try {
@@ -118,7 +118,6 @@ class UserService {
         throw InvalidCredentialsException();
       }
 
-      print(response.body);
       userService.saveUserInfo(User.fromJson(jsonDecode(response.body)));
     });
   }
