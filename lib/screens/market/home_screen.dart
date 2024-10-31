@@ -190,53 +190,53 @@ class _FilterSectionState extends State<_FilterSection> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text(
+          Text(
             'Todos os itens',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          Container(
-            height: 30,
-            width: 180,
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: DropdownButton<String>(
-              dropdownColor: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              value: selectedValue,
-              alignment: AlignmentDirectional.center,
-              hint: const Text(
-                "Filtrar itens",
-                style: TextStyle(color: Colors.grey),
-              ),
-              icon: const Icon(
-                Icons.filter_list,
-                color: Colors.grey,
-                size: 20,
-              ),
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedValue = newValue!;
-                });
-              },
-              items: filterOptions.map<DropdownMenuItem<String>>(
-                (String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  );
-                },
-              ).toList(),
-            ),
-          ),
+          // Container(
+          //   height: 30,
+          //   width: 180,
+          //   padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          //   decoration: BoxDecoration(
+          //     border: Border.all(color: Colors.grey),
+          //     borderRadius: BorderRadius.circular(20),
+          //   ),
+          //   child: DropdownButton<String>(
+          //     dropdownColor: Colors.white,
+          //     borderRadius: BorderRadius.circular(20),
+          //     value: selectedValue,
+          //     alignment: AlignmentDirectional.center,
+          //     hint: const Text(
+          //       "Filtrar itens",
+          //       style: TextStyle(color: Colors.grey),
+          //     ),
+          //     icon: const Icon(
+          //       Icons.filter_list,
+          //       color: Colors.grey,
+          //       size: 20,
+          //     ),
+          //     onChanged: (String? newValue) {
+          //       setState(() {
+          //         selectedValue = newValue!;
+          //       });
+          //     },
+          //     items: filterOptions.map<DropdownMenuItem<String>>(
+          //       (String value) {
+          //         return DropdownMenuItem<String>(
+          //           value: value,
+          //           child: Text(
+          //             value,
+          //             style: const TextStyle(color: Colors.grey),
+          //           ),
+          //         );
+          //       },
+          //     ).toList(),
+          //   ),
+          // ),
         ],
       ),
     );
