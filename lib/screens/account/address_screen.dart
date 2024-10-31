@@ -164,7 +164,7 @@ class _AddressCardState extends State<_AddressCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.address.street,
+                    '${widget.address.street}, ${widget.address.number}',
                     style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -172,32 +172,15 @@ class _AddressCardState extends State<_AddressCard> {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${widget.address.city}, ${widget.address.zipCode}',
+                    '${widget.address.city}, ${widget.address.state}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${widget.address.zipCode}',
                     style: TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton.icon(
-                        onPressed: () {},
-                        icon: Icon(Icons.edit, color: Colors.black),
-                        label: Text('Alterar',
-                            style: TextStyle(color: Colors.black)),
-                      ),
-                      const SizedBox(width: 8),
-                      TextButton.icon(
-                        onPressed: () {
-                          _showDialog(widget.address).then((value) {
-                            widget.onDelete(widget.address);
-                          });
-                        },
-                        icon: Icon(Icons.delete, color: Colors.redAccent),
-                        label: Text('Excluir',
-                            style: TextStyle(color: Colors.redAccent)),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
