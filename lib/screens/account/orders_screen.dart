@@ -159,34 +159,34 @@ class _OrderCard extends StatelessWidget {
   });
 
   Text _convertOrderStatus(String orderStatus) {
-    String? text;
+    String? text = 'Status: ';
     Color? color;
 
     switch (orderStatus) {
       case 'ENTREGUE':
-        text = 'Entregue';
+        text += 'Entregue';
         color = Colors.green;
         break;
       case 'EM_TRANSITO':
-        text = 'Em transito';
+        text += 'Em transito';
         color = Colors.grey;
         break;
       case 'PAGO':
-        text = 'Pago';
+        text += 'Pago';
         color = Colors.yellow;
         break;
       case 'AGUARDANDO_PAGAMENTO':
-        text = 'Pendente';
+        text += 'Pendente';
         color = Colors.grey;
       case 'CANCELADO':
-        text = 'Cancelado';
+        text += 'Cancelado';
         color = Colors.red;
     }
 
     return Text(
       text!,
       style:
-          TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: color!),
+          TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color!),
     );
   }
 
@@ -261,28 +261,16 @@ class _OrderCard extends StatelessWidget {
                   thickness: 0.5,
                   height: 10,
                 ),
+                const SizedBox(height: 20,),
+                Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text('Pedido ${order.id.toString().padLeft(8, '0')}', textAlign: TextAlign.start, style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 16),),
+                  ),
+                ],),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      height: 100,
-                      width: 100,
-                      child: Image.network(
-                        order.items.first.productImage,
-                        fit: BoxFit.contain,
-                        width: 100,
-                        height: 100,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.white,
-                            //child: Image.asset('assets/.png', fit: BoxFit.contain,),
-                          );
-                        },
-                      ),
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Column(
@@ -290,11 +278,8 @@ class _OrderCard extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           _convertOrderStatus(order.status!),
-                          const SizedBox(
-                            height: 10,
-                          ),
                           SizedBox(
-                            width: 200,
+                            width: 300,
                             child: _converMessage(order.status!),
                           ),
                         ],

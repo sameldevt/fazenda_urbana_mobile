@@ -18,10 +18,6 @@ class User {
     required this.addresses,
   });
 
-  bool hasAddress() {
-    return addresses.isNotEmpty;
-  }
-
   factory User.simple(String name, String email) {
     return User(
       id: 0,
