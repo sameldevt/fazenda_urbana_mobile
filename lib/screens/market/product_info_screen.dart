@@ -178,121 +178,117 @@ class _ProductPriceSectionState extends State<_ProductPriceSection> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
     updateItemPrice(widget.product, _selectedQuantity);
     updateProductToCart();
 
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'R\$ ${itemPrice.toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+        Text(
+          'R\$ ${itemPrice.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          'em 3x R\$ ${(itemPrice / 3).toStringAsFixed(2)}',
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+          width: screenWidth,
+          height: 50,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey,
+              width: 1.0,
             ),
-            Text(
-              'em 3x R\$ ${(itemPrice / 3).toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(
-              height: 8,
-            ),
-            Container(
-              width: 379,
-              height: 50,
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey,
-                  width: 1.0,
+            borderRadius: BorderRadius.circular(8.0),
+            color: Colors.white,
+          ),
+          child: GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(10.0),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.white,
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(10.0),
-                      ),
-                    ),
-                    showDragHandle: true,
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: 300,
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Escolha uma opção',
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 16.0),
-                            Expanded(
-                              child: ListView.separated(
-                                itemCount: _quantities.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  int value = _quantities[index];
-                                  return ListTile(
-                                    title: Center(
-                                      child: Text(
-                                        '${value.toString()} ${value < 100
-                                            ? 'kg'
-                                            : 'g'}',
-                                        style: const TextStyle(fontSize: 16.0),
-                                      ),
-                                    ),
-                                    onTap: () {
-                                      setState(() {
-                                        _selectedQuantity = value;
-                                        updateItemPrice(widget.product, _selectedQuantity);
-                                      });
-
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                },
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return const Divider(
-                                    color: Colors.grey,
-                                    thickness: 0.5,
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
+                showDragHandle: true,
+                builder: (BuildContext context) {
+                  return Container(
+                    height: 300,
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Escolha uma opção',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      );
-                    },
+                        const SizedBox(height: 16.0),
+                        Expanded(
+                          child: ListView.separated(
+                            itemCount: _quantities.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              int value = _quantities[index];
+                              return ListTile(
+                                title: Center(
+                                  child: Text(
+                                    '${value.toString()} ${value < 100
+                                        ? 'kg'
+                                        : 'g'}',
+                                    style: const TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _selectedQuantity = value;
+                                    updateItemPrice(widget.product, _selectedQuantity);
+                                  });
+
+                                  Navigator.pop(context);
+                                },
+                              );
+                            },
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return const Divider(
+                                color: Colors.grey,
+                                thickness: 0.5,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   );
                 },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Quantidade: ${_selectedQuantity < 100
-                          ? ' ${_selectedQuantity.toString()} kg'
-                          : ' ${_selectedQuantity.toString()} g'}',
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                    const Icon(Icons.arrow_forward_ios,
-                        color: Colors.lightGreen),
-                  ],
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Quantidade: ${_selectedQuantity < 100
+                      ? ' ${_selectedQuantity.toString()} kg'
+                      : ' ${_selectedQuantity.toString()} g'}',
+                  style: const TextStyle(color: Colors.grey),
                 ),
-              ),
-            )
-          ],
+                const Icon(Icons.arrow_forward_ios,
+                    color: Colors.lightGreen),
+              ],
+            ),
+          ),
         )
       ],
     );
