@@ -5,7 +5,7 @@ import 'package:verdeviva/model/product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService{
-  final String contextUrl = "produtos";
+  final String contextUrl = "produto";
 
   Future<List<Product>> getAll() async {
     final response = await http.get(Uri.parse('$baseApiUrl/$contextUrl/buscar-todos'));

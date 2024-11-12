@@ -6,7 +6,7 @@ import 'package:verdeviva/service/access_service.dart';
 import 'package:http/http.dart' as http;
 
 class OrderService {
-  final String contextUrl = "pedidos";
+  final String contextUrl = "pedido";
 
   Future<void> createOrder(Order order) async {
     print(order.finalPrice);
