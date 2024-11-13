@@ -166,9 +166,9 @@ class _CartItemCardState extends State<_CartItemCard> {
     4,
     5
   ];
-  int _selectedQuantity = 0;
+  double _selectedQuantity = 0;
 
-  void _updateItemPrice(ProductToCart product, int selectedQuantity) {
+  void _updateItemPrice(ProductToCart product, double selectedQuantity) {
     product.totalPrice = selectedQuantity > 5
         ? product.basePrice * (selectedQuantity / 1000)
         : product.basePrice * selectedQuantity;
@@ -229,10 +229,10 @@ class _CartItemCardState extends State<_CartItemCard> {
                       ),
                     ),
                     DropdownButton<int>(
-                      value: _selectedQuantity,
+                      value: _selectedQuantity.round(),
                       onChanged: (int? newValue) {
-                        _selectedQuantity = newValue!;
-                        widget.product.quantity = _selectedQuantity;
+                        _selectedQuantity = newValue!.roundToDouble();
+                        widget.product.quantity = _selectedQuantity as double;
                         _updateItemPrice(widget.product, _selectedQuantity);
                       },
                       items:

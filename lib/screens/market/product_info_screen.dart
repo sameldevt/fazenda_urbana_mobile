@@ -157,7 +157,7 @@ class _ProductPriceSectionState extends State<_ProductPriceSection> {
     5
   ];
 
-  int _selectedQuantity = 1;
+  double _selectedQuantity = 1;
   double itemPrice = 0;
 
   void updateProductToCart(){
@@ -170,7 +170,7 @@ class _ProductPriceSectionState extends State<_ProductPriceSection> {
     widget.productToCart.imageUrl = widget.product.imageUrl;
   }
 
-  void updateItemPrice(Product product, int selectedQuantity){
+  void updateItemPrice(Product product, double selectedQuantity){
     itemPrice = _selectedQuantity > 5
         ? widget.product.pricePerKilo * (_selectedQuantity / 1000)
         : widget.product.pricePerKilo * _selectedQuantity;
@@ -252,7 +252,7 @@ class _ProductPriceSectionState extends State<_ProductPriceSection> {
                                 ),
                                 onTap: () {
                                   setState(() {
-                                    _selectedQuantity = value;
+                                    _selectedQuantity = value.roundToDouble();
                                     updateItemPrice(widget.product, _selectedQuantity);
                                   });
 

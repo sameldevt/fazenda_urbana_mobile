@@ -38,7 +38,7 @@ class Order {
 class OrderItem {
   final String productImage;
   final int productId;
-  final int quantity;
+  final double quantity;
   final double subTotal;
 
   OrderItem(

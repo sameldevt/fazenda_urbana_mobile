@@ -5,7 +5,7 @@ class Product {
   final String name;
   final String description;
   final double pricePerKilo;
-  final int stockQuantity;
+  final double stockQuantity;
   final String imageUrl;
   final Category category;
   final Nutrients nutrients;
@@ -90,7 +90,7 @@ class ProductToCart {
   late String description;
   late double basePrice;
   late double totalPrice;
-  late int quantity;
+  late double quantity;
   late String imageUrl;
 
   ProductToCart();
