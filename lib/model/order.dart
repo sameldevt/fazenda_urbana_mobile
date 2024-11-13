@@ -22,7 +22,7 @@ class Order {
     order.orderDate = json['dataPedido']?? '';
     order.deliveryDate = json['dataEntrega'] ?? '';
     order.status = json['status'] ?? '';
-    order.finalPrice = json['total'] ?? '';
+    order.finalPrice = json['total'];
     order.deliveryAddress = json['enderecoEntrega'] ?? '';
     order.paymentMethod = json['formaPagamento'] ?? '';
     order.notes = json['observacoes'] ?? '';
@@ -30,6 +30,7 @@ class Order {
         .map((itemJson) => OrderItem.fromJson(itemJson))
         .toList();
 
+    print(order.finalPrice);
     return order;
   }
 }
@@ -47,7 +48,6 @@ class OrderItem {
       required this.subTotal});
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
-    print(json);
     return OrderItem(
         //productImage: json['imagemUrl'],
         productImage: 'https://rb.gy/2xfabn',

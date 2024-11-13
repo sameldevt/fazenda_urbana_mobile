@@ -11,6 +11,7 @@ class OrderProvider with ChangeNotifier {
   Future<void> createOrder(int clientId) async {
     clearOrder();
     order = Order();
+    order!.shippingCost = 5.99;
     order!.clientId = clientId;
     notifyListeners();
   }
@@ -20,14 +21,6 @@ class OrderProvider with ChangeNotifier {
         .map((p) => OrderItem(
             productImage: p.imageUrl, productId: p.id, quantity: p.quantity, subTotal: p.totalPrice))
         .toList();
-
-    orderItems.forEach((item) {
-      print('Product ID: ${item.productId}');
-      print('Product Image: ${item.productImage}');
-      print('Quantity: ${item.quantity}');
-      print('Subtotal: ${item.subTotal}');
-    });
-
     order!.items.addAll(orderItems);
 
     final totalPrice = products

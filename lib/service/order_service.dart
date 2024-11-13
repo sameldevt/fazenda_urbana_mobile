@@ -25,6 +25,7 @@ class OrderService {
     );
 
     if (response.statusCode == 500) {
+      print(response.body);
       throw ServerErrorException();
     }
 

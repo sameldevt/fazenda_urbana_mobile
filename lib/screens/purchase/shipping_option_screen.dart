@@ -686,7 +686,7 @@ class _ShippingOptions extends StatefulWidget {
 }
 
 class _ShippingOptionsState extends State<_ShippingOptions> {
-  int? _selectedValue;
+  int? _selectedValue = 1;
 
   Widget _buildShippingOption({
     required int value,
