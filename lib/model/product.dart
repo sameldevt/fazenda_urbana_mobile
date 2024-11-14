@@ -27,7 +27,7 @@ class Product {
       name: json['nome'],
       description: json['descricao'],
       pricePerKilo: (json['precoQuilo'] as num).toDouble(),
-      stockQuantity: json['quantidadeEstoque'],
+      stockQuantity: (json['quantidadeEstoque'] as num).toDouble(),
       imageUrl: json['imagemUrl'],
       category: Category.fromJson(json['categoria']),
       nutrients: Nutrients.fromJson(json['nutrientes'])
@@ -112,7 +112,7 @@ class ProductToCart {
       description: json["description"],
       basePrice: json["basePrice"],
       totalPrice: json["totalPrice"].toDouble(),
-      quantity: json["quantity"],
+      quantity: (json["quantity"] as num).toDouble(),
       imageUrl: json["imageUrl"],
     );
   }

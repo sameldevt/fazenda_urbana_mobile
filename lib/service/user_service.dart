@@ -66,7 +66,7 @@ class UserService {
       List<dynamic> responseBody = jsonDecode(response.body);
 
       return responseBody.map((product) => Order.fromJson(product)).toList();
-    } catch (Exception) {
+    } catch (e, stacktrace) {
       return [];
     }
   }

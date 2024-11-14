@@ -34,25 +34,17 @@ class PurchaseSummaryScreen extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10.0),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(appPadding),
-                child: Column(
-                  children: [
-                    const _Header(),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    _SummaryItemsSection(),
-                    _ConfirmPurchaseSection(),
-                  ],
-                ),
+            child: Padding(
+              padding: const EdgeInsets.all(appPadding),
+              child: Column(
+                children: [
+                  const _Header(),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  _SummaryItemsSection(),
+                  _ConfirmPurchaseSection(),
+                ],
               ),
             ),
           ),
@@ -96,7 +88,7 @@ class _SummaryItemsSection extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.60,
+                height: MediaQuery.of(context).size.height * 0.58,
                 child: ListView.separated(
                   itemCount: items.length,
                   itemBuilder: (context, index) {
@@ -232,7 +224,7 @@ class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
 
   String calculateTotalItemsPrice(Set<ProductToCart> products) {
     double total =
-        products.fold(0.0, (total, product) => total + product.totalPrice);
+    products.fold(0.0, (total, product) => total + product.totalPrice);
     return total.toStringAsFixed(2);
   }
 
@@ -244,6 +236,7 @@ class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
       final order = orderProvider.order!;
 
       return Container(
+        height: 180,
         color: Colors.white,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -344,7 +337,7 @@ class _ConfirmPurchaseSectionState extends State<_ConfirmPurchaseSection> {
                       orderProvider.confirmOrder().then((value) {
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(builder: (context) => screen),
-                          (Route<dynamic> route) => false,
+                              (Route<dynamic> route) => false,
                         );
                       });
                     });
