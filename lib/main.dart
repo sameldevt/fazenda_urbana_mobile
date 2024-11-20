@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:verdeviva/common/buttons.dart';
+import 'package:verdeviva/common/constants.dart';
 import 'package:verdeviva/providers/cart_provider.dart';
 import 'package:verdeviva/providers/order_provider.dart';
 import 'package:verdeviva/providers/product_provider.dart';
@@ -106,6 +108,80 @@ class _InitialScreenState extends State<InitialScreen> {
   late Future<void> _providersFuture;
   bool _isLoading = false;
 
+  void _showDialog() {
+    String content = "Seja bem vindo(a) à Fazenda VerdeViva!";
+    String image = "assets/purchase.png";
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Container(
+            height: 650,
+            width: 400,
+            padding: const EdgeInsets.all(appPadding),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Text(
+                    content,
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Image.asset(
+                  image,
+                  height: 300,
+                  width: 300,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 30.0),
+                  child: Text(
+                    "Fique à vontade para explorar nossos produtos ou acesse sua conta para realizar seus pedidos.",
+                    style: TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: const ActionPrimaryButton(
+                    buttonText: 'Nossos produtos',
+                    buttonTextSize: 16,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 12.0),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, "login");
+                    },
+                    child: const ActionSecondaryButton(
+                      buttonText: 'Acessar conta',
+                      buttonTextSize: 16,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -142,6 +218,9 @@ class _InitialScreenState extends State<InitialScreen> {
             ),
           );
         } else {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _showDialog();
+          });
           return const HomeScreen();
         }
       },
