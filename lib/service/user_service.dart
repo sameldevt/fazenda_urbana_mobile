@@ -65,6 +65,7 @@ class UserService {
           Uri.parse('$baseApiUrl/$contextUrl/buscar-pedidos?id=${userId}'));
       List<dynamic> responseBody = jsonDecode(response.body);
 
+      print(responseBody);
       return responseBody.map((product) => Order.fromJson(product)).toList();
     } catch (e, stacktrace) {
       return [];

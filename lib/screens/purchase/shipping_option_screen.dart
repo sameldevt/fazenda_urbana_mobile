@@ -78,7 +78,6 @@ class _ShippingOptionScreenState extends State<ShippingOptionScreen> {
                   ],
                 );
               } else {
-                // Caso a lista de endereços esteja vazia
                 return const _HasNoAddressScreen();
               }
             },
@@ -752,11 +751,11 @@ class _ShippingOptionsState extends State<_ShippingOptions> {
   double _getPrice(int index) {
     switch (index) {
       case 0:
-        return 5.99;
+        return 1.99;
       case 1:
-        return 10.99;
+        return 3.99;
       case 2:
-        return 15.99;
+        return 5.99;
       default:
         return 0;
     }
@@ -765,11 +764,11 @@ class _ShippingOptionsState extends State<_ShippingOptions> {
   String _getDeliveryTime(int index) {
     switch (index) {
       case 0:
-        return 'Entrega em até 1 semana';
+        return 'Entrega em até 1 dia';
       case 1:
-        return 'Entrega em até 3 dias';
+        return 'Entrega em até 12 horas';
       case 2:
-        return 'Entrega em 1 dia';
+        return 'Entrega em 2 horas';
       default:
         return '';
     }

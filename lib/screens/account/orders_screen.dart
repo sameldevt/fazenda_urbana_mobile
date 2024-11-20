@@ -163,22 +163,22 @@ class _OrderCard extends StatelessWidget {
     Color? color;
 
     switch (orderStatus) {
-      case 'ENTREGUE':
+      case 'Entregue':
         text += 'Entregue';
         color = Colors.green;
         break;
-      case 'EM_TRANSITO':
+      case 'EmTransito':
         text += 'Em transito';
         color = Colors.grey;
         break;
-      case 'PAGO':
+      case 'Pago':
         text += 'Pago';
         color = Colors.yellow;
         break;
-      case 'AGUARDANDO_PAGAMENTO':
+      case 'AguardandoPagamento':
         text += 'Pendente';
         color = Colors.grey;
-      case 'CANCELADO':
+      case 'Cancelado':
         text += 'Cancelado';
         color = Colors.red;
     }
@@ -194,18 +194,18 @@ class _OrderCard extends StatelessWidget {
     String? text;
 
     switch (status) {
-      case 'ENTREGUE':
+      case 'Entregue':
         text = 'Pedido entregue.';
         break;
-      case 'EM_TRANSITO':
+      case 'EmTransito':
         text = 'Seu pedido está em transito.';
         break;
-      case 'PAGO':
+      case 'Pago':
         text = 'Seu pedido foi pago e logo será enviado.';
         break;
-      case 'AGUARDANDO_PAGAMENTO':
+      case 'AguardandoPagamento':
         text = 'Estamos aguardando o pagamento do pedido.';
-      case 'CANCELADO':
+      case 'Cancelado':
         text = 'Este pedido foi cancelado';
     }
 

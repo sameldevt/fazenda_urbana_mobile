@@ -110,7 +110,7 @@ class _InitialScreenState extends State<InitialScreen> {
 
   void _showDialog() {
     String content = "Seja bem vindo(a) à Fazenda VerdeViva!";
-    String image = "assets/purchase.png";
+    String image = "assets/logo-fazenda.png";
 
     showDialog(
       context: context,
