@@ -70,7 +70,7 @@ class ShopCard extends StatelessWidget {
                         product.name,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
+                            fontSize: 14.0,
                             color: Colors.black),
                       ),
                       const SizedBox(height: 2.0),
